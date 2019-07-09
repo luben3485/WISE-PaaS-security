@@ -3,12 +3,13 @@
 ## Usage
 
 1. Start API server
+
 ```
 sudo ./w3af_api
-
+```
 2. Start Web server
 ```
 sudo python3 web/index.py
-
+```
 3. connect to localhost with port 5000
 
