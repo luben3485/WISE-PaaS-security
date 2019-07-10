@@ -10,10 +10,10 @@ $(document).ready(function(){
             withCredentials: true
         }
     }).done(function (user) {
-        alert('Hello! ' + user.lastName + ' ' + user.firstName);
+        console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
         forcelogin();
-        alert('You are not logged in!');
+        console.log('User is not logged in!');
     });
     
     
@@ -25,7 +25,7 @@ $(document).ready(function(){
             .modal({
             closable  : false,
             onDeny    : function(){
-                alert("login!!");
+                window.location.href = "https://wise-paas.advantech.com/en-us/marketplace";
         
         /*
         $.ajax({
@@ -37,7 +37,7 @@ $(document).ready(function(){
         },
         data: {
             "username":"Ben.Lu@advantech.com.tw",
-            "password":"@Aa123456"    
+            "password":""    
         },
         xhrFields: {
             withCredentials: true
@@ -78,7 +78,16 @@ $(document).ready(function(){
     
 
 	$('#startScan').click(function(){
-      $.ajax({
+    
+        $.ajax({
+        url: ssoUrl + '/v2.0/users/me',
+        method: 'GET',
+        xhrFields: {
+            withCredentials: true
+        }
+    }).done(function (user) {
+            
+        $.ajax({
                 url: '/startScan',
                 type: 'GET',
                 data: {
@@ -94,11 +103,30 @@ $(document).ready(function(){
 					alert('id:' + id + ' message:'+message);
                 }
           
-        });	
+        });	  
+        console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /startScan');
+    }).fail(function () {
+        forcelogin();
+        console.log('User is not logged in! /startScan');
+    });    
+        
+        
+        
+        
+        
 	});
     
 	$('#deleteScan').click(function(){
-      $.ajax({
+        
+        $.ajax({
+            url: ssoUrl + '/v2.0/users/me',
+            method: 'GET',
+            xhrFields: {
+                withCredentials: true
+            }
+        }).done(function (user) {
+            
+            $.ajax({
                 url: '/deleteScan',
                 type: 'GET',
                 data: {
@@ -112,13 +140,29 @@ $(document).ready(function(){
          			alert(message);
 		 		}
           
-        });
+            });
     
-	
+            console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /deleteScan');
+        }).fail(function () {
+            forcelogin();
+            console.log('User is not logged in! /deleteScan');
+        });    
+        
+        
 	});
     
 	$('#getScanResult').click(function(){
-      $.ajax({
+        
+        
+        $.ajax({
+            url: ssoUrl + '/v2.0/users/me',
+            method: 'GET',
+            xhrFields: {
+                withCredentials: true
+            }
+        }).done(function (user) {
+            
+            $.ajax({
                 url: '/getScanResult',
                 type: 'GET',
                 data: {
@@ -136,18 +180,17 @@ $(document).ready(function(){
 	
 					}
 					alert(str);
-				/*
-					for(var i=0;i<response.items.length;i++){
-						var div=$('<div></div>');      
-    					div.addclass('item');    
-    					div.appendto(ui list);
-						div.text(response.items[i]);
-					}
-*/
-//					$("#scanResult").text('result:'+response.items);
                 }
           
-        });
+            });
+    
+            console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /getScanResult');
+        }).fail(function () {
+            forcelogin();
+            console.log('User is not logged in! /getScanResult');
+        });            
+        
+      
     
 	
 	});
