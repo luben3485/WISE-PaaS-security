@@ -12,49 +12,59 @@ print(os.path.join(os.getcwd(), "static"))
 
 @app.route('/')
 def index():
-	EIToken =request.cookies.get('EIToken')
 	return app.send_static_file('index.html')
 
 
 @app.route('/startScan')
 def startScan():
 	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		scanOption = request.args.get('scanOption')
+		url = request.args.get('url')
+		data = {'scan_profile': open('../profiles/full_audit.pw3af').read(),
+		'target_urls': [url]}
+		response = requests.post('https://127.0.0.1:5000/scans/',
+		data=json.dumps(data),
+		headers={'content-type': 'application/json'},verify=False)
 	
-	
-	scanOption = request.args.get('scanOption')
-	url = request.args.get('url')
-
-	data = {'scan_profile': open('../profiles/full_audit.pw3af').read(),
-	'target_urls': [url]}
-	
-	response = requests.post('https://127.0.0.1:5000/scans/',
-	data=json.dumps(data),
-	headers={'content-type': 'application/json'},verify=False)
-	
-	response = response.json()
-	message = response['message']
-	if message == "Success":
-		result = {'message':message,'id':response['id'],'EIToken':EIToken}
+		response = response.json()
+		message = response['message']
+		if message == "Success":
+			result = {'message':message,'id':response['id']}
+		else:
+			result = {'message':'fail','id':-1}
 	else:
-		result = {'message':'fail','id':id}
-		
-	#result = ['aa',5]
+		result = {'code':401}
 	return jsonify(result)
+		
 
 @app.route('/getScanResult')
 def getScanResult():
-	id = request.args.get('id')
-	response = requests.get('https://127.0.0.1:5000/scans/'+id+'/kb/',
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		id = request.args.get('id')
+		response = requests.get('https://127.0.0.1:5000/scans/'+id+'/kb/',
                         verify=False)
-	response = response.json()
+		response = response.json()
+	else:
+		result = {'code':401}
+	
 	return jsonify(response)
 
 @app.route('/deleteScan')
 def deleteScan():
-	id = request.args.get('id')
-	response = requests.delete('https://127.0.0.1:5000/scans/'+id,verify=False) 
-	response = response.json()
-	result = {'message':response['message']}
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		id = request.args.get('id')
+		response = requests.delete('https://127.0.0.1:5000/scans/'+id,verify=False) 
+		response = response.json()
+		result = {'message':response['message']}
+	else:
+		result = {'code':401}
+	
 	return jsonify(result)
 if __name__ == '__main__':
 	#app.run()

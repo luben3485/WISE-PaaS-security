@@ -102,9 +102,8 @@ $(document).ready(function(){
                 },
                 success: function(response) {
                     id = response.id;
-					message = response.message;
-					EIToken = response.EIToken
-                    alert('id:' + id + ' message:'+ message +'EIToken:'+ EIToken);
+				    message = response.message;
+                    alert('id:' + id + ' message:'+ message);
                 }
           
         });	  
