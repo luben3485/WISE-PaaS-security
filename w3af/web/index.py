@@ -6,7 +6,7 @@ from flask import Flask,request
 from flask import jsonify
 import requests
 import json
-var ssoUrl = 'https://portal-sso.wise-paas.io';
+ssoUrl = 'https://portal-sso.wise-paas.io'
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 print(os.path.join(os.getcwd(), "static"))
 
