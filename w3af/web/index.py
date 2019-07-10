@@ -6,7 +6,7 @@ from flask import Flask,request
 from flask import jsonify
 import requests
 import json
-
+var ssoUrl = 'https://portal-sso.wise-paas.io';
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 print(os.path.join(os.getcwd(), "static"))
 
@@ -18,6 +18,9 @@ def index():
 
 @app.route('/startScan')
 def startScan():
+	EIToken =request.cookies.get('EIToken')  
+	
+	
 	scanOption = request.args.get('scanOption')
 	url = request.args.get('url')
 
@@ -31,7 +34,7 @@ def startScan():
 	response = response.json()
 	message = response['message']
 	if message == "Success":
-		result = {'message':message,'id':response['id']}
+		result = {'message':message,'id':response['id'],'EIToken':EIToken}
 	else:
 		result = {'message':'fail','id':id}
 		

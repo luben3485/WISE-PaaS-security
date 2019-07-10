@@ -94,13 +94,17 @@ $(document).ready(function(){
                     'scanOption':1,
 					'url': $('input[name="input_url"]').val()
                 },
+                xhrFields: {
+                    withCredentials: true
+                },
                 error: function(xhr) {
                     alert('Ajax startScan error');
                 },
                 success: function(response) {
                     id = response.id;
 					message = response.message;
-					alert('id:' + id + ' message:'+message);
+					EIToken = response.EIToken
+                    alert('id:' + id + ' message:'+ message +'EIToken:'+ EIToken);
                 }
           
         });	  
@@ -131,6 +135,9 @@ $(document).ready(function(){
                 type: 'GET',
                 data: {
                     'id':id,
+                },
+                xhrFields: {
+                    withCredentials: true
                 },
                 error: function(xhr) {
                     alert('Ajax deleteScan error');
@@ -167,6 +174,9 @@ $(document).ready(function(){
                 type: 'GET',
                 data: {
                     'id':id,
+                },
+                xhrFields: {
+                    withCredentials: true
                 },
                 error: function(xhr) {
                     alert('Ajax getScanResult error');
