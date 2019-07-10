@@ -91,9 +91,9 @@ def start_scan_helper(scan_info):
     finally:
         scan_info.finished = True
 		
-        #try:
-            # os.unlink(scan_info.profile_path)
-        #except (AttributeError, IOError) as _:
+        try:
+             os.unlink(scan_info.profile_path)
+        except (AttributeError, IOError) as _:
             # Reduce some exceptions found during interpreter shutdown
-            #pass
+            pass
 		
