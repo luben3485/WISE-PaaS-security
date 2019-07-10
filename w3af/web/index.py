@@ -9,16 +9,16 @@ import json
 ssoUrl = 'https://portal-sso.wise-paas.io'
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 print(os.path.join(os.getcwd(), "static"))
-
+EIToken = 0
 @app.route('/')
 def index():
-	print("index")
+	EIToken =request.cookies.get('EIToken')
 	return app.send_static_file('index.html')
 
 
 @app.route('/startScan')
 def startScan():
-	EIToken =request.cookies.get('EIToken')  
+	#EIToken =request.cookies.get('EIToken')  
 	
 	
 	scanOption = request.args.get('scanOption')
