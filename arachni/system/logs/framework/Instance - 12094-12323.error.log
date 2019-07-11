@@ -1,0 +1,231 @@
+
+2019-07-04 09:47:24 +0800 --------------------------------------------------------------------------------
+ENV:
+---
+CLUTTER_IM_MODULE: xim
+LD_LIBRARY_PATH: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/usr/lib:/usr/lib:/usr/local/lib"
+LS_COLORS: 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'
+FONTCONFIG_PATH: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/home/arachni/.fonts"
+LC_MEASUREMENT: lzh_TW
+LC_PAPER: lzh_TW
+LC_MONETARY: lzh_TW
+XDG_MENU_PREFIX: gnome-
+LANG: en_US.UTF-8
+LESS: "-R"
+DISPLAY: ":0"
+OLDPWD: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12"
+GNOME_SHELL_SESSION_MODE: ubuntu
+C_INCLUDE_PATH: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/usr/include"
+RUBY_VERSION: ruby-2.2.3
+COLORTERM: truecolor
+GEM_HOME: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/system/gems"
+USERNAME: luben3485
+XDG_VTNR: '1'
+ZSH: "/home/luben3485/.oh-my-zsh"
+SSH_AUTH_SOCK: "/run/user/1000/keyring/ssh"
+MANDATORY_PATH: "/usr/share/gconf/ubuntu.mandatory.path"
+LC_NAME: lzh_TW
+XDG_SESSION_ID: '1'
+USER: luben3485
+PAGER: less
+LSCOLORS: Gxfxcxdxbxegedabagacad
+DESKTOP_SESSION: ubuntu
+QT4_IM_MODULE: xim
+TEXTDOMAINDIR: "/usr/share/locale/"
+GNOME_TERMINAL_SCREEN: "/org/gnome/Terminal/screen/22b9b408_02b1_4403_b073_17b27a01af3c"
+DEFAULTS_PATH: "/usr/share/gconf/ubuntu.default.path"
+PWD: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin"
+HOME: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/home/arachni"
+LC_CTYPE: en_US.UTF-8
+TEXTDOMAIN: im-config
+SSH_AGENT_PID: '1538'
+QT_ACCESSIBILITY: '1'
+XDG_SESSION_TYPE: x11
+XDG_DATA_DIRS: "/usr/share/ubuntu:/usr/local/share:/usr/share:/var/lib/snapd/desktop"
+XDG_SESSION_DESKTOP: ubuntu
+GEM_PATH: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/gems"
+LC_ADDRESS: lzh_TW
+LIBRARY_PATH: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/usr/lib:/usr/lib:/usr/local/lib"
+GJS_DEBUG_OUTPUT: stderr
+LC_NUMERIC: lzh_TW
+RAILS_ENV: production
+GTK_MODULES: gail:atk-bridge
+ARACHNI_WEBUI_LOGDIR: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/logs/webui"
+WINDOWPATH: '1'
+TERM: xterm-256color
+SHELL: "/usr/bin/zsh"
+VTE_VERSION: '5202'
+QT_IM_MODULE: xim
+XMODIFIERS: "@im=gcin"
+ARACHNI_FRAMEWORK_LOGDIR: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/logs/framework"
+IM_CONFIG_PHASE: '2'
+XDG_CURRENT_DESKTOP: ubuntu:GNOME
+RUBYLIB: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/system/gems/gems/bundler-1.14.6/lib:/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/usr/lib/ruby:/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/usr/lib/ruby/site_ruby/2.2.0:/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/usr/lib/ruby/2.2.0:/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/usr/lib/ruby/2.2.0/x86_64-linux:/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/usr/lib/ruby/site_ruby/2.2.0/x86_64-linux"
+GPG_AGENT_INFO: "/run/user/1000/gnupg/S.gpg-agent:0:1"
+GNOME_TERMINAL_SERVICE: ":1.87"
+XDG_SEAT: seat0
+SHLVL: '1'
+LC_TELEPHONE: lzh_TW
+GDMSESSION: ubuntu
+GNOME_DESKTOP_SESSION_ID: this-is-deprecated
+LOGNAME: luben3485
+DBUS_SESSION_BUS_ADDRESS: unix:path=/run/user/1000/bus
+XDG_RUNTIME_DIR: "/run/user/1000"
+XAUTHORITY: "/run/user/1000/gdm/Xauthority"
+CPLUS_INCLUDE_PATH: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/usr/include"
+MY_RUBY_HOME: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/usr/lib/ruby"
+XDG_CONFIG_DIRS: "/etc/xdg/xdg-ubuntu:/etc/xdg"
+PATH: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/system/gems/bin:/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/../bin:/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/usr/bin:/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/gems/bin:/home/luben3485/.local/bin:/home/luben3485/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+LC_IDENTIFICATION: lzh_TW
+IRBRC: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/usr/lib/ruby/.irbrc"
+GJS_DEBUG_TOPICS: JS ERROR;JS LOG
+SESSION_MANAGER: local/luben3485:@/tmp/.ICE-unix/1435,unix/luben3485:/tmp/.ICE-unix/1435
+GTK_IM_MODULE: gcin
+LC_TIME: lzh_TW
+BUNDLE_GEMFILE: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/system/arachni-ui-web/Gemfile"
+BUNDLER_ORIG_PATH: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/../bin:/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/usr/bin:/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/gems/bin:/home/luben3485/.local/bin:/home/luben3485/bin:/usr/local/bin:/home/luben3485/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+BUNDLER_ORIG_GEM_PATH: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/bin/../system/gems"
+BUNDLE_BIN_PATH: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/system/gems/gems/bundler-1.14.6/exe/bundle"
+BUNDLER_VERSION: 1.14.6
+RUBYOPT: "-rbundler/setup"
+MANPATH: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/system/gems/gems/kramdown-1.4.1/man"
+RACK_ENV: development
+BUNDLER_ORIG_MANPATH: "/home/luben3485/iotsummerintern/scantool/arachni-1.5.1-0.5.12/system/gems/gems/kramdown-1.4.1/man"
+--------------------------------------------------------------------------------
+OPTIONS:
+---
+http:
+  user_agent: Arachni/v1.5.1
+  request_timeout: 10000
+  request_redirect_limit: 5
+  request_concurrency: 20
+  request_queue_size: 100
+  request_headers: {}
+  response_max_size: 500000
+  cookies: {}
+  authentication_type: auto
+datastore:
+  report_path: 
+  token: e04d64e9d06bdd31957606068905e6ed
+input:
+  values: {}
+  default_values:
+    name: arachni_name
+    user: arachni_user
+    usr: arachni_user
+    pass: 5543!%arachni_secret
+    txt: arachni_text
+    num: '132'
+    amount: '100'
+    mail: arachni@email.gr
+    account: '12'
+    id: '1'
+  without_defaults: false
+  force: false
+session: {}
+scope:
+  redundant_path_patterns: {}
+  dom_depth_limit: 5
+  exclude_file_extensions: []
+  exclude_path_patterns:
+  - logout
+  - security
+  - login
+  - setup
+  exclude_content_patterns: []
+  include_path_patterns: []
+  restrict_paths: []
+  extend_paths: []
+  url_rewrites: {}
+  page_limit: 5
+browser_cluster:
+  local_storage: {}
+  wait_for_elements: {}
+  pool_size: 6
+  job_timeout: 10
+  worker_time_to_live: 100
+  ignore_images: false
+  screen_width: 1600
+  screen_height: 1200
+audit:
+  parameter_values: true
+  exclude_vector_patterns: []
+  include_vector_patterns: []
+  link_templates: []
+  forms: true
+  cookies: false
+  headers: false
+checks:
+- sql_injection
+- xss_tag
+- csrf
+- code_injection_timing
+- ldap_injection
+- session_fixation
+- no_sql_injection
+- xss_event
+- xss
+- response_splitting
+- xss_dom
+- sql_injection_differential
+- xss_script_context
+- code_injection_php_input_wrapper
+- xpath_injection
+- xss_dom_script_context
+- unvalidated_redirect
+- os_cmd_injection
+- no_sql_injection_differential
+- code_injection
+- trainer
+- file_inclusion
+- xxe
+- unvalidated_redirect_dom
+- os_cmd_injection_timing
+- xss_path
+- rfi
+- source_code_disclosure
+- path_traversal
+- sql_injection_timing
+- webdav
+- backdoors
+- directory_listing
+- xst
+- htaccess_limit
+- insecure_cross_domain_policy_access
+- http_put
+- common_directories
+- insecure_cross_domain_policy_headers
+- interesting_responses
+- backup_directories
+- localstart_asp
+- allowed_methods
+- backup_files
+- origin_spoof_access_restriction_bypass
+- password_autocomplete
+- insecure_cookies
+- http_only_cookies
+- captcha
+- hsts
+- emails
+- cookie_set_for_parent_domain
+- mixed_resource
+- unencrypted_password_forms
+- ssn
+- private_ip
+- insecure_cors_policy
+- form_upload
+- x_frame_options
+- credit_card
+- html_objects
+- cvs_svn_users
+- insecure_client_access_policy
+- common_files
+- common_admin_interfaces
+platforms: []
+plugins: {}
+no_fingerprinting: false
+authorized_by: 
+url: http://crackme.cenzic.com/
+--------------------------------------------------------------------------------
+[2019-07-04 09:47:24 +0800] Giving up trying to audit: http://crackme.cenzic.com/
+[2019-07-04 09:47:24 +0800] Couldn't get a response after 5 tries: Couldn't connect to server.
