@@ -1,6 +1,21 @@
 FROM ubuntu:16.04
-
 MAINTAINER Ben Lu
+
+RUN apt-get update;\
+apt-get install -y git sudo
+RUN git clone https://github.com/luben3485/WISE-PaaS-security.git
+RUN sudo apt-get update;\
+     sudo apt-get -y upgrade;\
+     sudo apt-get install -y python3 python3-pip
+
+RUN mkdir /WISE-PaaS-security/arachni/system/arachni-ui-web/tmp;\ 
+	chmod a+rwx -R /WISE-PaaS-security
+
+
+
+
+
+
 
 ENV SERVER_ROOT_PASSWORD arachni
 ENV ARACHNI_USERNAME arachni
