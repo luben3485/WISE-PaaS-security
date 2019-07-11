@@ -12,8 +12,7 @@ $(document).ready(function(){
     }).done(function (user) {
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
-        //forcelogin();
-         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+        //window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
         console.log('User is not logged in!');
     });
     
@@ -27,46 +26,10 @@ $(document).ready(function(){
             closable  : false,
             onDeny    : function(){
                 window.location.href = "https://wise-paas.advantech.com/en-us/marketplace";
-        
-        /*
-        $.ajax({
-        url: 'https://portal-sso.wise-paas.io/v2.0/auth/native',
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin":"*"
-        },
-        data: {
-            "username":"Ben.Lu@advantech.com.tw",
-            "password":""    
-        },
-        xhrFields: {
-            withCredentials: true
-        }
-    }).done(function (res) {
-        alert(res);
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-        alert(textStatus+":)");
-    });
-        
-        */
-
-        /*
-        var d = new Date();
-        d.setTime(d.getTime()+(60*60*1000));
-        var expires = "expires="+d.toGMTString();
-        cvalue = "tokenbrabrabra~~~"
-        document.cookie = "EIToken" + "=" + cvalue + "; "// + expires+";domain=.wise-paas.io; path=/";
-
-        alert(document.cookie);
-        */
-        
-        
                 return false;
             },
             onApprove : function() {
                 //window.alert('Approved!');
-                //window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
                 window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
         
             }
@@ -106,8 +69,7 @@ $(document).ready(function(){
                         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;    
                     }else{
                         id = response.id;
-				        message = response.message;
-                        alert('id:' + id + ' message:'+ message);
+                        alert('id:'+id);
                     }
                 }
           
@@ -121,49 +83,6 @@ $(document).ready(function(){
         
         
         
-        
-        
-	});
-    
-	$('#deleteScan').click(function(){
-        
-        $.ajax({
-            url: ssoUrl + '/v2.0/users/me',
-            method: 'GET',
-            xhrFields: {
-                withCredentials: true
-            }
-        }).done(function (user) {
-            
-            $.ajax({
-                url: '/deleteScan',
-                type: 'GET',
-                data: {
-                    'id':id,
-                },
-                xhrFields: {
-                    withCredentials: true
-                },
-                error: function(xhr) {
-                    alert('Ajax deleteScan error');
-                },
-                success: function(response) {
-                    if(response.code == 401){
-                        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;    
-                    }else{
-					   message = response.message;
-         			    alert(message);
-                    }
-		 		}
-          
-            });
-    
-            console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /deleteScan');
-        }).fail(function () {
-            //forcelogin();
-            window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-            console.log('User is not logged in! /deleteScan');
-        });    
         
         
 	});
@@ -195,10 +114,10 @@ $(document).ready(function(){
                     if(response.code == 401){
                         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;    
                     }else{
-					   var len = response.items.length
+					   var len = response.issues.length
 					   var str="";
 					   for(var i=0;i<len;i++){
-						  str = str + response.items[i].name+"\n"
+						  str = str + response.issues[i].name+"\n"
 					   }
 					   alert(str);
                     }
