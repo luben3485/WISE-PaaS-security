@@ -3,7 +3,7 @@
 import random
 import os
 from flask import Flask,request
-from flask import jsonify
+from flask import jsonify,abort
 import requests
 import json
 ssoUrl = 'https://portal-sso.wise-paas.io'
@@ -32,11 +32,14 @@ def startScan():
 		message = response['message']
 		if message == "Success":
 			result = {'message':message,'id':response['id']}
+			return jsonify(result)
 		else:
 			result = {'message':'fail','id':-1}
+			return jsonify(result)
 	else:
 		result = {'code':401}
-	return jsonify(result)
+		return jsonify(result)
+
 		
 
 @app.route('/getScanResult')
@@ -47,11 +50,11 @@ def getScanResult():
 		id = request.args.get('id')
 		response = requests.get('https://127.0.0.1:5000/scans/'+id+'/kb/',
                         verify=False)
-		response = response.json()
+		result = response.json()
+		return jsonify(result)
 	else:
 		result = {'code':401}
-	
-	return jsonify(response)
+		return jsonify(result)
 
 @app.route('/deleteScan')
 def deleteScan():
@@ -62,10 +65,10 @@ def deleteScan():
 		response = requests.delete('https://127.0.0.1:5000/scans/'+id,verify=False) 
 		response = response.json()
 		result = {'message':response['message']}
+		return jsonify(result)
 	else:
 		result = {'code':401}
-	
-	return jsonify(result)
+		return jsonify(result)
 if __name__ == '__main__':
 	#app.run()
 	app.run(host='0.0.0.0',port=8080,debug=False)

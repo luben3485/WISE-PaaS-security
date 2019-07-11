@@ -12,7 +12,8 @@ $(document).ready(function(){
     }).done(function (user) {
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
-        forcelogin();
+        //forcelogin();
+         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
         console.log('User is not logged in!');
     });
     
@@ -101,15 +102,20 @@ $(document).ready(function(){
                     alert('Ajax startScan error');
                 },
                 success: function(response) {
-                    id = response.id;
-				    message = response.message;
-                    alert('id:' + id + ' message:'+ message);
+                    if(response.code == 401){
+                        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;    
+                    }else{
+                        id = response.id;
+				        message = response.message;
+                        alert('id:' + id + ' message:'+ message);
+                    }
                 }
           
         });	  
         console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /startScan');
     }).fail(function () {
-        forcelogin();
+        //forcelogin();
+        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
         console.log('User is not logged in! /startScan');
     });    
         
@@ -142,15 +148,20 @@ $(document).ready(function(){
                     alert('Ajax deleteScan error');
                 },
                 success: function(response) {
-					message = response.message;
-         			alert(message);
+                    if(response.code == 401){
+                        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;    
+                    }else{
+					   message = response.message;
+         			    alert(message);
+                    }
 		 		}
           
             });
     
             console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /deleteScan');
         }).fail(function () {
-            forcelogin();
+            //forcelogin();
+            window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
             console.log('User is not logged in! /deleteScan');
         });    
         
@@ -181,21 +192,24 @@ $(document).ready(function(){
                     alert('Ajax getScanResult error');
                 },
                 success: function(response) {
-
-					var len = response.items.length
-					var str="";
-					for(var i=0;i<len;i++){
-						str = str + response.items[i].name+"\n"
-	
-					}
-					alert(str);
+                    if(response.code == 401){
+                        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;    
+                    }else{
+					   var len = response.items.length
+					   var str="";
+					   for(var i=0;i<len;i++){
+						  str = str + response.items[i].name+"\n"
+					   }
+					   alert(str);
+                    }
                 }
           
             });
     
             console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /getScanResult');
         }).fail(function () {
-            forcelogin();
+            //forcelogin();
+            window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
             console.log('User is not logged in! /getScanResult');
         });            
         
