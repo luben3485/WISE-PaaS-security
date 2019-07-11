@@ -28,6 +28,7 @@ def startScan():
 		data=json.dumps(data),
 		headers={'content-type': 'application/json'},verify=False)
 	
+		#print(response)
 		response = response.json()
 		message = response['message']
 		if message == "Success":
@@ -48,10 +49,13 @@ def getScanResult():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		id = request.args.get('id')
-		response = requests.get('https://127.0.0.1:5000/scans/'+id+'/kb/',
-                        verify=False)
-		result = response.json()
-		return jsonify(result)
+		if id:
+			response = requests.get('https://127.0.0.1:5000/scans/'+str(id)+'/kb/',verify=False)
+			response = response.json()
+			return jsonify(response)
+		else:
+			abort(404)
+
 	else:
 		result = {'code':401}
 		return jsonify(result)
@@ -62,10 +66,14 @@ def deleteScan():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		id = request.args.get('id')
-		response = requests.delete('https://127.0.0.1:5000/scans/'+id,verify=False) 
-		response = response.json()
-		result = {'message':response['message']}
-		return jsonify(result)
+		if id:
+			response = requests.delete('https://127.0.0.1:5000/scans/'+str(id),verify=False) 
+			response = response.json()
+			result = {'message':response['message']}
+			return jsonify(result)
+		else:
+			abort(404)
+
 	else:
 		result = {'code':401}
 		return jsonify(result)
