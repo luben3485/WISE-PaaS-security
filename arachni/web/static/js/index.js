@@ -12,7 +12,7 @@ $(document).ready(function(){
     }).done(function (user) {
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
-        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+        //window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
         console.log('User is not logged in!');
     });
     
