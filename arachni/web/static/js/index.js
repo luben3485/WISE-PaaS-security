@@ -105,6 +105,9 @@ $(document).ready(function(){
         $.ajax({
             url: ssoUrl + '/v2.0/users/me',
             method: 'GET',
+            data: {
+                    'scanOption':1,
+                },
             xhrFields: {
                 withCredentials: true
             }
@@ -113,9 +116,6 @@ $(document).ready(function(){
             $.ajax({
                 url: '/getScanResult',
                 type: 'GET',
-                data: {
-                    'id':id,
-                },
                 xhrFields: {
                     withCredentials: true
                 },
