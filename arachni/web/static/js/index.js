@@ -1,5 +1,4 @@
 $(document).ready(function(){
-    var id = 0;
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
     var ssoUrl = 'https://portal-sso.wise-paas.io';
