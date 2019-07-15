@@ -11,9 +11,12 @@ app = Flask(__name__,static_url_path='',root_path=os.getcwd())
 print(os.path.join(os.getcwd(), "static"))
 
 @app.route('/')
+def home():
+	return app.send_static_file('home.html')
+
+@app.route('/report')
 def index():
 	return app.send_static_file('index.html')
-
 
 @app.route('/startScan')
 def startScan():
@@ -68,8 +71,13 @@ def getScanResult():
 		id = request.args.get('id')
 		if id:
 			response = requests.get('http://127.0.0.1:5000/scans/'+str(id)+'/report')
-			response = response.json()
-			return jsonify(response)
+			z = zipfile.ZipFile(io.BytesIO(response.content))
+			for filename in z.namelist():
+				z.extract(filename, path="static/", pwd=None)
+
+			#response = response.json()
+			#return jsonify(response)
+			return jsonify({'code':200})
 		else:
 			abort(404)
 

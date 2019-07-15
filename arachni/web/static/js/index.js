@@ -113,7 +113,13 @@ $(document).ready(function(){
                 success: function(response) {
                     if(response.code == 401){
                         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;    
-                    }else{
+                    }else if(response.code == 200){
+                         window.location.href =  myUrl+'/report'; 
+                        
+                    }
+                    
+                    /*
+                    else{
 					   var len = response.issues.length
 					   var str="";
 					   for(var i=0;i<len;i++){
@@ -121,6 +127,7 @@ $(document).ready(function(){
 					   }
 					   alert(str);
                     }
+                    */
                 }
           
             });
