@@ -42,7 +42,7 @@ $(document).ready(function(){
     
 
 	$('#startScan').click(function(){
-    
+        $("ui dimmer").addClass("active");
         $.ajax({
         url: ssoUrl + '/v2.0/users/me',
         method: 'GET',
@@ -62,9 +62,14 @@ $(document).ready(function(){
                     withCredentials: true
                 },
                 error: function(xhr) {
+                    //$(".ui dimmer").removeClass("active");
+                    //$(".ui negative message").css("display","block"); 
                     alert('Ajax startScan error');
                 },
                 success: function(response) {
+                    //$(".ui dimmer").removeClass("active");
+                    //$(".ui success message").css("display","block"); 
+                    
                     /*if(response.code == 401){
                         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;    
                     }else{
@@ -72,14 +77,19 @@ $(document).ready(function(){
                         alert('id:'+id);
                         
                     }*/
-                    alert('Set scan id in cookie!');
+                    
+                    alert('Start a new scan\n Set scan id in cookie!');
                 }
           
         });	  
         console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /startScan');
     }).fail(function () {                
         //forcelogin();
-         
+        //
+        
+            //$(".ui success message").css("display","block"); 
+            
+        //
         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
         console.log('User is not logged in! /startScan');
     });    

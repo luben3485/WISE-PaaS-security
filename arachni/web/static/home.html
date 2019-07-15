@@ -25,6 +25,9 @@
           </div>
         </div>
         
+        <div class="ui  dimmer">
+            <div class="ui massive text loader">Loading</div>
+        </div>
         
         <div class="ui grid">
             <div class="four wide column"></div>
@@ -58,11 +61,36 @@
                     </button>
                     <button id="getScanResult" class="ui green button" style="font-size:20px;">
                         Get result
-                    </button>
+                    </button>    
+                    
+                </div>
+            
+                
+                    <div id="succ" class="ui success message " style="display:none;">
+                        <i class="close icon"></i>
+                        <div class="header">
+                            Start a new scan successfully.
+                        </div>
+                    </div>
+                
+                
+                    <div id="fail" class="ui negative message " style="display:none;">
+                        <i class="close icon"></i>
+                        <div class="header">
+                            Failed.
+                        </div>
+                    </div>
+                
+                
                 
                 </div>
+                
+                
+                
             </div>
             <div class="four wide column"></div>
+            
+            
         </div>
         
         
