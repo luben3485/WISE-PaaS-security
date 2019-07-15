@@ -56,7 +56,7 @@ def startScan():
 			response = response.json()
 			#result = {'id':response['id']}
 			#return jsonify(result)
-			res_cookie = make_response(redirect('/'))
+			res_cookie = make_response(redirect('/'),200)
 			res_cookie.set_cookie('id', response['id'])
 			return res_cookie
 		else:
