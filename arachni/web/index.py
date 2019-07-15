@@ -79,8 +79,7 @@ def getScanResult():
 			response = requests.get('http://127.0.0.1:5000/scans/'+str(id)+'/report.html.zip')
 			z = zipfile.ZipFile(io.BytesIO(response.content))
 			for filename in z.namelist():
-				if filename == "index.html":
-					z.extract(filename, path="static/", pwd=None)
+				z.extract(filename, path="static/", pwd=None)
 
 			#response = response.json()
 			#return jsonify(response)
