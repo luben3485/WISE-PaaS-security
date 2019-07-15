@@ -6,6 +6,7 @@ from flask import Flask,request
 from flask import jsonify,abort
 import requests
 import json
+import zipfile,io
 ssoUrl = 'https://portal-sso.wise-paas.io'
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 print(os.path.join(os.getcwd(), "static"))
@@ -70,7 +71,7 @@ def getScanResult():
 	if res.status_code == 200:
 		id = request.args.get('id')
 		if id:
-			response = requests.get('http://127.0.0.1:5000/scans/'+str(id)+'/report')
+			response = requests.get('http://127.0.0.1:5000/scans/'+str(id)+'/report.html.zip')
 			z = zipfile.ZipFile(io.BytesIO(response.content))
 			for filename in z.namelist():
 				z.extract(filename, path="static/", pwd=None)
