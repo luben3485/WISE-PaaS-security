@@ -1,6 +1,7 @@
 import argparse
 import requests
 import json
+import zipfile,io
 
 def process_command():
 	parser = argparse.ArgumentParser()
@@ -42,10 +43,11 @@ if __name__ == '__main__':
 	elif args.scanmethod == "result":
 		response = requests.get('http://' + args.address  + '/scans/'+args.id+'/report')
 		print(response.text)
-
- 
-
-
-
+	elif args.scanmethod == "resulthtml":
+		response = requests.get('http://' + args.address  + '/scans/'+args.id+'/report.html.zip')
+		z = zipfile.ZipFile(io.BytesIO(response.content))
+		#print(z.namelist())
+		for filename in z.namelist():
+				z.extract(filename, path="static/", pwd=None)
 
 
