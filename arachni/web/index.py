@@ -53,12 +53,12 @@ def startScan():
 		response = requests.post('http://127.0.0.1:5000/scans',data=json.dumps(data),headers={'content-type': 'application/json'})
 
 		if response.status_code == 200:
-			#response = response.json()
+			response = response.json()
 			#result = {'id':response['id']}
 			#return jsonify(result)
-			res = make_response(redirect('/'))
-			res.set_cookie('id', response['id'])
-			return res
+			res_cookie = make_response(redirect('/'))
+			res_cookie.set_cookie('id', response['id'])
+			return res_cookie
 		else:
 			abort(500)
 	else:
