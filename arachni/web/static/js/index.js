@@ -65,12 +65,14 @@ $(document).ready(function(){
                     alert('Ajax startScan error');
                 },
                 success: function(response) {
-                    if(response.code == 401){
+                    /*if(response.code == 401){
                         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;    
                     }else{
                         id = response.id;
                         alert('id:'+id);
-                    }
+                        
+                    }*/
+                    alert('Set scan id in cookie!');
                 }
           
         });	  

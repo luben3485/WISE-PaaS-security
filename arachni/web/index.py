@@ -2,8 +2,8 @@
 
 import random
 import os
-from flask import Flask,request
-from flask import jsonify,abort
+from flask import Flask,request,redirect
+from flask import jsonify,abort,Response, make_response
 import requests
 import json
 import zipfile,io
@@ -53,14 +53,18 @@ def startScan():
 		response = requests.post('http://127.0.0.1:5000/scans',data=json.dumps(data),headers={'content-type': 'application/json'})
 
 		if response.status_code == 200:
-			response = response.json()
-			result = {'id':response['id']}
-			return jsonify(result)
+			#response = response.json()
+			#result = {'id':response['id']}
+			#return jsonify(result)
+			res = make_response(redirect('/'))
+			res.set_cookie('id', response['id'])
+			return res
 		else:
 			abort(500)
 	else:
-		result = {'code':401}
-		return jsonify(result)
+		abort(401)
+		#result = {'code':401}
+		#return jsonify(result)
 
 		
 
@@ -69,12 +73,14 @@ def getScanResult():
 	EIToken =request.cookies.get('EIToken')  
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
-		id = request.args.get('id')
+		#id = request.args.get('id')
+		id=request.cookies.get('id')
 		if id:
 			response = requests.get('http://127.0.0.1:5000/scans/'+str(id)+'/report.html.zip')
 			z = zipfile.ZipFile(io.BytesIO(response.content))
 			for filename in z.namelist():
-				z.extract(filename, path="static/", pwd=None)
+				if filename == "index.html":
+					z.extract(filename, path="static/", pwd=None)
 
 			#response = response.json()
 			#return jsonify(response)
