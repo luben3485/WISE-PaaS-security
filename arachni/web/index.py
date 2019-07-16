@@ -49,18 +49,23 @@ def startScan():
 		}
 		}
 		
-		print(json.dumps(data))
-		response = requests.post('http://127.0.0.1:5000/scans',data=json.dumps(data),headers={'content-type': 'application/json'})
+		#print(json.dumps(data))
+		try:
+			response = requests.post('http://127.0.0.1:5000/scans',data=json.dumps(data),headers={'content-type': 'application/json'})
 
-		if response.status_code == 200:
-			response = response.json()
-			#result = {'id':response['id']}
-			#return jsonify(result)
-			res_cookie = make_response(redirect('/'),200)
-			res_cookie.set_cookie('id', response['id'])
-			return res_cookie
-		else:
+			if response.status_code == 200:
+				response = response.json()
+				#result = {'id':response['id']}
+				#return jsonify(result)
+				res_cookie = make_response(redirect('/'),200)
+				res_cookie.set_cookie('id', response['id'])
+				return res_cookie
+			else:
+				abort(500)
+		except Exception as err:
+			print('error: {}'.format(str(err)))
 			abort(500)
+		
 	else:
 		abort(401)
 		#result = {'code':401}
@@ -75,17 +80,25 @@ def getScanResult():
 	if res.status_code == 200:
 		#id = request.args.get('id')
 		id=request.cookies.get('id')
-		if id:
-			response = requests.get('http://127.0.0.1:5000/scans/'+str(id)+'/report.html.zip')
-			z = zipfile.ZipFile(io.BytesIO(response.content))
-			for filename in z.namelist():
-				z.extract(filename, path="static/", pwd=None)
+		try:
+			if id:
+				response = requests.get('http://127.0.0.1:5000/scans/'+str(id)+'/report.html.zip')	
+				command = "rm -r "+os.path.join(os.getcwd())+"static/js" +os.path.join(os.getcwd())+"static/css " + os.path.join(os.getcwd())+"static/index.html"
+				result = os.system(command)
+				if result ==0:
+					z = zipfile.ZipFile(io.BytesIO(response.content))
+					for filename in z.namelist():
+						z.extract(filename, path="static/", pwd=None)
+					return jsonify({'code':200,'remove':1})
+				else:
+					print('remove error')
+					return jsonify({'code':200,'remove':0})
+				#response = response.json()
+				#return jsonify(response)
 
-			#response = response.json()
-			#return jsonify(response)
-			return jsonify({'code':200})
-		else:
-			abort(404)
+		except Exception as err:
+			print('error: {}'.format(str(err)))
+			abort(500)
 
 	else:
 		abort(401)
