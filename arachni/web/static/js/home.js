@@ -63,7 +63,7 @@ $(document).ready(function(){
                 error: function(xhr) {
                     //$(".ui dimmer").removeClass("active");
                     //$(".ui negative message").css("display","block"); 
-                    alert('Ajax startScan error');
+                    alert('Ajax /startScan error');
                 },
                 success: function(response) {
                     //$(".ui dimmer").removeClass("active");
@@ -120,7 +120,7 @@ $(document).ready(function(){
                     withCredentials: true
                 },
                 error: function(xhr) {
-                    alert('Ajax getScanResult error');
+                    alert('Ajax /getScanResult error');
                 },
                 success: function(response) {
                     if(response.code == 401){
@@ -145,6 +145,47 @@ $(document).ready(function(){
             });
     
             console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /getScanResult');
+        }).fail(function () {
+            //forcelogin();
+            window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+            console.log('User is not logged in! /getScanResult');
+        });            
+        
+      
+    
+	
+	});
+    
+    $('#downloadReport').click(function(){
+        
+        
+        $.ajax({
+            url: ssoUrl + '/v2.0/users/me',
+            method: 'GET',
+            data: {
+                    'scanOption':1,
+                },
+            xhrFields: {
+                withCredentials: true
+            }
+        }).done(function (user) {
+            
+            $.ajax({
+                url: '/getScanResult',
+                type: 'GET',
+                xhrFields: {
+                    withCredentials: true
+                },
+                error: function(xhr) {
+                    alert('Ajax /downloadReport error');
+                },
+                success: function(response) {
+                    console.log("Ajax /downloadReport success!")
+                }
+          
+            });
+    
+            console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /downloadReport');
         }).fail(function () {
             //forcelogin();
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;

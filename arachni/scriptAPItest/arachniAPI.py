@@ -48,6 +48,6 @@ if __name__ == '__main__':
 		z = zipfile.ZipFile(io.BytesIO(response.content))
 		#print(z.namelist())
 		for filename in z.namelist():
-				z.extract(filename, path="static/", pwd=None)
+			z.extract(filename, path="static/", pwd=None)
 
 

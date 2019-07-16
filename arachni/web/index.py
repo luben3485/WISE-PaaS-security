@@ -88,8 +88,32 @@ def getScanResult():
 			abort(404)
 
 	else:
-		result = {'code':401}
-		return jsonify(result)
+		abort(401)
+		#result = {'code':401}
+		#return jsonify(result)
+
+@app.route('/downloadReport')
+def downloadReport():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		id=request.cookies.get('id')
+		try:
+			r = requests.get('http://127.0.0.1:5000/scans/'+args.id+'/report.html.zip')
+			if r.status_code != 200:
+				raise Exception("Cannot connect with oss server or file is not existed")
+			response = make_response(r.content,200)
+			response.headers['Content-Type'] = 'application/zip'
+			response.headers['Content-Disposition'] = 'attachment; filename={}'.format('arachni_scan_report.zip')
+			return response
+		except Exception as err:
+			print('download_file error: {}'.format(str(err)))
+			abort(500)
+
+	else:
+		abort(401)
+		#result = {'code':401}
+		#return jsonify(result)
 
 if __name__ == '__main__':
 	#app.run()
