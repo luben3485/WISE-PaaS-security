@@ -75,7 +75,20 @@ def getScanResult():
 			z = zipfile.ZipFile(io.BytesIO(response.content))
 			for filename in z.namelist():
 				z.extract(filename, path="static/", pwd=None)
-
+			#garbage method
+			'''
+			f = open("static/index.html","r+")
+			f.seek(42,0)
+			str1 = '<META HTTP-EQUIV="pragma" CONTENT="no-cache">'
+			str2 = '< META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">'
+			str3 = '< META HTTP-EQUIV="expires" CONTENT="Wed, 26 Feb 1997 08:21:57 GMT">'
+			f.write(str1)
+			f.write(str2)
+			f.write(str3)
+			for i in range(25):
+				f.write(" ")
+			f.close()
+			'''
 			return jsonify({'code':200,'ret':ret})
 
 	except Exception as err:

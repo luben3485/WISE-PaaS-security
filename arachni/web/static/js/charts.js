@@ -1,9 +1,9 @@
 function index_to_shortname( index ){
-    return ["unencrypted_password_forms","password_autocomplete","common_files","x_frame_options","interesting_responses","allowed_methods"][index];
+    return [][index];
 }
 
 function index_to_severity( index ){
-    return {"unencrypted_password_forms":"medium","password_autocomplete":"low","common_files":"low","x_frame_options":"low","interesting_responses":"informational","allowed_methods":"informational"}[index_to_shortname(index)];
+    return {}[index_to_shortname(index)];
 }
 
 function renderCharts() {
@@ -14,9 +14,9 @@ function renderCharts() {
         bindto: '#chart-issues',
         data: {
             columns: [
-                ["Trusted",1,1,1,1,1,1],
-                ["Untrusted",0,0,0,0,0,0],
-                ["Severity",3,2,2,2,1,1]
+                ["Trusted"],
+                ["Untrusted"],
+                ["Severity"]
             ],
             axes: {
                 Severity: 'y2'
@@ -41,11 +41,11 @@ function renderCharts() {
                 goToLocation( location );
             }
         },
-        regions: [{"class":"severity-medium","start":0,"end":0},{"class":"severity-low","start":1,"end":3},{"class":"severity-informational","start":4}],
+        regions: [],
         axis: {
             x: {
                 type: 'category',
-                categories: ["Unencrypted password form","Password field with auto-complete","Common sensitive file","Missing 'X-Frame-Options' header","Interesting response","Allowed HTTP methods"],
+                categories: [],
                 tick: {
                     rotate: 15
                 }
@@ -83,7 +83,7 @@ function renderCharts() {
         bindto: '#chart-trust',
         data: {
             type: 'pie',
-            columns: [["Trusted",6],["Untrusted",0]]
+            columns: [["Trusted",0],["Untrusted",0]]
         },
         pie: {
             onclick: function (d) { goToLocation( 'summary/issues/' + d.id.toLowerCase() ) }
@@ -97,7 +97,7 @@ function renderCharts() {
         bindto: '#chart-elements',
         data: {
             type: 'pie',
-            columns: [["form",2],["server",4]]
+            columns: []
         }
     });
 
@@ -105,7 +105,7 @@ function renderCharts() {
         bindto: '#chart-severities',
         data: {
             type: 'pie',
-            columns: [["medium",1],["low",3],["informational",2]]
+            columns: []
         },
         color: {
             pattern: [ '#d62728', '#ff7f0e', '#ffbb78', '#1f77b4' ]

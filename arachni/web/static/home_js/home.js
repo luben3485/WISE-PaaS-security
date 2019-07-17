@@ -130,7 +130,7 @@ $(document).ready(function(){
                         console.log(response.ret)
 
                         window.location.href =  myUrl+'/report'; 
-                    
+                    }
                     /*
                     else{
 					   var len = response.issues.length
