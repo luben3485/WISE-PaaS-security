@@ -2,7 +2,7 @@ $(document).ready(function(){
 	var message;
     var port = 8080
     var myUrl = window.location.protocol + '//' + window.location.hostname+':'+port;
-    var ssoUrl = 'https://portal-sso.wise-paas.io';
+    //var ssoUrl = 'https://portal-sso.wise-paas.io';
  
     function forcelogin() {
     
@@ -23,7 +23,46 @@ $(document).ready(function(){
     
     }
     
+    $.ajax({
+                url: '/setSSOurl',
+                type: 'GET',
+                data: {
+                    'scanOption':1,
+                },
+                xhrFields: {
+                    withCredentials: true
+                },
+                error: function(xhr) {
+                    alert('Ajax /setSSOurl error');
+                },
+                success: function(response) {
+                    
+                    console.log('setSSOurl success');
+                    var ssoUrl = getCookie('ssoUrl');
+                    alert(ssoUrl)
+                    
+                }
+          
+        });	  
     
+    
+    
+    
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
 
 	$('#startScan').click(function(){
         

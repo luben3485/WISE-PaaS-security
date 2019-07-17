@@ -20,6 +20,14 @@ def home():
 def index():
 	return app.send_static_file('index.html')
 
+
+@app.route('/setSSOurl')
+def setSSOurl():
+	res_cookie = make_response(redirect('/'),200)
+	res_cookie.set_cookie('ssoUrl', 'http://abc.def.ghw')
+	return res_cookie
+
+
 @app.route('/startScan')
 def startScan():
 	url = request.args.get('url')
