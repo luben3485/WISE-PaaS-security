@@ -113,7 +113,7 @@ def downloadReport():
 	if res.status_code == 200:
 		id=request.cookies.get('id')
 		try:
-			r = requests.get('http://127.0.0.1:5000/scans/'+args.id+'/report.html.zip')
+			r = requests.get('http://127.0.0.1:5000/scans/'+str(id)+'/report.html.zip')
 			if r.status_code != 200:
 				raise Exception("Cannot connect with oss server or file is not existed")
 			response = make_response(r.content,200)
