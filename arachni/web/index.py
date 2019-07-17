@@ -10,7 +10,8 @@ import zipfile,io
 import subprocess
 
 
-ssoUrl=os.environ.get('ssoUrl') or 'https://portal-sso.wise-paas.io'
+#ssoUrl=os.environ.get('ssoUrl') or 'https://portal-sso.wise-paas.io'
+ssoUrl=os.environ['SSO_URL']
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 print(os.path.join(os.getcwd(), "static"))
 
@@ -25,7 +26,7 @@ def index():
 @app.route('/setSSOurl')
 def setSSOurl():
 	res_cookie = make_response(redirect('/'),200)
-	res_cookie.set_cookie('ssoUrl', ssoUrl)
+	res_cookie.set_cookie('SSO_URL', ssoUrl)
 	return res_cookie
 
 @app.route('/startScan')

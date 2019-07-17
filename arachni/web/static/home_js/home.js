@@ -19,7 +19,8 @@ $(document).ready(function(){
                 success: function(response) {
                     
                     console.log('setSSOurl success');
-                    var ssoUrl = getCookie('ssoUrl');
+                    var ssoUrl = getCookie('SSO_URL');
+                    alert(ssoUrl);
                     $.ajax({
                         url: ssoUrl + '/v2.0/users/me',
                         method: 'GET',
@@ -29,7 +30,7 @@ $(document).ready(function(){
                     }).done(function (user) {
                         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
                     }).fail(function () {
-                        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+                        //window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
                         console.log('User is not logged in!');
                     });
                     
