@@ -84,18 +84,15 @@ def getScanResult():
 		try:
 			if id:
 
-				#command = "rm -r "+os.path.join(os.getcwd())+"static/js" +os.path.join(os.getcwd())+"static/css " + os.path.join(os.getcwd())+"static/index.html"
-				command =  "rm -r static/index.html"
+				command = "rm -r "+os.path.join(os.getcwd())+"static/js" +os.path.join(os.getcwd())+"static/css " + os.path.join(os.getcwd())+"static/index.html"
+				#command =  "rm -r static/index.html"
 				process = subprocess.Popen(command,shell=True)
 				ret = process.wait()
-				if ret ==0:
-					response = requests.get('http://127.0.0.1:5000/scans/'+str(id)+'/report.html.zip')	
-					z = zipfile.ZipFile(io.BytesIO(response.content))
-					for filename in z.namelist():
-						z.extract(filename, path="static/", pwd=None)
-					return jsonify({'code':200,ret:0})
-				else:
-					return jsonify({'code':200,ret:1})
+				response = requests.get('http://127.0.0.1:5000/scans/'+str(id)+'/report.html.zip')	
+				z = zipfile.ZipFile(io.BytesIO(response.content))
+				for filename in z.namelist():
+					z.extract(filename, path="static/", pwd=None)
+				return jsonify({'code':200,'ret':ret})
 
 		except Exception as err:
 			print('error: {}'.format(str(err)))

@@ -116,6 +116,7 @@ $(document).ready(function(){
             $.ajax({
                 url: '/getScanResult',
                 type: 'GET',
+                cache: false,
                 xhrFields: {
                     withCredentials: true
                 },
@@ -126,14 +127,9 @@ $(document).ready(function(){
                     if(response.code == 401){
                         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;    
                     }else if(response.code == 200){
-                        if(response.ret==0){
-                            console.log('remove success');
-                        }else if(response.ret==1){
-                            console.log('remove fail');
-                        }
+                        console.log(response.ret)
+
                         window.location.href =  myUrl+'/report'; 
-                        
-                    }
                     
                     /*
                     else{
@@ -175,21 +171,7 @@ $(document).ready(function(){
             }
         }).done(function (user) {
             
-            $.ajax({
-                url: '/getScanResult',
-                type: 'GET',
-                xhrFields: {
-                    withCredentials: true
-                },
-                error: function(xhr) {
-                    alert('Ajax /downloadReport error');
-                },
-                success: function(response) {
-                    console.log("Ajax /downloadReport success!")
-                }
-          
-            });
-    
+            window.location.href = myUrl + '/downloadReport';
             console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /downloadReport');
         }).fail(function () {
             //forcelogin();
