@@ -7,6 +7,7 @@ from flask import jsonify,abort,Response, make_response
 import requests
 import json
 import zipfile,io
+import subprocess
 ssoUrl = 'https://portal-sso.wise-paas.io'
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 print(os.path.join(os.getcwd(), "static"))
@@ -82,19 +83,19 @@ def getScanResult():
 		id=request.cookies.get('id')
 		try:
 			if id:
-				response = requests.get('http://127.0.0.1:5000/scans/'+str(id)+'/report.html.zip')	
-				command = "rm -r "+os.path.join(os.getcwd())+"static/js" +os.path.join(os.getcwd())+"static/css " + os.path.join(os.getcwd())+"static/index.html"
-				result = os.system(command)
-				if result ==0:
+
+				#command = "rm -r "+os.path.join(os.getcwd())+"static/js" +os.path.join(os.getcwd())+"static/css " + os.path.join(os.getcwd())+"static/index.html"
+				command =  "rm -r static/index.html"
+				process = subprocess.Popen(command,shell=True)
+				ret = process.wait()
+				if ret ==0:
+					response = requests.get('http://127.0.0.1:5000/scans/'+str(id)+'/report.html.zip')	
 					z = zipfile.ZipFile(io.BytesIO(response.content))
 					for filename in z.namelist():
 						z.extract(filename, path="static/", pwd=None)
-					return jsonify({'code':200,'remove':1})
+					return jsonify({'code':200,ret:0})
 				else:
-					print('remove error')
-					return jsonify({'code':200,'remove':0})
-				#response = response.json()
-				#return jsonify(response)
+					return jsonify({'code':200,ret:1})
 
 		except Exception as err:
 			print('error: {}'.format(str(err)))

@@ -126,7 +126,12 @@ $(document).ready(function(){
                     if(response.code == 401){
                         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;    
                     }else if(response.code == 200){
-                         window.location.href =  myUrl+'/report'; 
+                        if(response.ret==0){
+                            console.log('remove success');
+                        }else if(response.ret==1){
+                            console.log('remove fail');
+                        }
+                        window.location.href =  myUrl+'/report'; 
                         
                     }
                     
