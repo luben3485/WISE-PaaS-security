@@ -2,8 +2,6 @@ $(document).ready(function(){
     
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
-    //console.log(myUrl)
-    //var ssoUrl = 'https://portal-sso.wise-paas.io';
     
     $.ajax({
                 url: '/setSSOurl',

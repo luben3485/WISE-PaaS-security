@@ -1,9 +1,9 @@
 ---
 applications:
-- name: zap-security-3
+- name: zap-security-web
   memory: 1024M
   instances: 1
-  disk_quota: 2G
+  disk_quota: 3G
   docker:
     image: luben3485/zap:latest
   env:
