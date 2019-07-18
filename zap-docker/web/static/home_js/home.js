@@ -2,7 +2,7 @@ $(document).ready(function(){
     
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
-    console.log(myUrl)
+    //console.log(myUrl)
     //var ssoUrl = 'https://portal-sso.wise-paas.io';
     
     $.ajax({
@@ -31,7 +31,6 @@ $(document).ready(function(){
                         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
                     }).fail(function () {
                         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-                        console.log('User is not logged in!');
                     });
                     
                 }
