@@ -1,0 +1,10 @@
+---
+applications:
+- name: arachni-security
+  memory: 1024M
+  instances: 1
+  disk_quota: 2G
+  docker:
+    image: luben3485/arachni:latest
+  env:
+    SSO_URL: https://portal-sso.arfa.wise-paas.com

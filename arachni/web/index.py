@@ -10,8 +10,7 @@ import zipfile,io
 import subprocess
 
 
-#ssoUrl=os.environ.get('ssoUrl') or 'https://portal-sso.wise-paas.io'
-ssoUrl=os.environ['SSO_URL']
+ssoUrl=os.environ.get('ssoUrl') or 'https://portal-sso.wise-paas.io'
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 print(os.path.join(os.getcwd(), "static"))
 
