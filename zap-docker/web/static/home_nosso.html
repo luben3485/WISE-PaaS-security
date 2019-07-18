@@ -1,0 +1,127 @@
+<DOCTYPE html>
+
+<html>
+    <head>
+        <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+        <!--<link href="css/style.css" rel="stylesheet" type="text/css" >-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/>
+
+    </head>
+    <body>
+        
+        <div class="ui inverted segment" style="margin:0px;">
+          <div class="ui inverted secondary menu">
+            <a class="item">
+              home
+            </a>
+            <a class="item active">
+              Quick scan
+            </a>
+            <a class="item">
+              Advanced scan
+            </a>
+            <a class="item">
+              Setting
+            </a>
+          </div>
+        </div>
+        
+        <div class="ui  dimmer">
+            <div class="ui massive text loader">Loading</div>
+        </div>
+        
+        <div class="ui grid">
+            <div class="four wide column"></div>
+            <div class="eight wide column">
+                <div style="font-size: 4rem;font-family:Arial;">
+                    <p>Start a quick scan</p>                  
+                </div>                
+                <div style="font-size: 1.5rem;font-family:MS Sans Serif;">
+                    <p>The only thing you need to do is provide some basic information and make a simple choice about the type of scan you want to perform.</p>
+</div>
+                <hr>
+                <div class="ui form">
+                    <div class="field">
+                        <div class="two fields">
+                            <div class="field">
+                                <label>Target URL</label>
+                                <input type="text" name="input_url" placeholder="e.g http://testphp.vulnweb.com">
+                            </div>
+                            <div class="field">
+                                <label>Scan Profile</label>
+                                    <select class="ui fluid dropdown">
+                                        <option value="">Default</option>
+                                        <option value="AL">Cross-Site Scripting(XSS)</option>
+                                        <option value="AK">SQL injection</option>
+                                    </select>
+                            </div>
+                        </div>
+                    </div>  
+                    <button id="startScan" class="ui blue button" style="font-size:20px;">
+                        Start
+                    </button>
+                    <button id="getScanResult" class="ui green button" style="font-size:20px;">
+                        Get result
+                    </button>
+                    <button id="downloadReport" class="ui orange button" style="font-size:20px;">
+                        Download
+                    </button>  
+                    
+                </div>
+            
+                
+                    <div id="succ" class="ui success message " style="display:none;">
+                        <i class="close icon"></i>
+                        <div class="header">
+                            Start a new scan successfully.
+                        </div>
+                    </div>
+                
+                
+                    <div id="fail" class="ui negative message " style="display:none;">
+                        <i class="close icon"></i>
+                        <div class="header">
+                            Failed.
+                        </div>
+                    </div>
+                
+                
+                
+                </div>
+                
+                
+                
+            </div>
+            <div class="four wide column"></div>
+            
+            
+        </div>
+        
+        
+        <div class="ui basic modal">
+            <div class="ui icon header">
+                <i class="cloud icon"></i>
+                    WISE-PaaS Security Online Tool
+            </div>
+            <div class="content">
+                <p>Please login to access the page. </p>
+            </div>
+            <div class="actions">
+                <div class="ui red basic cancel inverted button">
+                    <i class="sign out alternate icon"></i>  
+                        Exit
+                </div>
+            <div class="ui green ok inverted button">
+                    <i class="sign in alternate icon"></i>
+                    Login
+                    </div>
+            </div>
+        </div>
+        
+
+        <!--<button type="button" class="btn" id="hi">按鈕</button>-->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="home_js/home_nosso.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>
+    </body>
+</html>
