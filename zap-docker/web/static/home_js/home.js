@@ -2,6 +2,7 @@ $(document).ready(function(){
     
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
+    console.log(myUrl)
     //var ssoUrl = 'https://portal-sso.wise-paas.io';
     
     $.ajax({
@@ -57,7 +58,7 @@ $(document).ready(function(){
 
 
 	$('#startScan').click(function(){
-        var ssoUrl = getCookie('ssoUrl');
+        var ssoUrl = getCookie('SSO_URL');
         $.ajax({
         url: ssoUrl + '/v2.0/users/me',
         method: 'GET',
@@ -99,7 +100,7 @@ $(document).ready(function(){
     
 	$('#getScanResult').click(function(){
         
-        var ssoUrl = getCookie('ssoUrl');
+        var ssoUrl = getCookie('SSO_URL');
         $.ajax({
             url: ssoUrl + '/v2.0/users/me',
             method: 'GET',
@@ -146,7 +147,7 @@ $(document).ready(function(){
     
     $('#downloadReport').click(function(){
         
-        var ssoUrl = getCookie('ssoUrl');
+        var ssoUrl = getCookie('SSO_URL');
         $.ajax({
             url: ssoUrl + '/v2.0/users/me',
             method: 'GET',
