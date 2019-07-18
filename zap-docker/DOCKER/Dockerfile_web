@@ -13,7 +13,7 @@ RUN sudo apt-get update;\
 RUN sudo pip3 install flask requests
 EXPOSE 8080
 WORKDIR /WISE-PaaS-security/zap-docker/web
-CMD python3 index.py
-#CMD /zap/zap.sh -cmd -addonupdate > zapoutput.out && /zap/zap.sh -daemon -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.key=\${ZAP_KEY} -host 0.0.0.0 -port 5000 >> zapoutput.out 2>&1 && python3 index.py
+#CMD python3 index.py
+CMD /zap/zap.sh -cmd -addonupdate > zapoutput.out && /zap/zap.sh -daemon -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.key=\${ZAP_KEY} -host 0.0.0.0 -port 8080 >> zapoutput.out 2>&1 && python3 index.py
 
 
