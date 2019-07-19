@@ -123,9 +123,9 @@ $(document).ready(function(){
                     if(response.code == 401){
                         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;    
                     }else if(response.code == 200){
-                        console.log(response.ret)
-
-                        window.location.href =  myUrl+'/report'; 
+                        console.log(response.env)
+                        
+                        
                     }
                 }
           
