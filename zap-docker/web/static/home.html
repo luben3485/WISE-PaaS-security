@@ -34,12 +34,12 @@
             <div class="four wide column"></div>
             <div class="eight wide column">
                 <div style="font-size: 4rem;font-family:Arial;">
-                    <p>Start a quick scan</p>                  
+                    <p>Start a passive scan</p>                  
                 </div>                
                 <div style="font-size: 1.5rem;font-family:MS Sans Serif;">
                     <p>The only thing you need to do is provide some basic information and make a simple choice about the type of scan you want to perform.</p>
 </div>
-                <hr>
+               <hr>
                 <div class="ui form">
                     <div class="field">
                         <div class="two fields">
@@ -56,16 +56,32 @@
                                     </select>
                             </div>
                         </div>
-                    </div>  
+                    </div>
+                    <div class="ui horizontal divider">
+                        Main Operation
+                    </div>
                     <button id="startScan" class="ui blue button" style="font-size:20px;">
-                        Start
-                    </button>
-                    <button id="getScanResult" class="ui green button" style="font-size:20px;">
-                        Get result
+                        Start new scan
                     </button>
                     <button id="downloadReport" class="ui orange button" style="font-size:20px;">
-                        Download
+                        Download (html)
                     </button>  
+                    
+                    <div class="ui horizontal divider">
+                        Other Operation
+                    </div>
+                    <button id="spiderStatus" class="ui  button" style="font-size:20px;">
+                        Status
+                    </button>
+                    <button id="spiderPause" class="ui  button" style="font-size:20px;">
+                        Pause
+                    </button>
+                    <button id="spiderResume" class="ui  button" style="font-size:20px;">
+                        Resume
+                    </button>
+                    <button id="spiderRemove" class="ui  button" style="font-size:20px;">
+                        Remove
+                    </button>
                     
                 </div>
             

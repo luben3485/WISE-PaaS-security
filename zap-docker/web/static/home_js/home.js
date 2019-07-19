@@ -54,7 +54,7 @@ $(document).ready(function(){
     }
 
 
-	$('#startScan').click(function(){
+	$('#spiderScan').click(function(){
         var ssoUrl = getCookie('SSO_URL');
         $.ajax({
         url: ssoUrl + '/v2.0/users/me',
@@ -65,7 +65,7 @@ $(document).ready(function(){
     }).done(function (user) {
             
         $.ajax({
-                url: '/startScan',
+                url: '/spiderScan',
                 type: 'GET',
                 data: {
                     'scanOption':1,
@@ -76,17 +76,17 @@ $(document).ready(function(){
                 },
                 error: function(xhr) {
  
-                    alert('Ajax /startScan error');
+                    alert('Ajax /spiderScan error');
                 },
                 success: function(response) {
-                    alert('Start a new scan\n Set scan id in cookie!');
+                    alert('Start a new scan\n Set spiderId in cookie!');
                 }
           
         });	  
-        console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /startScan');
+        console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /spiderScan');
     }).fail(function () {                
         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-        console.log('User is not logged in! /startScan');
+        console.log('User is not logged in! /spiderScan');
     });    
         
         
@@ -95,7 +95,7 @@ $(document).ready(function(){
         
 	});
     
-	$('#getScanResult').click(function(){
+	$('#spiderStatus').click(function(){
         
         var ssoUrl = getCookie('SSO_URL');
         $.ajax({
@@ -110,31 +110,146 @@ $(document).ready(function(){
         }).done(function (user) {
             
             $.ajax({
-                url: '/getScanResult',
+                url: '/spiderStatus',
                 type: 'GET',
                 cache: false,
                 xhrFields: {
                     withCredentials: true
                 },
                 error: function(xhr) {
-                    alert('Ajax /getScanResult error');
+                    alert('Ajax /spiderStatus error');
                 },
                 success: function(response) {
-                    if(response.code == 401){
-                        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;    
-                    }else if(response.code == 200){
-                        console.log(response.env)
-                        
-                        
-                    }
+                    console.log('spiderStatus ' response.status)    
                 }
           
             });
     
-            console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /getScanResult');
+            console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /spiderStatus');
         }).fail(function () {
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-            console.log('User is not logged in! /getScanResult');
+            console.log('User is not logged in! /spiderStatus');
+        });            
+        
+      
+    
+	
+	});
+    $('#spiderPause').click(function(){
+        
+        var ssoUrl = getCookie('SSO_URL');
+        $.ajax({
+            url: ssoUrl + '/v2.0/users/me',
+            method: 'GET',
+            data: {
+                    'scanOption':1,
+                },
+            xhrFields: {
+                withCredentials: true
+            }
+        }).done(function (user) {
+            
+            $.ajax({
+                url: '/spiderPause',
+                type: 'GET',
+                cache: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                error: function(xhr) {
+                    alert('Ajax /spiderPause error');
+                },
+                success: function(response) {
+                    console.log('spiderPause '+response.Result)
+                    
+                }
+          
+            });
+    
+            console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /spiderPause');
+        }).fail(function () {
+            window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+            console.log('User is not logged in! /spiderPause');
+        });            
+        
+      
+    
+	
+	});
+    $('#spiderResume').click(function(){
+        
+        var ssoUrl = getCookie('SSO_URL');
+        $.ajax({
+            url: ssoUrl + '/v2.0/users/me',
+            method: 'GET',
+            data: {
+                    'scanOption':1,
+                },
+            xhrFields: {
+                withCredentials: true
+            }
+        }).done(function (user) {
+            
+            $.ajax({
+                url: '/spiderResume',
+                type: 'GET',
+                cache: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                error: function(xhr) {
+                    alert('Ajax /spiderResume error');
+                },
+                success: function(response) {
+                    console.log('spiderResume '+response.Result)    
+                }
+          
+            });
+    
+            console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /spiderResume');
+        }).fail(function () {
+            window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+            console.log('User is not logged in! /spiderResume');
+        });            
+        
+      
+    
+	
+	});
+    $('#spiderRemove').click(function(){
+        
+        var ssoUrl = getCookie('SSO_URL');
+        $.ajax({
+            url: ssoUrl + '/v2.0/users/me',
+            method: 'GET',
+            data: {
+                    'scanOption':1,
+                },
+            xhrFields: {
+                withCredentials: true
+            }
+        }).done(function (user) {
+            
+            $.ajax({
+                url: '/spiderRemove',
+                type: 'GET',
+                cache: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                error: function(xhr) {
+                    alert('Ajax /spiderRemove error');
+                },
+                success: function(response) {
+                    console.log('spiderRemove 'response.Result)    
+                }
+          
+            });
+    
+            console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /spiderRemove');
+        }).fail(function () {
+            window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+            console.log('User is not logged in! /spiderRemove');
         });            
         
       

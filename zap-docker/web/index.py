@@ -33,23 +33,27 @@ def setSSOurl():
 	res_cookie.set_cookie('SSO_URL', ssoUrl)
 	return res_cookie
 
-@app.route('/startScan')
-def startScan():
+@app.route('/spiderScan')
+def spiderScan():
 	EIToken =request.cookies.get('EIToken')  
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		url = request.args.get('url')
+		maxChildren=''
+		recurse=''
+		contextName=''
+		subtreeOnly=''
 
-		
 		try:
-			response = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan/?url='+ url +'&maxChildren=&recurse=&contextName=&subtreeOnly=')
-
-			if response.status_code == 200:
-				response = response.json()
+			payload = {'url': url, 'maxChildren': maxChildren,'recurse':recurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
+			r = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan',params=payload)
+			
+			if r.status_code == 200:
+				r = r.json()
 				#result = {'id':response['id']}
 				#return jsonify(result)
 				res_cookie = make_response(redirect('/'),200)
-				res_cookie.set_cookie('id', response['scan'])
+				res_cookie.set_cookie('spiderId', r['scan'])
 				return res_cookie
 			else:
 				abort(500)
@@ -59,22 +63,23 @@ def startScan():
 		
 	else:
 		abort(401)
-		#result = {'code':401}
-		#return jsonify(result)
 
 		
 
-@app.route('/getScanResult')
-def getScanResult():
+@app.route('/spiderStatus')
+def spiderStatus():
 	EIToken =request.cookies.get('EIToken')  
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		#id = request.args.get('id')
-		id=request.cookies.get('id')
+		spiderId=request.cookies.get('spiderId')
 		try:
 			if id:
-				env = os.environ
-				return jsonify({'code':200,'env':env})
+				payload = {'scanId':spiderId}
+        		r = requests.get('http://127.0.0.1:5000/JSON/spider/view/status/',params=payload)	
+				r = r.json()
+				result = {'status':r['status']}
+				return jsonify(result)
 
 		except Exception as err:
 			print('error: {}'.format(str(err)))
@@ -82,32 +87,92 @@ def getScanResult():
 
 	else:
 		abort(401)
-		#result = {'code':401}
-		#return jsonify(result)
 
+
+@app.route('/spiderPause')
+def spiderPause():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		#id = request.args.get('id')
+		spiderId=request.cookies.get('spiderId')
+		try:
+			if id:
+				payload = {'scanId':spiderId}
+        		r = requests.get('http://127.0.0.1:5000/JSON/spider/action/pause/',params=payload)	
+				r = r.json()
+				result = {'Result':r['Result']}
+				return jsonify(result)
+
+		except Exception as err:
+			print('error: {}'.format(str(err)))
+			abort(500)
+
+	else:
+		abort(401)
+
+
+@app.route('/spiderResume')
+def spiderResume():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		#id = request.args.get('id')
+		spiderId=request.cookies.get('spiderId')
+		try:
+			if id:
+				payload = {'scanId':spiderId}
+        		r = requests.get('http://127.0.0.1:5000/JSON/spider/action/resume/',params=payload)	
+				r = r.json()
+				result = {'Result':r['Result']}
+				return jsonify(result)
+
+		except Exception as err:
+			print('error: {}'.format(str(err)))
+			abort(500)
+
+	else:
+		abort(401)
+
+@app.route('/spiderRemove')
+def spiderRemove():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		#id = request.args.get('id')
+		spiderId=request.cookies.get('id')
+		try:
+			if id:
+				payload = {'scanId':spiderId}
+        		r = requests.get('http://127.0.0.1:5000/JSON/spider/action/removeAllScans/',params=payload)	
+				r = r.json()
+				result = {'Result':r['Result']}
+				return jsonify(result)
+
+		except Exception as err:
+			print('error: {}'.format(str(err)))
+			abort(500)
+
+	else:
+		abort(401)
 @app.route('/downloadReport')
 def downloadReport():
 	EIToken =request.cookies.get('EIToken')  
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
-		id=request.cookies.get('id')
 		try:
-			r = requests.get('http://127.0.0.1:5000/scans/'+str(id)+'/report.html.zip')
-			if r.status_code != 200:
-				raise Exception("Cannot connect with oss server or file is not existed")
-			response = make_response(r.content,200)
-			response.headers['Content-Type'] = 'application/zip'
-			response.headers['Content-Disposition'] = 'attachment; filename={}'.format('arachni_scan_report.zip')
-			return response
+			r = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
+			if r.status_code == 200:
+				response = make_response(r.content,200)
+				response.headers['Content-Type'] = 'application/html'
+				response.headers['Content-Disposition'] = 'attachment; filename={}'.format('zap_report.html')
+				return response
 		except Exception as err:
 			print('download_file error: {}'.format(str(err)))
 			abort(500)
 
 	else:
 		abort(401)
-		#result = {'code':401}
-		#return jsonify(result)
 
 if __name__ == '__main__':
-	#app.run()
 	app.run(host='0.0.0.0',port=8080,debug=False)
