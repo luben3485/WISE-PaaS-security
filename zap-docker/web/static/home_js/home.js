@@ -163,7 +163,7 @@ $(document).ready(function(){
                     alert('Ajax /spiderStatus error');
                 },
                 success: function(response) {
-                    console.log('spiderStatus ' response.status)    
+                    console.log('spiderStatus '+ response.status)    
                 }
           
             });
@@ -285,7 +285,7 @@ $(document).ready(function(){
                     alert('Ajax /spiderRemove error');
                 },
                 success: function(response) {
-                    console.log('spiderRemove 'response.Result)    
+                    console.log('spiderRemove '+response.Result)    
                 }
           
             });
