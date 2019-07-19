@@ -35,13 +35,10 @@ def startScan():
 	EIToken =request.cookies.get('EIToken')  
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
+		scanOption = request.args.get('scanOption')
+		url = request.args.get('url')
 		try:
-			scanOption = request.args.get('scanOption')
-			url = request.args.get('url')
-		except Exception as err:
-			abort(404)
-		try:
-			if scanOption == 0:
+			if scanOption == '0':
 				maxChildren=''
 				recurse=''
 				contextName=''
@@ -56,7 +53,7 @@ def startScan():
 					res_cookie.set_cookie('spiderId', r['scan'])
 					return res_cookie
 			
-			elif scanOption == 1:
+			elif scanOption == '1':
 				recurse = True
 				inScopeOnly = False
 				scanPolicyName = ''
@@ -72,7 +69,7 @@ def startScan():
 					res_cookie.set_cookie('ascanId', r['scan'])
 					return res_cookie
 
-			elif scanOption == 2:
+			elif scanOption == '2':
 				maxChildren=''
 				recurse=''
 				contextName=''
@@ -101,7 +98,7 @@ def startScan():
 					return res_cookie
 
 			else:
-				abort(403)
+				abort(500)
 		except Exception as err:
 			print('error: {}'.format(str(err)))
 			abort(500)
