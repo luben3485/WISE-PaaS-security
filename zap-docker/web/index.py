@@ -76,7 +76,7 @@ def spiderStatus():
 		try:
 			if id:
 				payload = {'scanId':spiderId}
-        		r = requests.get('http://127.0.0.1:5000/JSON/spider/view/status/',params=payload)	
+				r = requests.get('http://127.0.0.1:5000/JSON/spider/view/status/',params=payload)	
 				r = r.json()
 				result = {'status':r['status']}
 				return jsonify(result)
@@ -99,7 +99,7 @@ def spiderPause():
 		try:
 			if id:
 				payload = {'scanId':spiderId}
-        		r = requests.get('http://127.0.0.1:5000/JSON/spider/action/pause/',params=payload)	
+				r = requests.get('http://127.0.0.1:5000/JSON/spider/action/pause/',params=payload)	
 				r = r.json()
 				result = {'Result':r['Result']}
 				return jsonify(result)
@@ -122,7 +122,7 @@ def spiderResume():
 		try:
 			if id:
 				payload = {'scanId':spiderId}
-        		r = requests.get('http://127.0.0.1:5000/JSON/spider/action/resume/',params=payload)	
+				r = requests.get('http://127.0.0.1:5000/JSON/spider/action/resume/',params=payload)	
 				r = r.json()
 				result = {'Result':r['Result']}
 				return jsonify(result)
@@ -144,7 +144,7 @@ def spiderRemove():
 		try:
 			if id:
 				payload = {'scanId':spiderId}
-        		r = requests.get('http://127.0.0.1:5000/JSON/spider/action/removeAllScans/',params=payload)	
+				r = requests.get('http://127.0.0.1:5000/JSON/spider/action/removeAllScans/',params=payload)	
 				r = r.json()
 				result = {'Result':r['Result']}
 				return jsonify(result)
