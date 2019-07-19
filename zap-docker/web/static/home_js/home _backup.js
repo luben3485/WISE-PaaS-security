@@ -52,49 +52,7 @@ $(document).ready(function(){
       }
       return "";
     }
-    
-    
-    $('#startScan').click(function(){
-        var ssoUrl = getCookie('SSO_URL');
-        $.ajax({
-        url: ssoUrl + '/v2.0/users/me',
-        method: 'GET',
-        xhrFields: {
-            withCredentials: true
-        }
-    }).done(function (user) {
-            
-        $.ajax({
-                url: '/startScan',
-                type: 'GET',
-                data: {
-                    'scanOption':0,
-					'url': $('input[name="input_url"]').val()
-                },
-                xhrFields: {
-                    withCredentials: true
-                },
-                error: function(xhr) {
- 
-                    alert('Ajax /startScan error');
-                },
-                success: function(response) {
-                    alert('Start a  scan\n Set id in cookie!');
-                }
-          
-        });	  
-        console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /startScan');
-    }).fail(function () {                
-        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-        console.log('User is not logged in! /startScan');
-    });    
-        
-        
-	});
-    
-    
-    
-    
+
 
 	$('#spiderScan').click(function(){
         var ssoUrl = getCookie('SSO_URL');
@@ -132,11 +90,10 @@ $(document).ready(function(){
     });    
         
         
+        
+        
+        
 	});
-    
-    
-    
-    
     
 	$('#spiderStatus').click(function(){
         
@@ -175,10 +132,9 @@ $(document).ready(function(){
         });            
         
       
+    
+	
 	});
-    
-    
-    
     $('#spiderPause').click(function(){
         
         var ssoUrl = getCookie('SSO_URL');

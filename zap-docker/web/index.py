@@ -1,5 +1,5 @@
 #-*-coding:utf-8 -*-
-
+import time
 import random
 import os
 from flask import Flask,request,redirect
@@ -32,6 +32,84 @@ def setSSOurl():
 	res_cookie = make_response(redirect('/'),200)
 	res_cookie.set_cookie('SSO_URL', ssoUrl)
 	return res_cookie
+
+@app.route('/startScan')
+def startScan():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		scanOption = request.args.geti('scanOption')
+		url = request.args.get('url')
+
+		try:
+			if scanOption == 0:
+				maxChildren=''
+				recurse=''
+				contextName=''
+				subtreeOnly=''
+				payload = {'url': url, 'maxChildren': maxChildren,'recurse':recurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
+				r = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan',params=payload)
+				if r.status_code == 200:
+					r = r.json()
+					#result = {'id':response['id']}
+					#return jsonify(result)
+					res_cookie = make_response(redirect('/'),200)
+					res_cookie.set_cookie('spiderId', r['scan'])
+					return res_cookie
+			
+			elif scanOption == 1:
+				resurse = True
+				inScopeOnly = False
+				scanPolicyName = ''
+				method =''
+				postData = ''
+				contextId = ''
+				payload = {'url' : url,'inScopeOnly':inScopeOnly,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
+				r = requests.get('http://' + args.address  + '/JSON/ascan/action/scan/',params=payload)
+				
+				if r.status_code == 200:
+					r = r.json()
+					res_cookie = make_response(edirect('/'),200)
+					res_cookie.set_cookie('ascanId', r['scan'])
+					return res_cookie
+
+			elif scanOption == 2:
+				maxChildren=''
+				recurse=''
+				contextName=''
+				subtreeOnly=''
+				payload = {'url': url, 'maxChildren': maxChildren,'recurse':recurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
+				r_spider = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan',params=payload)
+
+				time.sleep(3)
+
+				resurse = True
+				inScopeOnly = False
+				scanPolicyName = ''
+				method =''
+				postData = ''
+				contextId = ''
+				payload = {'url' : url,'inScopeOnly':inScopeOnly,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
+				r_ascan = requests.get('http://' + args.address  + '/JSON/ascan/action/scan/',params=payload)
+
+
+				if r_spider.status_code == 200 and r_ascan.status_code == 200:
+					r_spider = r_spider.json()
+					r_ascan = r_ascan.json()
+					res_cookie = make_response(redirect('/'),200)
+					res_cookie.set_cookie('spiderId', r_spider['scan'])
+					res_cookie.set_cookie('ascanId', r_ascan['scan'])
+					return res_cookie
+
+			else:
+				abort(500)
+		except Exception as err:
+			print('error: {}'.format(str(err)))
+			abort(500)
+		
+	else:
+		abort(401)
+
 
 @app.route('/spiderScan')
 def spiderScan():
