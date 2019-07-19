@@ -9,10 +9,15 @@ import json
 import zipfile,io
 import subprocess
 
-
-ssoUrl=os.environ['SSO_URL'] or 'https://portal-sso.wise-paas.io'
+try:
+	app_env = json.loads(os.environ['VCAP_APPLICATION'])
+	ssoUrl = 'https://portal-sso' + app_env['application_uris'][0][app_env['application_uris'][0].find('.'):]
+except Exception as err:
+	print('Can not get environment variables form: {}'.format(str(err)))
+	ssoUrl = 'https://portal-sso.wise-paas.io'
+#ssoUrl=os.environ['SSO_URL'] or 'https://portal-sso.wise-paas.io'
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
-print(os.path.join(os.getcwd(), "static"))
+#print(os.path.join(os.getcwd(), "static"))
 
 @app.route('/')
 def home():
