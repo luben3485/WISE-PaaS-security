@@ -38,7 +38,7 @@ def startScan():
 	EIToken =request.cookies.get('EIToken')  
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
-		scanOption = request.args.geti('scanOption')
+		scanOption = request.args.get('scanOption')
 		url = request.args.get('url')
 
 		try:
@@ -110,7 +110,9 @@ def startScan():
 	else:
 		abort(401)
 
-
+'''
+SPIDER + PASSIVE SCAN
+'''
 @app.route('/spiderScan')
 def spiderScan():
 	EIToken =request.cookies.get('EIToken')  
@@ -233,6 +235,143 @@ def spiderRemove():
 
 	else:
 		abort(401)
+
+
+
+'''
+ACTIVE SCAN
+'''
+@app.route('/ascan')
+def ascan():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		url = request.args.get('url')
+		resurse = True
+		inScopeOnly = False
+		scanPolicyName = ''
+		method =''
+		postData = ''
+		contextId = ''
+
+		
+		try:
+			payload = {'url' : url,'inScopeOnly':inScopeOnly,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
+			r = requests.get('http://' + args.address  + '/JSON/ascan/action/scan/',params=payload)
+			
+			if r.status_code == 200:
+				r = r.json()
+				#result = {'id':response['id']}
+				#return jsonify(result)
+				res_cookie = make_response(redirect('/'),200)
+				res_cookie.set_cookie('ascanId', r['scan'])
+				return res_cookie
+			else:
+				abort(500)
+		except Exception as err:
+			print('error: {}'.format(str(err)))
+			abort(500)
+		
+	else:
+		abort(401)
+
+		
+
+@app.route('/ascanStatus')
+def ascanStatus():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		#id = request.args.get('id')
+		ascanId=request.cookies.get('ascanId')
+		try:
+			if id:
+				payload = {'ascanId':ascanId}
+				r = requests.get('http://127.0.0.1:5000/JSON/ascan/view/status/',params=payload)	
+				r = r.json()
+				result = {'status':r['status']}
+				return jsonify(result)
+		except Exception as err:
+			print('error: {}'.format(str(err)))
+			abort(500)
+
+	else:
+		abort(401)
+
+
+@app.route('/ascanPause')
+def ascanPause():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		#id = request.args.get('id')
+		ascanId=request.cookies.get('ascanId')
+		try:
+			if id:
+				payload = {'scanId':ascanId}
+				r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/pause/',params=payload)	
+				r = r.json()
+				result = {'Result':r['Result']}
+				return jsonify(result)
+
+		except Exception as err:
+			print('error: {}'.format(str(err)))
+			abort(500)
+
+	else:
+		abort(401)
+
+
+@app.route('/ascanResume')
+def ascanResume():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		ascanId=request.cookies.get('ascanId')
+		try:
+			if id:
+				payload = {'scanId':ascanId}
+				r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/resume/',params=payload)	
+				r = r.json()
+				result = {'Result':r['Result']}
+				return jsonify(result)
+
+		except Exception as err:
+			print('error: {}'.format(str(err)))
+			abort(500)
+
+	else:
+		abort(401)
+
+@app.route('/ascanRemove')
+def ascanRemove():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		ascanId=request.cookies.get('ascanId')
+		try:
+			if id:
+				payload = {'scanId':spiderId}
+				r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/removeAllScans/',params=payload)	
+				r = r.json()
+				result = {'Result':r['Result']}
+				return jsonify(result)
+
+		except Exception as err:
+			print('error: {}'.format(str(err)))
+			abort(500)
+
+	else:
+		abort(401)
+
+
+
+
+
+'''
+REPORT
+'''
+
 @app.route('/downloadReport')
 def downloadReport():
 	EIToken =request.cookies.get('EIToken')  
