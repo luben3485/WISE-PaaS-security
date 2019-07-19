@@ -34,7 +34,7 @@ def setSSOurl():
 def startScan():
 	EIToken =request.cookies.get('EIToken')  
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
-	if res.status_code == 200 or True:
+	if res.status_code == 200:
 		scanOption = request.args.get('scanOption')
 		url = request.args.get('url')
 
@@ -55,13 +55,13 @@ def startScan():
 					return res_cookie
 			
 			elif scanOption == 1:
-				resurse = True
+				recurse = True
 				inScopeOnly = False
 				scanPolicyName = ''
 				method =''
 				postData = ''
 				contextId = ''
-				payload = {'url' : url,'inScopeOnly':inScopeOnly,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
+				payload = {'url' : url,'recurse':recurse,'inScopeOnly':inScopeOnly,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
 				r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/scan/',params=payload)
 				
 				if r.status_code == 200:
@@ -80,13 +80,13 @@ def startScan():
 
 				time.sleep(3)
 
-				resurse = True
+				recurse = True
 				inScopeOnly = False
 				scanPolicyName = ''
 				method =''
 				postData = ''
 				contextId = ''
-				payload = {'url' : url,'inScopeOnly':inScopeOnly,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
+				payload = {'url' : url,'inScopeOnly':inScopeOnly,'recurse':recurse,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
 				r_ascan = requests.get('http://127.0.0.1:5000/JSON/ascan/action/scan/',params=payload)
 
 
@@ -244,7 +244,7 @@ def ascan():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		url = request.args.get('url')
-		resurse = True
+		recurse = True
 		inScopeOnly = False
 		scanPolicyName = ''
 		method =''
@@ -253,7 +253,7 @@ def ascan():
 
 		
 		try:
-			payload = {'url' : url,'inScopeOnly':inScopeOnly,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
+			payload = {'url' : url,'inScopeOnly':inScopeOnly,'recurse':recurse,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
 			r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/scan/',params=payload)
 			
 			if r.status_code == 200:
@@ -282,7 +282,7 @@ def ascanStatus():
 		#id = request.args.get('id')
 		ascanId=request.cookies.get('ascanId')
 		try:
-			if id:
+			if ascanId:
 				payload = {'ascanId':ascanId}
 				r = requests.get('http://127.0.0.1:5000/JSON/ascan/view/status/',params=payload)	
 				r = r.json()
@@ -304,7 +304,7 @@ def ascanPause():
 		#id = request.args.get('id')
 		ascanId=request.cookies.get('ascanId')
 		try:
-			if id:
+			if ascanId:
 				payload = {'scanId':ascanId}
 				r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/pause/',params=payload)	
 				r = r.json()
@@ -326,7 +326,7 @@ def ascanResume():
 	if res.status_code == 200:
 		ascanId=request.cookies.get('ascanId')
 		try:
-			if id:
+			if ascanId:
 				payload = {'scanId':ascanId}
 				r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/resume/',params=payload)	
 				r = r.json()
@@ -347,8 +347,8 @@ def ascanRemove():
 	if res.status_code == 200:
 		ascanId=request.cookies.get('ascanId')
 		try:
-			if id:
-				payload = {'scanId':spiderId}
+			if ascanId:
+				payload = {'scanId':ascanId}
 				r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/removeAllScans/',params=payload)	
 				r = r.json()
 				result = {'Result':r['Result']}
