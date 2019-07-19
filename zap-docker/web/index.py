@@ -8,13 +8,13 @@ import requests
 import json
 import zipfile,io
 import subprocess
-
+ssoUrl = ''
 try:
 	app_env = json.loads(os.environ['VCAP_APPLICATION'])
 	ssoUrl = 'https://portal-sso' + app_env['application_uris'][0][app_env['application_uris'][0].find('.'):]
 except Exception as err:
 	print('Can not get environment variables form: {}'.format(str(err)))
-	ssoUrl = 'https://portal-sso.wise-paas.io'
+	ssoUrl = 'https://portal-sso.arfa.wise-paas.com'
 #ssoUrl=os.environ['SSO_URL'] or 'https://portal-sso.wise-paas.io'
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 #print(os.path.join(os.getcwd(), "static"))
@@ -73,16 +73,8 @@ def getScanResult():
 		id=request.cookies.get('id')
 		try:
 			if id:
-
-				command = "rm -r "+os.path.join(os.getcwd())+"static/js" +os.path.join(os.getcwd())+"static/css " + os.path.join(os.getcwd())+"static/index.html"
-				#command =  "rm -r static/index.html"
-				process = subprocess.Popen(command,shell=True)
-				ret = process.wait()
-				response = requests.get('http://127.0.0.1:5000/scans/'+str(id)+'/report.html.zip')	
-				z = zipfile.ZipFile(io.BytesIO(response.content))
-				for filename in z.namelist():
-					z.extract(filename, path="static/", pwd=None)
-				return jsonify({'code':200,'ret':ret})
+				env = os.environ
+				return jsonify({'code':200,'env':env})
 
 		except Exception as err:
 			print('error: {}'.format(str(err)))
