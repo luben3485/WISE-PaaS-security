@@ -12,7 +12,7 @@ def process_command():
     return parser.parse_args()
 if __name__ == '__main__':
     args = process_command()
-    if args.scanmethod == "start":
+    if args.scanmethod == "spider":
         url = args.target
         maxChildren=''
         recurse=''
@@ -20,12 +20,73 @@ if __name__ == '__main__':
         subtreeOnly=''
 
         payload = {'url': url, 'maxChildren': maxChildren,'recurse':recurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
-        #response = requests.get('http://' + args.address  + 'JSON/spider/action/scan',params=payload)
-        r = requests.get('http://127.0.0.1:8080/JSON/spider/action/scan/?url=http%3A%2F%2Fcrackme.cenzic.com%2F&maxChildren=&recurse=&contextName=&subtreeOnly=')
+        r = requests.get('http://' + args.address  + '/JSON/spider/action/scan',params=payload)
         print(r.text)
 	#response = response.json()
 	#print(response)
-    elif args.scanmethod == "result":
-        response = requests.get('http://' + args.address  + '/scans/'+args.id+'/report')
+    elif args.scanmethod == "report":
+        baseurl = args.target
+        start = ''
+        count = ''
+        riskId = ''
+        payload = {'baseurl' : baseurl,'start':start,'count':count,'riskId':riskId}
+        response = requests.get('http://' + args.address  + '/JSON/core/view/alerts/',params=payload)
         print(response.text)
+    elif args.scanmethod == "reporthtml":
+        response = requests.get('http://' + args.address  + '/OTHER/core/other/htmlreport/')
+        print(response.text)
+    elif args.scanmethod == "spiderstatus":
+        payload = {'scanId':args.id}
+        response = requests.get('http://' + args.address  + '/JSON/spider/view/status/',params=payload)
+        print(response.text)
+    elif args.scanmethod == "spiderpause":
+        payload = {'scanId':args.id}
+        response = requests.get('http://' + args.address  + '/JSON/spider/action/pause/',params=payload)
+        print(response.text)
+    elif args.scanmethod == "spiderresume":
+        payload = {'scanId':args.id}
+        response = requests.get('http://' + args.address  + '/JSON/spider/action/resume/',params=payload)
+        print(response.text)
+    elif args.scanmethod == "spiderremove":
+        payload = {'scanId':args.id}
+        response = requests.get('http://' + args.address  + '/JSON/spider/action/removeAllScans/',params=payload)
+        print(response.text)
+    elif args.scanmethod == "spiderdelete":
+        response = requests.get('http://' + args.address  + '/JSON/core/action/deleteAllAlerts')
+        print(response.text)
+    elif args.scanmethod == "delete":
+        response = requests.get('http://' + args.address  + '/JSON/core/action/deleteAllAlerts')
+        print(response.text)
+    elif args.scanmethod == "ascan":
+        url = args.target
+        resurse = True
+        inScopeOnly = False
+        scanPolicyName = ''
+        method =''
+        postData = ''
+        contextId = ''
+        payload = {'url' : url,'inScopeOnly':inScopeOnly,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
+        response = requests.get('http://' + args.address  + '/JSON/ascan/action/scan/',params=payload)
+        print(response.text)
+    elif args.scanmethod == "ascanstatus":
+        payload = {'scanId':args.id}
+        response = requests.get('http://' + args.address  + '/JSON/ascan/view/status/',params=payload)
+        print(response.text)
+    elif args.scanmethod == "ascanpause":
+        payload = {'scanId':args.id}
+        response = requests.get('http://' + args.address  + '/JSON/ascan/action/pause/',params=payload)
+        print(response.text)
+    elif args.scanmethod == "ascanresume":
+        payload = {'scanId':args.id}
+        response = requests.get('http://' + args.address  + '/JSON/ascan/action/resume/',params=payload)
+        print(response.text)
+    elif args.scanmethod == "ascanremove":
+        payload = {'scanId':args.id}
+        response = requests.get('http://' + args.address  + '/JSON/ascan/action/removeAllScans/',params=payload)
+        print(response.text)
+    elif args.scanmethod == "urls":
+        payload = {'baseurl':args.target}
+        response = requests.get('http://' + args.address  + '/JSON/core/view/urls/',params=payload)
+        print(response.text)
+
 
