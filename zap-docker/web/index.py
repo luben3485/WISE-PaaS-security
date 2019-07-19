@@ -23,9 +23,6 @@ app = Flask(__name__,static_url_path='',root_path=os.getcwd())
 def home():
 	return app.send_static_file('home.html')
 
-@app.route('/report')
-def index():
-	return app.send_static_file('index.html')
 
 @app.route('/setSSOurl')
 def setSSOurl():
@@ -37,7 +34,7 @@ def setSSOurl():
 def startScan():
 	EIToken =request.cookies.get('EIToken')  
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
-	if res.status_code == 200:
+	if res.status_code == 200 or True:
 		scanOption = request.args.get('scanOption')
 		url = request.args.get('url')
 
@@ -65,11 +62,11 @@ def startScan():
 				postData = ''
 				contextId = ''
 				payload = {'url' : url,'inScopeOnly':inScopeOnly,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
-				r = requests.get('http://' + args.address  + '/JSON/ascan/action/scan/',params=payload)
+				r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/scan/',params=payload)
 				
 				if r.status_code == 200:
 					r = r.json()
-					res_cookie = make_response(edirect('/'),200)
+					res_cookie = make_response(redirect('/'),200)
 					res_cookie.set_cookie('ascanId', r['scan'])
 					return res_cookie
 
@@ -90,7 +87,7 @@ def startScan():
 				postData = ''
 				contextId = ''
 				payload = {'url' : url,'inScopeOnly':inScopeOnly,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
-				r_ascan = requests.get('http://' + args.address  + '/JSON/ascan/action/scan/',params=payload)
+				r_ascan = requests.get('http://127.0.0.1:5000/JSON/ascan/action/scan/',params=payload)
 
 
 				if r_spider.status_code == 200 and r_ascan.status_code == 200:
@@ -257,7 +254,7 @@ def ascan():
 		
 		try:
 			payload = {'url' : url,'inScopeOnly':inScopeOnly,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
-			r = requests.get('http://' + args.address  + '/JSON/ascan/action/scan/',params=payload)
+			r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/scan/',params=payload)
 			
 			if r.status_code == 200:
 				r = r.json()

@@ -54,6 +54,7 @@ $(document).ready(function(){
     
     $('#startScan').click(function(){
         var ssoUrl = getCookie('SSO_URL');
+        var scanOption=$("#scanOption").val();
         $.ajax({
         url: ssoUrl + '/v2.0/users/me',
         method: 'GET',
@@ -61,13 +62,12 @@ $(document).ready(function(){
             withCredentials: true
         }
     }).done(function (user) {
-            
         $.ajax({
                 url: '/startScan',
                 type: 'GET',
                 data: {
-                    'scanOption':0,
-					'url': $('input[name="input_url"]').val()
+                    'scanOption':scanOption,
+					'url': $('input[name="input_url"]').val()        
                 },
                 xhrFields: {
                     withCredentials: true
@@ -82,7 +82,7 @@ $(document).ready(function(){
           
         });	  
         console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /startScan');
-    }).fail(function () {                
+    }).fail(function () {
         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
         console.log('User is not logged in! /startScan');
     });    
