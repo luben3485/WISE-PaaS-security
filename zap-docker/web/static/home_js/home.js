@@ -2,6 +2,8 @@ $(document).ready(function(){
     
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
+     
+
     
     $.ajax({
         url: '/setSSOurl',
@@ -485,7 +487,42 @@ $(document).ready(function(){
             console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /downloadReport');
         }).fail(function () {
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-            console.log('User is not logged in! /getScanResult');
+            console.log('User is not logged in! /downloadReport');
+        });            
+     
+	});
+    
+    $('#clear').click(function(){
+        
+        var ssoUrl = getCookie('SSO_URL');
+        $.ajax({
+            url: ssoUrl + '/v2.0/users/me',
+            method: 'GET',
+            xhrFields: {
+                withCredentials: true
+            }
+        }).done(function (user) {
+            
+             $.ajax({
+                url: '/clear',
+                type: 'GET',
+                cache: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                error: function(xhr) {
+                    alert('Ajax /clear error');
+                },
+                success: function(response) {
+                    console.log('clear '+response.Result)    
+                }
+          
+            });
+    
+            console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /clear');
+        }).fail(function () {
+            window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+            console.log('User is not logged in! /clear');
         });            
      
 	});

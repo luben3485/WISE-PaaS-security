@@ -387,5 +387,26 @@ def downloadReport():
 	else:
 		abort(401)
 
+
+@app.route('/clear')
+def clear():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		try:
+			payload = {'scanId':ascanId}
+			r = response = requests.get('http://127.0.0.1:5000/JSON/core/action/deleteAllAlerts')
+			r = r.json()
+			result = {'Result':r['Result']}
+			return jsonify(result)
+
+		except Exception as err:
+			print('error: {}'.format(str(err)))
+			abort(500)
+
+	else:
+		abort(401)
+
+
 if __name__ == '__main__':
 	app.run(host='0.0.0.0',port=8080,debug=False)
