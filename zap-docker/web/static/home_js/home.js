@@ -2,8 +2,9 @@ $(document).ready(function(){
     var intervalNum;
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
-        //progressPage();
-        //progressUpdate(100,"Passive scan");
+    //progressPage();
+    //progressUpdate(87,"Passive scan");
+    
     $.ajax({
         url: '/setSSOurl',
         type: 'GET',
@@ -32,7 +33,6 @@ $(document).ready(function(){
                 
             });        
         }
-          
     });
     function cancelScan(){
         checkStop();
@@ -53,7 +53,7 @@ $(document).ready(function(){
                     withCredentials: true
                 },
                 error: function(xhr) {
-                    console.log('Ajax /spiderRemove from cancel button error');
+                    console.log('Ajax /spiderRemove from progressPage error');
                 },
                 success: function(response) {
                 console.log('spiderRemove from progressPage '+response.Result)    
@@ -68,10 +68,10 @@ $(document).ready(function(){
                     withCredentials: true
                 },
                 error: function(xhr) {
-                    console.log('Ajax /ascanRemove from cancel button error');
+                    console.log('Ajax /ascanRemove from progressPage error');
                 },
                 success: function(response) {
-                    console.log('ascanRemove '+response.Result)    
+                    console.log('ascanRemove from progressPage '+response.Result)    
                 }
           
             });
@@ -83,36 +83,94 @@ $(document).ready(function(){
         
         return true;    
     }
-    
-    
-    function checkScan(scanOption){
-        if(scanOption == 0){
-            $.ajax({
+    function spiderstatus(){
+        return $.ajax({
                 url: '/spiderStatus',
                 type: 'GET',
                 cache: false,
                 xhrFields: {
                     withCredentials: true
-                },
-                error: function(xhr) {
-                    alert('Ajax /spiderStatus error from checkScan');
-                },
-                success: function(response) {
-                    progressUpdate(response.status,"Passive scan");
-                    console.log('spiderStatus '+ response.status)    
                 }
           
+        });
+        
+    }
+    function ascanstatus(){
+        return $.ajax({
+                url: '/ascanStatus',
+                type: 'GET',
+                cache: false,
+                xhrFields: {
+                    withCredentials: true
+                }
+          
+        });
+        
+    }
+    
+    
+    function checkScan(scanOption){
+        if(scanOption == 0){
+            spiderstatus().done(function(response){
+                if(response.status < 100){
+                    progressUpdate(response.status,"Passive scan");
+                    console.log('spiderStatus '+ response.status)
+                }else if(response.status==100){
+                    delay(2000).then(() => {
+                        $('.ui.tiny.modal').modal('hide')
+                        //download button 解除禁用~~                   
+                    });
+                }
+            }).fail(function(){
+                alert('Ajax /spiderStatus error from checkScan');
             });
-            
         }
         else if(scanOption == 1){
-            
-            
+            ascanstatus().done(function(response){
+                 if(response.status < 100){
+                   progressUpdate(response.status,"Active scan");
+                    console.log('ascanStatus '+ response.status)  
+                }else if(response.status==100){
+                    delay(2000).then(() => {
+                        $('.ui.tiny.modal').modal('hide')
+                        //download button 解除禁用~~                   
+                    });
+                }
+
+            }).fail(function(){
+                alert('Ajax /ascanStatus error from checkScan');
+            });
         }
         else if(scanOption == 2){
+            spiderstatus().done(function(response){
+                if (response.status < 100){
+                    progressUpdate(response.status,"Passive scan");
+                    console.log('spiderStatus '+ response.status)  
+                }else{response.status == 100}{
+                    ascanstatus().done(function(res){
+
+                    if(res.status < 100){
+                        progressUpdate(res.status,"Active scan");
+                        console.log('ascanStatus '+ res.status)  
+                    }else if(res.status==100){
+                        delay(2000).then(() => {
+                        $('.ui.tiny.modal').modal('hide')
+                        //download button 解除禁用~~                   
+                        });
+                    }
+  
+                    }).fail(function(){
+                        alert('Ajax /ascanStatus error from checkScan scanOption 2');
+                    });
+                }
+                
+            }).fail(function(){
+                alert('either /spiderStatus or /ascanStatus  ajax error from checkScan');
+            });
             
             
-            
+        }else{
+            alert("error scanOption:"+scanOption);
         }
         
     }
@@ -169,7 +227,10 @@ $(document).ready(function(){
         });
         
     }
-    
+    function delay(ms) {
+        console.log("Scan has finished. Page will return immediately.");
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
     $('#startScan').click(function(){
         var ssoUrl = getCookie('SSO_URL');
         var scanOption=$("#scanOption").val();
@@ -196,12 +257,12 @@ $(document).ready(function(){
                     },
                     error: function(xhr) {
 
-                        console.log('Ajax /startScan error');
+                        console.log('Ajax /startScan error maybe wrong URL');
                     },
                     success: function(response) {
                         //start timer
                         intervalNum = setInterval(function(){ checkScan(scanOption) }, 500);
-                        alert('Start a  scan\n Set id in cookie!');
+                        //alert('Start a  scan\n Set id in cookie!');
                     }
 
                 });	 
