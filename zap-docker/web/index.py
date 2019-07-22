@@ -394,7 +394,6 @@ def clear():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		try:
-			payload = {'scanId':ascanId}
 			r = response = requests.get('http://127.0.0.1:5000/JSON/core/action/deleteAllAlerts')
 			r = r.json()
 			result = {'Result':r['Result']}

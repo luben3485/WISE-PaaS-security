@@ -2,9 +2,8 @@ $(document).ready(function(){
     
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
-     
-
-    
+        //progressPageShow();
+        //progressUpdate(100);
     $.ajax({
         url: '/setSSOurl',
         type: 'GET',
@@ -15,7 +14,7 @@ $(document).ready(function(){
             withCredentials: true
         },
         error: function(xhr) {
-            alert('Ajax /setSSOurl error');
+            //alert('Ajax /setSSOurl error');
         },
         success: function(response) {        
             console.log('setSSOurl success');
@@ -30,12 +29,36 @@ $(document).ready(function(){
                 console.log('Hello! ' + user.lastName + ' ' + user.firstName);
             }).fail(function () {
                 window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+                
             });        
         }
           
     });	  
+    function progressUpdate(percent){
+        $('#progressbar').progress({
+            percent: percent
+        });
+        $('#progressNumber').text(percent+'% Earned')
+    }
+    
+    function progressPageShow() {
+    
+        $('.ui.tiny.modal')
+            .modal({
+            closable  : false,
+            onDeny    : function(){
+                window.location.href = "/";
+                
+            },
+            onApprove : function() {
+                window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+        
+            }
+            })
+    .modal('show');
     
     
+    }
     
     function getCookie(cname) {
       var name = cname + "=";
@@ -64,6 +87,8 @@ $(document).ready(function(){
             withCredentials: true
         }
     }).done(function (user) {
+        //progressPageShow();
+        //progressUpdate(0);
         $.ajax({
                 url: '/startScan',
                 type: 'GET',

@@ -3,15 +3,38 @@
 <html>
     <head>
         <meta http-equiv="Access-Control-Allow-Origin" content="*" />
-        <!--<link href="home_css/home.css" rel="stylesheet" type="text/css" >-->
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+        <link href="home_css/home.css" rel="stylesheet" type="text/css" >
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/>
         
     </head>
     <body>
         
-        <div class="container">
-            <div class="progress-bar"></div>
+        <!--
+        <div id="progressbar">
+            <div></div>
         </div>
+        -->
+         <div class="ui basic modal">
+            <div class="ui icon header">
+                <i class="cloud icon"></i>
+                    WISE-PaaS Security Online Tool
+            </div>
+            <div class="content">
+                <p>Please login to access the page. </p>
+            </div>
+            <div class="actions">
+                <div class="ui red basic cancel inverted button">
+                    <i class="sign out alternate icon"></i>  
+                        Exit
+                </div>
+            <div class="ui green ok inverted button">
+                    <i class="sign in alternate icon"></i>
+                    Login
+                    </div>
+            </div>
+        </div>
+        
         
         <div class="ui inverted segment" style="margin:0px;">
           <div class="ui inverted secondary menu">
@@ -34,6 +57,8 @@
             <div class="ui massive text loader">Loading</div>
         </div>
         
+        
+        
         <div class="ui grid">
             <div class="four wide column"></div>
             <div class="eight wide column">
@@ -42,7 +67,7 @@
                 </div>                
                 <div style="font-size: 1.5rem;font-family:MS Sans Serif;">
                     <p>The only thing you need to do is provide some basic information and make a simple choice about the type of scan you want to perform.</p>
-</div>
+                </div>
                <hr>
                 <div class="ui form">
                     <div class="field">
@@ -112,6 +137,7 @@
                         Remove
                     </button>
                     
+                    
                 </div>
             
                 
@@ -129,12 +155,7 @@
                             Failed.
                         </div>
                     </div>
-                
-                
-                
-                </div>
-                
-                
+                    
                 
             </div>
             <div class="four wide column"></div>
@@ -143,29 +164,38 @@
         </div>
         
         
-        <div class="ui basic modal">
+        <div class="ui tiny basic modal">
+            
             <div class="ui icon header">
                 <i class="cloud icon"></i>
-                    WISE-PaaS Security Online Tool
+                <h1>It takes a few seconds to minutes to scan your website.</h1>
+                    
             </div>
-            <div class="content">
-                <p>Please login to access the page. </p>
+            <div class="ui teal progress" id="progressbar">
+                <div class="bar"></div>
+                <div id="progressNumber" class="label" style="font-size: 1.5rem;color:white;">22% Earned</div>
             </div>
             <div class="actions">
                 <div class="ui red basic cancel inverted button">
                     <i class="sign out alternate icon"></i>  
-                        Exit
+                        Cancel
                 </div>
+            <!--
             <div class="ui green ok inverted button">
                     <i class="sign in alternate icon"></i>
                     Login
                     </div>
             </div>
+            -->
+            </div>
+   
         </div>
         
 
         <!--<button type="button" class="btn" id="hi">按鈕</button>-->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
         <script type="text/javascript" src="home_js/home.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>
     </body>

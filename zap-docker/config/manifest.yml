@@ -1,6 +1,6 @@
 ---
 applications:
-- name: zap-security
+- name: zap-security-web-debug
   memory: 1024M
   instances: 1
   disk_quota: 4G
