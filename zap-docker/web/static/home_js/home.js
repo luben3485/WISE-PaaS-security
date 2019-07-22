@@ -1,9 +1,9 @@
 $(document).ready(function(){
-    
+    var intervalNum;
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
-        //progressPageShow();
-        //progressUpdate(100);
+        //progressPage();
+        //progressUpdate(100,"Passive scan");
     $.ajax({
         url: '/setSSOurl',
         type: 'GET',
@@ -33,31 +33,112 @@ $(document).ready(function(){
             });        
         }
           
-    });	  
-    function progressUpdate(percent){
+    });
+    function cancelScan(){
+        checkStop();
+        var ssoUrl = getCookie('SSO_URL');
+        $.ajax({
+            url: ssoUrl + '/v2.0/users/me',
+            method: 'GET',
+            xhrFields: {
+                withCredentials: true
+            }
+        }).done(function (user) {
+
+            $.ajax({
+                url: '/spiderRemove',
+                type: 'GET',
+                cache: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                error: function(xhr) {
+                    console.log('Ajax /spiderRemove from cancel button error');
+                },
+                success: function(response) {
+                console.log('spiderRemove from progressPage '+response.Result)    
+                }
+            });
+            
+            $.ajax({
+                url: '/ascanRemove',
+                type: 'GET',
+                cache: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                error: function(xhr) {
+                    console.log('Ajax /ascanRemove from cancel button error');
+                },
+                success: function(response) {
+                    console.log('ascanRemove '+response.Result)    
+                }
+          
+            });
+            
+        }).fail(function () {
+        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+            console.log('User is not logged in! /spiderRemove');
+        });      
+        
+        return true;    
+    }
+    
+    
+    function checkScan(scanOption){
+        if(scanOption == 0){
+            $.ajax({
+                url: '/spiderStatus',
+                type: 'GET',
+                cache: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                error: function(xhr) {
+                    alert('Ajax /spiderStatus error from checkScan');
+                },
+                success: function(response) {
+                    progressUpdate(response.status,"Passive scan");
+                    console.log('spiderStatus '+ response.status)    
+                }
+          
+            });
+            
+        }
+        else if(scanOption == 1){
+            
+            
+        }
+        else if(scanOption == 2){
+            
+            
+            
+        }
+        
+    }
+    function checkStop() {
+        //stop function checkScan
+        clearInterval(intervalNum);
+    }
+    
+    function progressUpdate(percent,scantype){
         $('#progressbar').progress({
             percent: percent
         });
-        $('#progressNumber').text(percent+'% Earned')
+        $('#progressNumber').text(scantype +"  "+ percent+'% Earned')
     }
     
-    function progressPageShow() {
+    function progressPage(scanOption) {
     
         $('.ui.tiny.modal')
             .modal({
             closable  : false,
-            onDeny    : function(){
-                window.location.href = "/";
-                
-            },
+            onDeny    : cancelScan,
             onApprove : function() {
                 window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-        
             }
             })
     .modal('show');
-    
-    
     }
     
     function getCookie(cname) {
@@ -75,7 +156,19 @@ $(document).ready(function(){
       }
       return "";
     }
-    
+    function deleteData(){
+        //Delete all scan report before
+        return $.ajax({
+                url: '/clear',
+                type: 'GET',
+                cache: false,
+                xhrFields: {
+                    withCredentials: true
+                }
+          
+        });
+        
+    }
     
     $('#startScan').click(function(){
         var ssoUrl = getCookie('SSO_URL');
@@ -86,33 +179,43 @@ $(document).ready(function(){
         xhrFields: {
             withCredentials: true
         }
-    }).done(function (user) {
-        //progressPageShow();
-        //progressUpdate(0);
-        $.ajax({
-                url: '/startScan',
-                type: 'GET',
-                data: {
-                    'scanOption':scanOption,
-					'url': $('input[name="input_url"]').val()        
-                },
-                xhrFields: {
-                    withCredentials: true
-                },
-                error: function(xhr) {
- 
-                    alert('Ajax /startScan error');
-                },
-                success: function(response) {
-                    alert('Start a  scan\n Set id in cookie!');
-                }
-          
-        });	  
-        console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /startScan');
-    }).fail(function () {
-        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-        console.log('User is not logged in! /startScan');
-    });    
+        }).done(function (user) {
+
+            progressPage(scanOption);
+            progressUpdate(0);
+            deleteData().done(function(){
+                $.ajax({
+                    url: '/startScan',
+                    type: 'GET',
+                    data: {
+                        'scanOption':scanOption,
+                        'url': $('input[name="input_url"]').val()        
+                    },
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    error: function(xhr) {
+
+                        console.log('Ajax /startScan error');
+                    },
+                    success: function(response) {
+                        //start timer
+                        intervalNum = setInterval(function(){ checkScan(scanOption) }, 500);
+                        alert('Start a  scan\n Set id in cookie!');
+                    }
+
+                });	 
+                 console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /startScan');
+
+            }).fail(function () {
+                console.log("deleteData error!")
+            });
+
+
+        }).fail(function () {
+            window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+            console.log('User is not logged in! /startScan');
+        });    
         
         
 	});
