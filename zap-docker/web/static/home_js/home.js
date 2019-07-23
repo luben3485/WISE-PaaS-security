@@ -46,6 +46,8 @@ $(document).ready(function(){
                 withCredentials: true
             }
         }).done(function (user) {
+            $('#downloadReport').removeClass('disabled');
+            $('#dashboard').removeClass('disabled');
             checkStop();
             $.ajax({
                 url: '/spiderRemove',
@@ -164,8 +166,9 @@ $(document).ready(function(){
                     progressUpdate(response.status,"Passive scan");
                     console.log('spiderStatus '+ response.status)  
                 }else if(response.status == 100){
-                    progressUpdate(100,"Passive scan");
                     if(astart == 0){
+                        progressUpdate(100,"Passive scan");
+                        $('#header>h1').text('Scan task has not finished. Please be patient.')
                         ascanStart().done(function(){
                             astart = 1;
                             console.log('Start a new scan\n Set ascanId in cookie!');       
@@ -176,11 +179,13 @@ $(document).ready(function(){
                     }else if(astart == 1){
                         ascanstatus().done(function(res){
                             if(res.status < 100 && res.status > 0){
+                                $('#header>h1').text('It takes a few seconds to minutes to scan your website.')
                                 progressUpdate(res.status,"Active scan");
                                 console.log('ascanStatus '+ res.status)  
                             }else if(res.status==100){
                                 finishedDelay(2000,'Active scan').then(() => {
-                                    $('.ui.tiny.modal').modal('hide');           astart = 0;        
+                                    $('.ui.tiny.modal').modal('hide');           
+                                    astart = 0;        
                                 });
                             }
                         }).fail(function(){
@@ -276,6 +281,7 @@ $(document).ready(function(){
         }).done(function (user) {
 
             progressPage();
+            $('#header>h1').text('It takes a few seconds to minutes to scan your website.')
             $('#downloadReport').removeClass('disabled');
             $('#dashboard').removeClass('disabled');
             $('#downloadReport').addClass('disabled');
