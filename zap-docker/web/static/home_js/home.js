@@ -236,7 +236,7 @@ $(document).ready(function(){
         });
         $('#progressNumber').text(scantype +'  100%  Earned')
         $('#header>h1').text('Scan task has finished. Page will return immediately.')
-        $('#cancelButton').css(display,'none');
+        $('#cancelButton').css('display','none');
         $('#downloadReport').removeClass('disabled');
         $('#dashboard').removeClass('disabled');
         return new Promise(resolve => setTimeout(resolve, ms));
