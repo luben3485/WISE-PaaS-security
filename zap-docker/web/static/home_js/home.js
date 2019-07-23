@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    var astart = 0 ;
     var intervalNum;
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
@@ -6,7 +7,6 @@ $(document).ready(function(){
     //$('.ui.tiny.modal').modal('hide');
     //progressUpdate(87,"Passive scan");
     //finishedDelay(2000,'Passive scan').then(() => {});
-
     $.ajax({
         url: '/setSSOurl',
         type: 'GET',
@@ -37,7 +37,7 @@ $(document).ready(function(){
         }
     });
     function cancelScan(){
-        checkStop();
+        
         var ssoUrl = getCookie('SSO_URL');
         $.ajax({
             url: ssoUrl + '/v2.0/users/me',
@@ -46,7 +46,7 @@ $(document).ready(function(){
                 withCredentials: true
             }
         }).done(function (user) {
-
+            checkStop();
             $.ajax({
                 url: '/spiderRemove',
                 type: 'GET',
@@ -109,6 +109,20 @@ $(document).ready(function(){
         });
         
     }
+    function ascanStart(){
+        var targetUrl = getCookie('targetUrl');
+        return  $.ajax({
+                url: '/ascan',
+                type: 'GET',
+                data: {
+					'url': targetUrl
+                },
+                xhrFields: {
+                    withCredentials: true
+                }
+        });	  
+        
+    }
     
     
     function checkScan(scanOption){
@@ -119,14 +133,14 @@ $(document).ready(function(){
                     console.log('spiderStatus '+ response.status)
                 }else if(response.status==100){
                     finishedDelay(2000,'Passive scan').then(() => {
-                        $('.ui.tiny.modal').modal('hide')
-                        //download button 解除禁用~~                   
+                        $('.ui.tiny.modal').modal('hide')                 
                     });
                 }
             }).fail(function(){
                 alert('Ajax /spiderStatus error from checkScan');
             });
         }
+        /*
         else if(scanOption == 1){
             ascanstatus().done(function(response){
                  if(response.status < 100){
@@ -134,8 +148,7 @@ $(document).ready(function(){
                     console.log('ascanStatus '+ response.status)  
                 }else if(response.status==100){
                     finishedDelay(2000,'Active scan').then(() => {
-                        $('.ui.tiny.modal').modal('hide')
-                        //download button 解除禁用~~                   
+                        $('.ui.tiny.modal').modal('hide')                   
                     });
                 }
 
@@ -143,27 +156,37 @@ $(document).ready(function(){
                 alert('Ajax /ascanStatus error from checkScan');
             });
         }
+        */
+                        
         else if(scanOption == 2){
             spiderstatus().done(function(response){
                 if (response.status < 100){
                     progressUpdate(response.status,"Passive scan");
                     console.log('spiderStatus '+ response.status)  
-                }else{response.status == 100}{
-                    ascanstatus().done(function(res){
-
-                    if(res.status < 100){
-                        progressUpdate(res.status,"Active scan");
-                        console.log('ascanStatus '+ res.status)  
-                    }else if(res.status==100){
-                        finishedDelay(2000,'Active scan').then(() => {
-                        $('.ui.tiny.modal').modal('hide')
-                        //download button 解除禁用~~                   
+                }else if(response.status == 100){
+                    progressUpdate(100,"Passive scan");
+                    if(astart == 0){
+                        ascanStart().done(function(){
+                            astart = 1;
+                            console.log('Start a new scan\n Set ascanId in cookie!');       
+                        }).fail(function(){
+                            console.log('Ajax /ascan error when scanOption=2')
+                        });
+                        
+                    }else if(astart == 1){
+                        ascanstatus().done(function(res){
+                            if(res.status < 100 && res.status > 0){
+                                progressUpdate(res.status,"Active scan");
+                                console.log('ascanStatus '+ res.status)  
+                            }else if(res.status==100){
+                                finishedDelay(2000,'Active scan').then(() => {
+                                    $('.ui.tiny.modal').modal('hide');           astart = 0;        
+                                });
+                            }
+                        }).fail(function(){
+                            console.log('Ajax /ascanStatus error from checkScan scanOption 2');
                         });
                     }
-  
-                    }).fail(function(){
-                        alert('Ajax /ascanStatus error from checkScan scanOption 2');
-                    });
                 }
                 
             }).fail(function(){
@@ -188,7 +211,7 @@ $(document).ready(function(){
         $('#progressNumber').text(scantype +"   "+ percent+'%  Earned')
     }
     
-    function progressPage(scanOption) {
+    function progressPage() {
     
         $('.ui.tiny.modal')
             .modal({
@@ -252,19 +275,18 @@ $(document).ready(function(){
         }
         }).done(function (user) {
 
-            progressPage(scanOption);
+            progressPage();
             $('#downloadReport').removeClass('disabled');
             $('#dashboard').removeClass('disabled');
             $('#downloadReport').addClass('disabled');
             $('#dashboard').addClass('disabled');
-            if(scanOption ==0)  progressUpdate(1,"Passive scan");
-            else  progressUpdate(1,"Active scan");
+            $('#cancelButton').css('display','');
+            progressUpdate(0,"Passive scan");
             deleteData().done(function(){
                 $.ajax({
-                    url: '/startScan',
+                    url: '/spiderScan',
                     type: 'GET',
                     data: {
-                        'scanOption':scanOption,
                         'url': $('input[name="input_url"]').val()        
                     },
                     xhrFields: {
@@ -272,7 +294,7 @@ $(document).ready(function(){
                     },
                     error: function(xhr) {
 
-                        console.log('Ajax /startScan error maybe wrong URL');
+                        console.log('Ajax /spiderScan error maybe wrong URL');
                     },
                     success: function(response) {
                         //start timer
@@ -281,7 +303,7 @@ $(document).ready(function(){
                     }
 
                 });	 
-                 console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /startScan');
+                 console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /spiderScan');
 
             }).fail(function () {
                 console.log("deleteData error!")
@@ -290,7 +312,7 @@ $(document).ready(function(){
 
         }).fail(function () {
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-            console.log('User is not logged in! /startScan');
+            console.log('User is not logged in! /spiderScan');
         });    
         
         

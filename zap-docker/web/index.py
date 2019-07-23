@@ -9,6 +9,8 @@ import json
 import zipfile,io
 import subprocess
 ssoUrl = ''
+spiderId = -1
+ascanId = -1
 try:
 	app_env = json.loads(os.environ['VCAP_APPLICATION'])
 	ssoUrl = 'https://portal-sso' + app_env['application_uris'][0][app_env['application_uris'][0].find('.'):]
@@ -29,7 +31,7 @@ def setSSOurl():
 	res_cookie = make_response(redirect('/'),200)
 	res_cookie.set_cookie('SSO_URL', ssoUrl)
 	return res_cookie
-
+'''
 @app.route('/startScan')
 def startScan():
 	EIToken =request.cookies.get('EIToken')  
@@ -105,7 +107,7 @@ def startScan():
 		
 	else:
 		abort(401)
-
+'''
 '''
 SPIDER + PASSIVE SCAN
 '''
@@ -130,6 +132,8 @@ def spiderScan():
 				#return jsonify(result)
 				res_cookie = make_response(redirect('/'),200)
 				res_cookie.set_cookie('spiderId', r['scan'])
+				res_cookie.set_cookie('targetUrl', url)
+			
 				return res_cookie
 			else:
 				abort(500)
@@ -216,8 +220,7 @@ def spiderRemove():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		try:
-			payload = {'scanId':spiderId}
-			r = requests.get('http://127.0.0.1:5000/JSON/spider/action/removeAllScans/',params=payload)	
+			r = requests.get('http://127.0.0.1:5000/JSON/spider/action/removeAllScans/')	
 			r = r.json()
 			result = {'Result':r['Result']}
 			return jsonify(result)
@@ -342,7 +345,7 @@ def ascanRemove():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		try:
-			r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/removeAllScans/',params=payload)	
+			r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/removeAllScans/')	
 			r = r.json()
 			result = {'Result':r['Result']}
 			return jsonify(result)
