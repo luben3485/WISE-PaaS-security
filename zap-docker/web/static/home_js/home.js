@@ -3,6 +3,7 @@ $(document).ready(function(){
     var intervalNum;
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
+    $('.menu .item').tab();
     //progressPage();
     //$('.ui.tiny.modal').modal('hide');
     //progressUpdate(87,"Passive scan");

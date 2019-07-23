@@ -9,17 +9,13 @@
         
     </head>
     <body>
-        
-        <div class="ui inverted segment" style="margin:0px;">
+        <div class="ui inverted  segment" style="margin:0px;border-radius:0;">
           <div class="ui inverted secondary menu">
             <a class="item">
               home
             </a>
             <a class="item active">
-              Quick scan
-            </a>
-            <a class="item">
-              Advanced scan
+              Scan
             </a>
             <a class="item">
               Setting
@@ -27,28 +23,26 @@
           </div>
         </div>
         
-        <div class="ui  dimmer">
-            <div class="ui massive text loader">Loading</div>
-        </div>
-        
         
         
         <div class="ui grid">
-            <div class="four wide column"></div>
-            <div class="eight wide column">
+            <div class="three wide column"></div>
+            <div class="ten wide column">
                 <div style="font-size: 4rem;font-family:Arial;">
-                    <p>Start a quick scan</p>                  
+                    <p>Start a scan</p>                  
                 </div>                
                 <div style="font-size: 1.5rem;font-family:MS Sans Serif;">
                     <p>The only thing you need to do is provide some basic information and make a simple choice about the type of scan you want to perform.</p>
                 </div>
                <hr>
+  
                 <div class="ui form">
                     <div class="field">
                         <div class="two fields">
                             <div class="field">
                                 <label>Target URL</label>
                                 <input type="text" name="input_url" placeholder="e.g http://testphp.vulnweb.com">
+                                <div>Full URL of the targeted web application(must include the appropriate protocol http or https).</div>
                             </div>
                             <div class="field">
                                 <label>Scan Method</label>
@@ -60,11 +54,53 @@
                             </div>
                         </div>
                     </div>
+                    <div class="ui  raised segment">
+                        <h3 class="ui header">
+                            <!--<i class="settings icon"></i>-->
+                            <div class="content">
+                                Advanced Options
+ 
+
+                                
+                            </div>
+                        </h3>
+                        <div class="ui clearing divider">
+                          
+
+                            
+                        </div>                         
+                                <div class="ui top attached tabular menu">
+                                  <a class="item" data-tab="first">Passive Scan</a>
+                                  <a class="item active" data-tab="second">Active Scan</a>
+                                </div>
+                                <div class="ui bottom attached tab segment" data-tab="first">
+                                  Passive Scan
+                                </div>
+                                <div class="ui bottom attached tab segment active" data-tab="second">
+                                  Active Scan
+                                </div>
+
+                    </div>
+                    
+                    
+                    <!--
+                    <div class="ui placeholder segment">
+                        <div class="ui icon header">
+                            <i class="pdf file outline icon"></i>
+                                No documents are listed for this customer.
+                        </div>
+                        <div class="ui primary button">Add Document</div>
+                    </div>
+                    -->
+                    
+                    
+                    
                     <div class="ui horizontal divider">
                         Main Operation
                     </div>
                     <button id="startScan" class="ui blue button" style="font-size:20px;">
-                        Start scan
+                        <i class="search icon"></i>
+                        Scan
                     </button>
                     <!--
                     <button id="spiderScan" class="ui red button" style="font-size:20px;">
@@ -75,9 +111,11 @@
                     </button>
                     -->
                     <button id="downloadReport" class="ui  green disabled button" style="font-size:20px;">
+                        <i class="file alternate outline icon"></i>
                         Download
                     </button>
                     <button id="dashboard" class="ui  orange  disabled button" style="font-size:20px;">
+                        <i class="th list icon"></i>
                         Dashboard
                     </button>
                     <!--
@@ -121,29 +159,11 @@
                     
                 </div>
             
-                
-                    <div id="succ" class="ui success message " style="display:none;">
-                        <i class="close icon"></i>
-                        <div class="header">
-                            Start a new scan successfully.
-                        </div>
-                    </div>
-                
-                
-                    <div id="fail" class="ui negative message " style="display:none;">
-                        <i class="close icon"></i>
-                        <div class="header">
-                            Failed.
-                        </div>
-                    </div>
-                    
-                
             </div>
-            <div class="four wide column"></div>
+            <div class="three wide column"></div>
             
             
         </div>
-        
         
         <div class="ui tiny basic modal">
             
@@ -162,17 +182,15 @@
                         Cancel
                 </div>
             
-            <div class="ui green ok inverted button">
+                <div class="ui green ok inverted button">
                     <i class="sign in alternate icon"></i>
                     Dashboard
-                    </div>
+                </div>
             </div>
             
-            </div>
    
         </div>
         
-
         <!--<button type="button" class="btn" id="hi">按鈕</button>-->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
