@@ -3,9 +3,10 @@ $(document).ready(function(){
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
     //progressPage();
+    //$('.ui.tiny.modal').modal('hide');
     //progressUpdate(87,"Passive scan");
     //finishedDelay(2000,'Passive scan').then(() => {});
-    
+
     $.ajax({
         url: '/setSSOurl',
         type: 'GET',
@@ -229,12 +230,15 @@ $(document).ready(function(){
         
     }
     function finishedDelay(ms,scantype) {
+        checkStop();
         $('#progressbar').progress({
             percent: 100
         });
         $('#progressNumber').text(scantype +'  100%  Earned')
         $('#header>h1').text('Scan task has finished. Page will return immediately.')
         $('#cancelButton').css(display,'none');
+        $('#downloadReport').removeClass('disabled');
+        $('#dashboard').removeClass('disabled');
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     $('#startScan').click(function(){
@@ -250,6 +254,9 @@ $(document).ready(function(){
 
             progressPage(scanOption);
             $('#downloadReport').removeClass('disabled');
+            $('#dashboard').removeClass('disabled');
+            $('#downloadReport').addClass('disabled');
+            $('#dashboard').addClass('disabled');
             if(scanOption ==0)  progressUpdate(1,"Passive scan");
             else  progressUpdate(1,"Active scan");
             deleteData().done(function(){
@@ -269,7 +276,7 @@ $(document).ready(function(){
                     },
                     success: function(response) {
                         //start timer
-                        intervalNum = setInterval(function(){ checkScan(scanOption) }, 200);
+                        intervalNum = setInterval(function(){ checkScan(scanOption) }, 600);
                         //alert('Start a  scan\n Set id in cookie!');
                     }
 
