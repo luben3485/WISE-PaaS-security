@@ -215,15 +215,12 @@ def spiderRemove():
 	EIToken =request.cookies.get('EIToken')  
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
-		#id = request.args.get('id')
-		spiderId=request.cookies.get('id')
 		try:
-			if id:
-				payload = {'scanId':spiderId}
-				r = requests.get('http://127.0.0.1:5000/JSON/spider/action/removeAllScans/',params=payload)	
-				r = r.json()
-				result = {'Result':r['Result']}
-				return jsonify(result)
+			payload = {'scanId':spiderId}
+			r = requests.get('http://127.0.0.1:5000/JSON/spider/action/removeAllScans/',params=payload)	
+			r = r.json()
+			result = {'Result':r['Result']}
+			return jsonify(result)
 
 		except Exception as err:
 			print('error: {}'.format(str(err)))
@@ -344,14 +341,11 @@ def ascanRemove():
 	EIToken =request.cookies.get('EIToken')  
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
-		ascanId=request.cookies.get('ascanId')
 		try:
-			if ascanId:
-				payload = {'scanId':ascanId}
-				r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/removeAllScans/',params=payload)	
-				r = r.json()
-				result = {'Result':r['Result']}
-				return jsonify(result)
+			r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/removeAllScans/',params=payload)	
+			r = r.json()
+			result = {'Result':r['Result']}
+			return jsonify(result)
 
 		except Exception as err:
 			print('error: {}'.format(str(err)))
@@ -394,7 +388,7 @@ def clear():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		try:
-			r = response = requests.get('http://127.0.0.1:5000/JSON/core/action/deleteAllAlerts')
+			r = requests.get('http://127.0.0.1:5000/JSON/core/action/deleteAllAlerts')
 			r = r.json()
 			result = {'Result':r['Result']}
 			return jsonify(result)

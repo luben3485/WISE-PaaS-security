@@ -1,6 +1,6 @@
 ---
 applications:
-- name: zap-security-web-debug
+- name: zap-security-web-progressBar-2
   memory: 1024M
   instances: 1
   disk_quota: 4G

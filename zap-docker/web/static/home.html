@@ -70,7 +70,7 @@
                         Main Operation
                     </div>
                     <button id="startScan" class="ui blue button" style="font-size:20px;">
-                        Scan
+                        Start scan
                     </button>
                     <!--
                     <button id="spiderScan" class="ui red button" style="font-size:20px;">
@@ -80,8 +80,8 @@
                         Start active scan
                     </button>
                     -->
-                    <button id="downloadReport" class="ui orange button" style="font-size:20px;">
-                        Download
+                    <button id="downloadReport" class="ui  green disabled button" style="font-size:20px;">
+                        Download Report
                     </button>
                     <!--
                     <button id="clear" class="ui white button" style="font-size:20px;">
@@ -150,17 +150,17 @@
         
         <div class="ui tiny basic modal">
             
-            <div class="ui icon header">
+            <div id="header" class="ui icon header">
                 <i class="cloud icon"></i>
                 <h1>It takes a few seconds to minutes to scan your website.</h1>
                     
             </div>
             <div class="ui teal progress" id="progressbar">
                 <div class="bar"></div>
-                <div id="progressNumber" class="label" style="font-size: 1.5rem;color:white;">22% Earned</div>
+                <div id="progressNumber" class="label" style="font-size: 1.5rem;color:white;"></div>
             </div>
             <div class="actions">
-                <div class="ui red  cancel inverted button">
+                <div id="cancelButton" class="ui red  cancel inverted button">
                     <i class="window close icon"></i>  
                         Cancel
                 </div>
@@ -179,7 +179,7 @@
         <!--<button type="button" class="btn" id="hi">按鈕</button>-->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-        <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
+        <!--<link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">-->
         <script type="text/javascript" src="home_js/home.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>
     </body>

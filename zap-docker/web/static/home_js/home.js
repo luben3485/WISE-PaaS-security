@@ -4,6 +4,7 @@ $(document).ready(function(){
     var myUrl = window.location.protocol + '//' + window.location.hostname;
     //progressPage();
     //progressUpdate(87,"Passive scan");
+    //finishedDelay(2000,'Passive scan').then(() => {});
     
     $.ajax({
         url: '/setSSOurl',
@@ -116,7 +117,7 @@ $(document).ready(function(){
                     progressUpdate(response.status,"Passive scan");
                     console.log('spiderStatus '+ response.status)
                 }else if(response.status==100){
-                    delay(2000).then(() => {
+                    finishedDelay(2000,'Passive scan').then(() => {
                         $('.ui.tiny.modal').modal('hide')
                         //download button 解除禁用~~                   
                     });
@@ -131,7 +132,7 @@ $(document).ready(function(){
                    progressUpdate(response.status,"Active scan");
                     console.log('ascanStatus '+ response.status)  
                 }else if(response.status==100){
-                    delay(2000).then(() => {
+                    finishedDelay(2000,'Active scan').then(() => {
                         $('.ui.tiny.modal').modal('hide')
                         //download button 解除禁用~~                   
                     });
@@ -153,7 +154,7 @@ $(document).ready(function(){
                         progressUpdate(res.status,"Active scan");
                         console.log('ascanStatus '+ res.status)  
                     }else if(res.status==100){
-                        delay(2000).then(() => {
+                        finishedDelay(2000,'Active scan').then(() => {
                         $('.ui.tiny.modal').modal('hide')
                         //download button 解除禁用~~                   
                         });
@@ -183,7 +184,7 @@ $(document).ready(function(){
         $('#progressbar').progress({
             percent: percent
         });
-        $('#progressNumber').text(scantype +"  "+ percent+'% Earned')
+        $('#progressNumber').text(scantype +"   "+ percent+'%  Earned')
     }
     
     function progressPage(scanOption) {
@@ -227,8 +228,13 @@ $(document).ready(function(){
         });
         
     }
-    function delay(ms) {
-        console.log("Scan has finished. Page will return immediately.");
+    function finishedDelay(ms,scantype) {
+        $('#progressbar').progress({
+            percent: 100
+        });
+        $('#progressNumber').text(scantype +'  100%  Earned')
+        $('#header>h1').text('Scan task has finished. Page will return immediately.')
+        $('#cancelButton').css(display,'none');
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     $('#startScan').click(function(){
@@ -243,7 +249,9 @@ $(document).ready(function(){
         }).done(function (user) {
 
             progressPage(scanOption);
-            progressUpdate(0);
+            $('#downloadReport').removeClass('disabled');
+            if(scanOption ==0)  progressUpdate(1,"Passive scan");
+            else  progressUpdate(1,"Active scan");
             deleteData().done(function(){
                 $.ajax({
                     url: '/startScan',
@@ -261,7 +269,7 @@ $(document).ready(function(){
                     },
                     success: function(response) {
                         //start timer
-                        intervalNum = setInterval(function(){ checkScan(scanOption) }, 500);
+                        intervalNum = setInterval(function(){ checkScan(scanOption) }, 200);
                         //alert('Start a  scan\n Set id in cookie!');
                     }
 
