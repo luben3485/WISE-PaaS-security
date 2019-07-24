@@ -150,7 +150,7 @@ $(document).ready(function(){
     function spiderScanStart(){
         var subtreeOnly;
         var recurse;
-        $("input[name=]:checked").each(function () { subtreeOnly = $(this).val()});
+        $("input[name=subtreeOnly]:checked").each(function () { subtreeOnly = $(this).val()});
         $("input[name=passiveRecurse]:checked").each(function () { recurse = $(this).val()});
 
         return  $.ajax({
