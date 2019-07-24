@@ -118,9 +118,9 @@ def spiderScan():
 	if res.status_code == 200:
 		url = request.args.get('url')
 		maxChildren=''
-		recurse=''
+		recurse = request.args.get('recurse')
 		contextName=''
-		subtreeOnly=''
+		subtreeOnly= request.args.get('subtreeOnly')
 
 		try:
 			payload = {'url': url, 'maxChildren': maxChildren,'recurse':recurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
@@ -243,9 +243,9 @@ def ascan():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		url = request.args.get('url')
-		recurse = True
-		inScopeOnly = False
-		scanPolicyName = ''
+		recurse = request.args.get('recurse')
+		inScopeOnly = request.args.get('inScopeOnly')
+		scanPolicyName = 'custom'
 		method =''
 		postData = ''
 		contextId = ''
@@ -271,7 +271,27 @@ def ascan():
 	else:
 		abort(401)
 
-		
+@app.route('/addScanPolicy')
+def addScanPolicy():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		try:
+			alertThreshold = request.args.get('alertThreshold')
+			attackStrength = request.args.get('attackStrength')
+			scanPolicyName = 'custom'
+			payload = {'alertThreshold':alertThreshold,'attackStrength':attackStrength,'scanPolicyName':scanPolicyName}
+			r = requests.get('http://127.0.0.1:8080/JSON/ascan/action/addScanPolicy/',params=payload)
+			r = r.json()
+			result = {'Result':r['Result']}
+			return jsonify(result)
+		except Exception as err:
+			print('error: {}'.format(str(err)))
+			abort(500)
+
+	else:
+		abort(401)
+
 
 @app.route('/ascanStatus')
 def ascanStatus():

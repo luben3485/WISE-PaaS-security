@@ -4,6 +4,22 @@ $(document).ready(function(){
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
     $('.menu .item').tab();
+    $('.accordion').accordion({animateChildren: false});
+    $('.ui.checkbox').checkbox();
+    $('.message .close')
+      .on('click', function() {
+        $(this)
+          .closest('.message')
+          .transition('fade')
+        ;
+      });
+    
+    /*
+    $('.accordion').click(function() {
+        $('.title').toggleClass("active");
+        $('.content').toggleClass("active");
+    });
+    */
     //progressPage();
     //$('.ui.tiny.modal').modal('hide');
     //progressUpdate(87,"Passive scan");
@@ -113,12 +129,17 @@ $(document).ready(function(){
         
     }
     function ascanStart(){
+        var recurse;
+        var inScopeOnly;
+        $("input[name=activeRecurse]:checked").each(function () { recurse = $(this).val()});
+        $("input[name=inScopeOnly]:checked").each(function () { inScopeOnly = $(this).val()});
         var targetUrl = getCookie('targetUrl');
         return  $.ajax({
                 url: '/ascan',
                 type: 'GET',
                 data: {
-					'url': targetUrl
+					'inScopeOnly': inScopeOnly,
+                    'recurse':recurse
                 },
                 xhrFields: {
                     withCredentials: true
@@ -126,7 +147,46 @@ $(document).ready(function(){
         });	  
         
     }
+    function spiderScanStart(){
+        var subtreeOnly;
+        var recurse;
+        $("input[name=]:checked").each(function () { subtreeOnly = $(this).val()});
+        $("input[name=passiveRecurse]:checked").each(function () { recurse = $(this).val()});
+
+        return  $.ajax({
+                url: '/spiderScan',
+                type: 'GET',
+                data: {
+                    'subtreeOnly': subtreeOnly,
+                    'recurse': recurse,
+                    'url': $('input[name="input_url"]').val()
+                },
+                xhrFields: {
+                    withCredentials: true
+                }
+        });
+    }
     
+    
+    function addScanPolicy(){
+        var alertThreshold;
+        var attackStrength;
+        $("input[name=alertThreshold]:checked").each(function () { alertThreshold = $(this).val()});
+        $("input[name=attackStrength]:checked").each(function () { attackStrength = $(this).val()});
+        
+        return  $.ajax({
+                url: '/addScanPolicy',
+                type: 'GET',
+                data: {
+                    'alertThreshold':alertThreshold,
+                    'attackStrength':attackStrength
+                },
+                xhrFields: {
+                    withCredentials: true
+                }
+        });	  
+        
+    }
     
     function checkScan(scanOption){
         if(scanOption == 0){
@@ -170,12 +230,21 @@ $(document).ready(function(){
                     if(astart == 0){
                         progressUpdate(100,"Passive scan");
                         $('#header>h1').text('Scan task has not finished. Please be patient.')
-                        ascanStart().done(function(){
-                            astart = 1;
-                            console.log('Start a new scan\n Set ascanId in cookie!');       
+
+                        addScanPolicy().done(function(){
+                            
+                            ascanStart().done(function(){
+                                astart = 1;
+                                console.log('Start a new scan\n Set ascanId in cookie!');       
+                            }).fail(function(){
+                                console.log('Ajax /ascan error when scanOption=2')
+                            });
+                            
                         }).fail(function(){
-                            console.log('Ajax /ascan error when scanOption=2')
+                            console.log('Ajax /addScanPolicy error')
                         });
+                        
+                        
                         
                     }else if(astart == 1){
                         ascanstatus().done(function(res){
@@ -268,6 +337,7 @@ $(document).ready(function(){
         $('#cancelButton').css('display','none');
         $('#downloadReport').removeClass('disabled');
         $('#dashboard').removeClass('disabled');
+        $('#succMsg').css('display','none');
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     $('#startScan').click(function(){
@@ -282,6 +352,7 @@ $(document).ready(function(){
         }).done(function (user) {
 
             progressPage();
+            $('#succMsg').css('display','none');
             $('#header>h1').text('It takes a few seconds to minutes to scan your website.')
             $('#downloadReport').removeClass('disabled');
             $('#dashboard').removeClass('disabled');
@@ -289,29 +360,17 @@ $(document).ready(function(){
             $('#dashboard').addClass('disabled');
             $('#cancelButton').css('display','');
             progressUpdate(0,"Passive scan");
-            deleteData().done(function(){
-                $.ajax({
-                    url: '/spiderScan',
-                    type: 'GET',
-                    data: {
-                        'url': $('input[name="input_url"]').val()        
-                    },
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    error: function(xhr) {
-
-                        console.log('Ajax /spiderScan error maybe wrong URL');
-                    },
-                    success: function(response) {
-                        //start timer
-                        intervalNum = setInterval(function(){ checkScan(scanOption) }, 600);
-                        //alert('Start a  scan\n Set id in cookie!');
-                    }
-
-                });	 
-                 console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /spiderScan');
-
+            
+            deleteData().done(function(){    
+                spiderScanStart().done(function(){
+                    console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /spiderScan');
+                    //start timer
+                    intervalNum = setInterval(function(){ checkScan(scanOption) }, 600);
+                    //alert('Start a  scan\n Set id in cookie!');
+                }).fail(function(){
+                    console.log('Ajax /spiderScan error');    
+                });
+                
             }).fail(function () {
                 console.log("deleteData error!")
             });

@@ -1,14 +1,65 @@
-/*
-#progressbar {
-  background-color: black;
-  border-radius: 13px;
-  padding: 3px;
+.ui.inverted.segment{
+    margin:0px;
+    border-radius:0px;
+}
+.ui.styled.accordion{
+    margin-bottom:2rem;
+}
+.ui.positive.message{
+    display:block;
+}
+#succMsg{
+    display:none;
 }
 
-#progressbar>div {
-  background-color: orange;
-  width: 40%;
-  height: 20px;
-  border-radius: 10px;
+@media (min-width: 1200px) {
+    #dashboard{
+        font-size:1.4rem;
+        margin:0.5rem;
+    }
+    #downloadReport{ 
+        font-size:1.4rem;
+        margin:0.5rem;
+    }
+    #startScan{ 
+        font-size:1.4rem;
+        margin:0.5rem;
+    }   
+    
 }
-*/
+
+@media (min-width: 900px) and (max-width: 1200px) {
+    #dashboard{
+        font-size:1.4rem;
+        margin:0.5rem;
+    }
+    #downloadReport{ 
+        font-size:1.4rem;
+        margin:0.5rem;
+    }
+    #startScan{ 
+        font-size:1.4rem;
+        margin:0.5rem;
+    }   
+    
+   
+}
+
+@media (max-width: 900px) {
+    #dashboard{
+        font-size:1.3rem;
+        width:100%;
+        margin:0.5rem;
+    }
+    #downloadReport{ 
+        font-size:1.3rem;
+        width:100%;
+        margin:0.5rem;
+    }
+    #startScan{ 
+        font-size:1.3rem;
+        width:100%;
+        margin:0.5rem;
+    }   
+    
+}
