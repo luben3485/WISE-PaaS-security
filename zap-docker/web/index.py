@@ -281,7 +281,7 @@ def addScanPolicy():
 			attackStrength = request.args.get('attackStrength')
 			scanPolicyName = 'custom'
 			payload = {'alertThreshold':alertThreshold,'attackStrength':attackStrength,'scanPolicyName':scanPolicyName}
-			r = requests.get('http://127.0.0.1:8080/JSON/ascan/action/addScanPolicy/',params=payload)
+			r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/addScanPolicy/',params=payload)
 			r = r.json()
 			result = {'Result':r['Result']}
 			return jsonify(result)
