@@ -288,9 +288,9 @@ def addScanPolicy():
 				#r = r.json()
 				#result = {'Result':r['Result']}
 				#return jsonify(result)
-				return True
+				return 'OK'
 			else:
-				abort(500)
+				abort(400)
 		except Exception as err:
 			print('error: {}'.format(str(err)))
 			abort(500)
