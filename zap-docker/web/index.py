@@ -277,15 +277,20 @@ def addScanPolicy():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		try:
-			alertThreshold = request.args.get('alertThreshold')
-			attackStrength = request.args.get('attackStrength')
 			scanPolicyName = 'custom'
-			payload = {'alertThreshold':alertThreshold,'attackStrength':attackStrength,'scanPolicyName':scanPolicyName}
-			r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/addScanPolicy/',params=payload)
-			#r = r.json()
-			#result = {'Result':r['Result']}
-			#return jsonify(result)
-			return True
+			remove_payload = {'scanPolicyName':scanPolicyName}
+			r_remove = requests.get('http://127.0.0.1:5000/JSON/ascan/action/removeScanPolicy/',params=remove_payload)
+			if r_remove.status_code == 200 or r_remove.status_code == 400:
+				alertThreshold = request.args.get('alertThreshold')
+				attackStrength = request.args.get('attackStrength')
+				payload = {'scanPolicyName':scanPolicyName,'alertThreshold':alertThreshold,'attackStrength':attackStrength}
+				r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/addScanPolicy',params=payload)
+				#r = r.json()
+				#result = {'Result':r['Result']}
+				#return jsonify(result)
+				return True
+			else:
+				abort(500)
 		except Exception as err:
 			print('error: {}'.format(str(err)))
 			abort(500)

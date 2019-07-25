@@ -27,9 +27,6 @@ $(document).ready(function(){
     $.ajax({
         url: '/setSSOurl',
         type: 'GET',
-        data: {
-            'scanOption':1,
-        },
         xhrFields: {
             withCredentials: true
         },
@@ -350,15 +347,7 @@ $(document).ready(function(){
             withCredentials: true
         }
         }).done(function (user) {
-            
-            /*VUE~~~~*/
-            
-            app.addTable();
-            
-            
-            /*VUE~~~~*/
-            
-            
+
             progressPage();
             $('#succMsg').css('display','none');
             $('#header>h1').text('It takes a few seconds to minutes to scan your website.')
