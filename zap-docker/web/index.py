@@ -282,9 +282,10 @@ def addScanPolicy():
 			scanPolicyName = 'custom'
 			payload = {'alertThreshold':alertThreshold,'attackStrength':attackStrength,'scanPolicyName':scanPolicyName}
 			r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/addScanPolicy/',params=payload)
-			r = r.json()
-			result = {'Result':r['Result']}
-			return jsonify(result)
+			#r = r.json()
+			#result = {'Result':r['Result']}
+			#return jsonify(result)
+			return True
 		except Exception as err:
 			print('error: {}'.format(str(err)))
 			abort(500)

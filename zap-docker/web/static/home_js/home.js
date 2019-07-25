@@ -13,7 +13,7 @@ $(document).ready(function(){
           .transition('fade')
         ;
       });
-    
+
     /*
     $('.accordion').click(function() {
         $('.title').toggleClass("active");
@@ -152,7 +152,7 @@ $(document).ready(function(){
         var recurse;
         $("input[name=subtreeOnly]:checked").each(function () { subtreeOnly = $(this).val()});
         $("input[name=passiveRecurse]:checked").each(function () { recurse = $(this).val()});
-
+        
         return  $.ajax({
                 url: '/spiderScan',
                 type: 'GET',
@@ -350,7 +350,15 @@ $(document).ready(function(){
             withCredentials: true
         }
         }).done(function (user) {
-
+            
+            /*VUE~~~~*/
+            
+            app.addTable();
+            
+            
+            /*VUE~~~~*/
+            
+            
             progressPage();
             $('#succMsg').css('display','none');
             $('#header>h1').text('It takes a few seconds to minutes to scan your website.')
@@ -360,7 +368,7 @@ $(document).ready(function(){
             $('#dashboard').addClass('disabled');
             $('#cancelButton').css('display','');
             progressUpdate(0,"Passive scan");
-            
+
             deleteData().done(function(){    
                 spiderScanStart().done(function(){
                     console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /spiderScan');
@@ -378,7 +386,7 @@ $(document).ready(function(){
 
         }).fail(function () {
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-            console.log('User is not logged in! /spiderScan');
+            //console.log('User is not logged in! /spiderScan');
         });    
         
         
