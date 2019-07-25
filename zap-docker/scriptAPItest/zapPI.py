@@ -61,7 +61,7 @@ if __name__ == '__main__':
         url = args.target
         resurse = True
         inScopeOnly = False
-        scanPolicyName = ''
+        scanPolicyName = 'custom'
         method =''
         postData = ''
         contextId = ''
@@ -88,5 +88,28 @@ if __name__ == '__main__':
         payload = {'baseurl':args.target}
         response = requests.get('http://' + args.address  + '/JSON/core/view/urls/',params=payload)
         print(response.text)
+    elif args.scanmethod == "policy":
+        scanPolicyName = 'custom'
+        remove_payload = {'scanPolicyName':scanPolicyName}
+        r_remove = requests.get('http://127.0.0.1:5000/JSON/ascan/action/removeScanPolicy/',params=remove_payload)
+        if r_remove.status_code == 200 or r_remove.status_code == 400:
+            print(r_remove.status_code)
+            alertThreshold = 'Low'
+            attackStrength = 'Default'
+            payload = {'scanPolicyName':scanPolicyName,'alertThreshold':alertThreshold,'attackStrength':attackStrength}
+            r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/addScanPolicy',params=payload)
+            print(r.text)
+        else: 
+            print("fail")
+
+
+
+
+
+
+
+
+
+
 
 
