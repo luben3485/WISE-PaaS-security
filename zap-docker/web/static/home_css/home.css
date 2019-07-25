@@ -17,10 +17,16 @@
     font-family:Arial;
     margin-top:3rem;
 }
+#app{
+    margin-top:5rem;
+    margin-bottom:10rem;
+    height:auto;
+    
+}
 @media (min-height: 600px) and  (min-width: 900px){
  .ui.inverted.vertical.footer.segment{
     
-    position: absolute;
+    position: relative;
     bottom: 0;
     width: 100%;
   }

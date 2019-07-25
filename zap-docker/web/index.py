@@ -242,7 +242,7 @@ def ascan():
 	EIToken =request.cookies.get('EIToken')  
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
-		url = request.args.get('url')
+		url = request.cookies.get('targetUrl')
 		recurse = request.args.get('recurse')
 		inScopeOnly = request.args.get('inScopeOnly')
 		scanPolicyName = 'custom'

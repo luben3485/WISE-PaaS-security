@@ -7,6 +7,8 @@
         <link href="home_css/home.css" rel="stylesheet" type="text/css" >
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/>
         <link rel="stylesheet" href="https://unpkg.com/vue-easytable/umd/css/index.css">
+        <!--<link rel="stylesheet" href="https://unpkg.com/vue-easytable@1.7.2/umd/css/index.css">-->
+        
     </head>
     <body>
             
@@ -313,7 +315,13 @@
                     -->
                     
                 </div>
-            
+                
+                <div id="app">
+                    <h1>Scan History</h1>
+                    <template>
+                        <v-table is-horizontal-resize style="width:100%;" :columns="columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" :select-all="selectALL" :select-change="selectChange" :select-group-change="selectGroupChange"></v-table>
+                    </template>
+                </div>
             </div>
             <div class="three wide column"></div>
             
@@ -347,11 +355,7 @@
         </div>
         
         
-        <div id="app">
-        <template>
-            <v-table is-horizontal-resize style="width:100%" :columns="columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" :select-all="selectALL" :select-change="selectChange" :select-group-change="selectGroupChange"></v-table>
-        </template>
-        </div>
+        
 
         <!--</div>-->
 
@@ -363,7 +367,7 @@
             </div>
         </div>
         -->
-        <!--
+    
         <div class="ui inverted vertical footer segment">
             <div id="footcontaier" class="ui container ">
               <div class="ui stackable inverted divided equal height stackable grid">
@@ -389,7 +393,7 @@
               </div>
             </div>
         </div>
-        -->
+        
         
         
         <!--<button type="button" class="btn" id="hi">按鈕</button>-->
