@@ -228,8 +228,8 @@ $(document).ready(function(){
                         progressUpdate(100,"Passive scan");
                         $('#header>h1').text('Scan task has not finished. Please be patient.')
 
-                        addScanPolicy().done(function(){
-                            
+                        addScanPolicy().done(function(res){
+                            console.log(res.code);
                             ascanStart().done(function(){
                                 astart = 1;
                                 console.log('Start a new scan\n Set ascanId in cookie!');       
