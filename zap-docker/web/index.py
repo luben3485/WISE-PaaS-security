@@ -263,10 +263,10 @@ def ascan():
 				res_cookie.set_cookie('ascanId', r['scan'])
 				return res_cookie
 			else:
-				abort(500)
+				abort(400)
 		except Exception as err:
 			print('error: {}'.format(str(err)))
-			abort(500)
+			abort(403)
 		
 	else:
 		abort(401)
@@ -286,9 +286,9 @@ def addScanPolicy():
 				payload = {'scanPolicyName':scanPolicyName,'alertThreshold':alertThreshold,'attackStrength':attackStrength}
 				r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/addScanPolicy',params=payload)
 				#r = r.json()
-				#result = {'Result':r['Result']}
-				#return jsonify(result)
-				return 'OK'
+				result = {'code':r.status_code}
+				return jsonify(result)
+				#return 'OK'
 			else:
 				abort(400)
 		except Exception as err:

@@ -47,14 +47,15 @@ var Main ={
                         {"name":"吴伟","tel":"183*****6678","hobby":"钢琴、书法、唱歌","address":"上海市松江区乐都西路867-871号"}
                      ],
                     columns: [
+                        {width: 60, titleAlign: 'center',columnAlign:'center',type: 'selection'},
                         {
-                            field: 'custome', title:'序号', width: 50, titleAlign: 'center', columnAlign: 'center',
+                            field: 'custome', title:'Number', width: 50, titleAlign: 'center', columnAlign: 'center',
                             formatter: function (rowData,rowIndex,pagingIndex,field) {
-                                return rowIndex < 3 ? '<span style="color:red;font-weight: bold;">' + (rowIndex + 1) + '</span>' : rowIndex + 1
+                                return rowIndex < 3 ? '<span style="color:#FF0000;font-weight: bold;">' + (rowIndex + 1) + '</span>' : rowIndex + 1
                             }, isFrozen: true,isResize:true
                         },
-                        {field: 'name', title:'姓名', width: 80, titleAlign: 'center',columnAlign:'center',isResize:true},
-                        {field: 'tel', title: '手机号码', width: 150, titleAlign: 'center',columnAlign:'center',isResize:true},
+                        {field: 'name', title:'Target URL', width: 150, titleAlign: 'center',columnAlign:'center',isResize:true},
+                        {field: 'tel', title: '', width: 150, titleAlign: 'center',columnAlign:'center',isResize:true},
                         {field: 'hobby', title: '爱好', width: 150, titleAlign: 'center',columnAlign:'center',isResize:true},
                         {field: 'address', title: '地址', width: 230, titleAlign: 'center',columnAlign:'left',isResize:true},
                         {field: 'custome-adv', title: '操作',width: 200, titleAlign: 'center',columnAlign:'center',componentName:'table-operation',isResize:true}
@@ -63,6 +64,16 @@ var Main ={
             }
         },
         methods:{
+            selectALL(selection){
+                console.log('select-aLL',selection);
+            },
+            selectChange(selection,rowData){
+                console.log('select-change',selection,rowData);
+            },
+
+            selectGroupChange(selection){
+                console.log('select-group-change',selection);
+            },
             customCompFunc(params){
 
                 console.log(params);
