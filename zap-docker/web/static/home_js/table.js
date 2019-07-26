@@ -36,38 +36,36 @@ var tableApp = new Vue({
         }
 })
 */
-
+var Data =[
+                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashboardLink":"dd"},
+                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashbpardLInk":"dd"},
+                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashbpardLInk":"dd"},
+                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashbpardLInk":"dd"}
+            ];
+$(document).ready(function(){
+    $('#tabledelete').click(function(){
+        //Data.push({"targeturl":"http://abcdefg.vulnweb.com","time":"2019-07-25 15:30:56"});
+    });
+    
+});   
+console.log(Data[0]);
+    
 var Main ={
         data() {
             return {
-                tableData: [
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56"},
-                     ],
+                tableData: Data,
                     columns: [
-                        {width: 50, titleAlign: 'center',columnAlign:'center',type: 'selection'},
+                        {width: 50, titleAlign: 'center',columnAlign:'center',type: 'selection' 
+                        },
                         {
                             field: 'custome', title:'Number', width: 50, titleAlign: 'center', columnAlign: 'center',
                             formatter: function (rowData,rowIndex,pagingIndex,field) {
-                                return rowIndex < 3 ? '<span style="color:#FF0000;font-weight: bold;">' + (rowIndex + 1) + '</span>' : rowIndex + 1
+                                return rowIndex >=0 ? '<span style="color:#000000;font-weight: bold;">' + (rowIndex + 1) + '</span>' : rowIndex + 1
                             }, isFrozen: true,isResize:true
                         },
                         {field: 'targeturl', title:'Target URL', width: 350, titleAlign: 'center',columnAlign:'center',isResize:true},
                         {field: 'time', title: 'Time', width: 100, titleAlign: 'center',columnAlign:'center',isResize:true},
-                        {field: 'dashboard', title: 'Dashboard', width: 90, titleAlign: 'center',columnAlign:'center',componentName:'table-dashboard',isResize:true},
+                        {field: 'dashboard', title: 'Dashboard', width: 50, titleAlign: 'center',columnAlign:'center',componentName:'table-dashboard',isResize:true},
                         {field: 'custome-adv', title: 'Operation',width: 150, titleAlign: 'center',columnAlign:'center',componentName:'table-operation',isResize:true}
                     ]
 
@@ -94,16 +92,21 @@ var Main ={
 
                 }else if (params.type === 'edit'){ // do edit operation
 
-                    alert(`Number：${params.index} Target URL：${params.rowData['targeturl']}`)
+                    alert(`Number：${params.index} Target URL：${params.rowData['targeturl']}  time：${params.rowData['dashboardLink']}`)
+                    //dashboard link
+                    //window.location.href = params.rowData['link']
                 }
 
             }
         }
     }
 
-    // 自定义列组件
     Vue.component('table-dashboard',{
         template:`<span>
+        <!--<button id="dashboardlink" style="font-size:1rem;width:auto;" class="ui  green  button" @click.stop.prevent="update(rowData,index)">
+            <i class="external alternate icon"></i>
+            
+        </button>-->
         <a href="" @click.stop.prevent="update(rowData,index)">Link</a>
         </span>`,
         props:{

@@ -375,6 +375,7 @@ $(document).ready(function(){
 
         }).fail(function () {
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+            //alert(Data[0].targeturl)
             //console.log('User is not logged in! /spiderScan');
         });    
         

@@ -19,18 +19,31 @@
 }
 #app{
     margin-top:5rem;
-    margin-bottom:10rem;
-    height:auto;
+    margin-bottom:15rem;
     
 }
-@media (min-height: 600px) and  (min-width: 900px){
+#app td span span{
+    text-align: center;
+    margin-top:0.45rem;
+    margin-bottom:0.45rem;
+}
+#scanblock{
+    min-height:40%;
+}
+.ui.inverted.vertical.footer.segment{
+    position: relative;
+    
+}
+/*
+@media (min-height: 900px) and  (min-width: 900px){
  .ui.inverted.vertical.footer.segment{
     
-    position: relative;
+    position: absolute;
     bottom: 0;
     width: 100%;
   }
 }
+*/
 @media (min-width: 1200px) {
     #dashboard{
         font-size:1.4rem;
@@ -47,7 +60,7 @@
     
 }
 
-@media (min-width: 900px) and (max-width: 1200px) {
+@media (min-width: 1000px) and (max-width: 1200px) {
     #dashboard{
         font-size:1.4rem;
 
@@ -63,7 +76,7 @@
    
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
     #dashboard{
         font-size:1.3rem;
         width:100%;

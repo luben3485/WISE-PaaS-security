@@ -5,9 +5,9 @@
         <meta http-equiv="Access-Control-Allow-Origin" content="*" />
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
         <link href="home_css/home.css" rel="stylesheet" type="text/css" >
+        <link href="home_css/font-awesome-all.css" rel="stylesheet" type="text/css" >
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/>
         <link rel="stylesheet" href="https://unpkg.com/vue-easytable/umd/css/index.css">
-        <!--<link rel="stylesheet" href="https://unpkg.com/vue-easytable@1.7.2/umd/css/index.css">-->
         
     </head>
     <body>
@@ -30,296 +30,303 @@
         
         <!--<div class="ui segment" style="margin:0px;">-->
 
-        <div class="ui grid">
+        <div class="ui grid" >
             <div class="three wide column"></div>
             <div class="ten wide column">
-                <div id="header">
-                    <p>Start a scan</p>                  
-                </div>                
-                <div style="font-size: 1.5rem;font-family:MS Sans Serif;">
-                    <p>The only thing you need to do is provide some basic information and make a simple choice about the type of scan you want to perform.</p>
-                </div>
-               <hr>
-  
-                <div class="ui form">
-                    <div class="field">
-                        <div class="two fields">
-                            <div class="field">
-                                <label >Target URL</label>
-                                <input type="text" name="input_url" placeholder="e.g http://testphp.vulnweb.com">
-                                <div>Full URL of the targeted web application(must include the appropriate protocol http or https).</div>
-                            </div>
-                            <div class="field">
-                                <label>Scan Method</label>
-                                    <select id="scanOption" class="ui fluid dropdown">
-                                        <option value="0">Passive Scan</option>
-                                        <!--<option value="1">Active Scan</option>-->
-                                        <option value="2">Full Scan</option>
-                                    </select>
-                            </div>
-                        </div>
+                <div id="scanblock" >
+                    <div id="header">
+                        <p>Start a scan</p>                  
+                    </div>                
+                    <div style="font-size: 1.5rem;font-family:MS Sans Serif;">
+                        <p>The only thing you need to do is provide some basic information and make a simple choice about the type of scan you want to perform.</p>
                     </div>
-                    
-                    <div class="ui styled accordion" style="width:auto;">
-                        <div class="title">
-                            <i class="dropdown icon"></i>
-                            Advanced Options
-                        </div>
-                        <div class="content">
-                          <div class="ui top attached tabular menu ">
-                              <a class="item active" data-tab="first">Full Scan</a>
-                              <a class="item" data-tab="second">Passive Scan</a>
-                            </div>
-                            <div class="ui bottom attached tab segment active" data-tab="first">
-                                
-                                <div class="ui form">
-                                  <div class="inline fields">
-                                    <label>Alert Threshold</label>
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="alertThreshold" value="Default" checked="checked">
-                                        <label>Default</label>
-                                      </div>
-                                    </div>
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="alertThreshold" value="Off">
-                                        <label>Off</label>
-                                      </div>
-                                    </div>
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="alertThreshold" value="Low">
-                                        <label>Low</label>
-                                      </div>
-                                    </div>
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="alertThreshold" value="Medium">
-                                        <label>Medium</label>
-                                      </div>
-                                    </div>
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="alertThreshold" value="High">
-                                        <label>High</label>
-                                      </div>
-                                    </div>
-                                  </div>
+                   <hr>
+
+                    <div class="ui form">
+                        <div class="field">
+                            <div class="two fields">
+                                <div class="field">
+                                    <label >Target URL</label>
+                                    <input type="text" name="input_url" placeholder="e.g http://testphp.vulnweb.com">
+                                    <div>Full URL of the targeted web application(must include the appropriate protocol http or https).</div>
                                 </div>
-                                
-                                
-                                
-                                <div class="ui form">
-                                  <div class="inline fields">
-                                    <label>Attack Stregth</label>
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="attackStrength" value="Default" checked="checked">
-                                        <label>Default</label>
-                                      </div>
-                                    </div>
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="attackStrength" value="Low">
-                                        <label>Low</label>
-                                      </div>
-                                    </div>
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="attackStrength" value="Medium">
-                                        <label>Medium</label>
-                                      </div>
-                                    </div>
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="attackStrength" value="High">
-                                        <label>High</label>
-                                      </div>
-                                    </div>
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="attackStrength" value="Insane">
-                                        <label>Insane</label>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                                <div class="ui form">
-                                  <div class="inline fields">
-                                    <label>inScopeOnly</label>
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="inScopeOnly" value="True">
-                                        <label>True</label>
-                                      </div>
-                                    </div>
-        
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="inScopeOnly" value="False" checked="checked">
-                                        <label>False</label>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                                <div class="ui form">
-                                  <div class="inline fields">
-                                    <label>Recurse</label>
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="activeRecurse" value="True" checked="checked">
-                                        <label>True</label>
-                                      </div>
-                                    </div>
-        
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="activeRecurse" value="False">
-                                        <label>False</label>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                            </div>
-                            <div class="ui bottom attached tab segment" data-tab="second">
-                            
-                               <div class="ui form">
-                                  <div class="inline fields">
-                                    <label>SubtreeOnly</label>
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="subtreeOnly" value="True" >
-                                        <label>True</label>
-                                      </div>
-                                    </div>
-        
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="subtreeOnly" value="False" checked="checked">
-                                        <label>False</label>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                                <div class="ui form">
-                                  <div class="inline fields">
-                                    <label>Recurse</label>
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="passiveRecurse" value="True" checked="checked">
-                                        <label>True</label>
-                                      </div>
-                                    </div>
-        
-                                    <div class="field">
-                                      <div class="ui radio checkbox">
-                                        <input type="radio" name="passiveRecurse" value="False">
-                                        <label>False</label>
-                                      </div>
-                                    </div>
-                                  </div>
+                                <div class="field">
+                                    <label>Scan Method</label>
+                                        <select id="scanOption" class="ui fluid dropdown">
+                                            <option value="0">Passive Scan</option>
+                                            <!--<option value="1">Active Scan</option>-->
+                                            <option value="2">Full Scan</option>
+                                        </select>
                                 </div>
                             </div>
                         </div>
-                      
-                    </div>
-                    
-                    
-                    
-                    <!--
-                    <div class="ui placeholder segment">
-                        <div class="ui icon header">
-                            <i class="pdf file outline icon"></i>
-                                No documents are listed for this customer.
+
+                        <div class="ui styled accordion" style="width:auto;">
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Advanced Options
+                            </div>
+                            <div class="content">
+                              <div class="ui top attached tabular menu ">
+                                  <a class="item active" data-tab="first">Full Scan</a>
+                                  <a class="item" data-tab="second">Passive Scan</a>
+                                </div>
+                                <div class="ui bottom attached tab segment active" data-tab="first">
+
+                                    <div class="ui form">
+                                      <div class="inline fields">
+                                        <label>Alert Threshold</label>
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="alertThreshold" value="Default" checked="checked">
+                                            <label>Default</label>
+                                          </div>
+                                        </div>
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="alertThreshold" value="Off">
+                                            <label>Off</label>
+                                          </div>
+                                        </div>
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="alertThreshold" value="Low">
+                                            <label>Low</label>
+                                          </div>
+                                        </div>
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="alertThreshold" value="Medium">
+                                            <label>Medium</label>
+                                          </div>
+                                        </div>
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="alertThreshold" value="High">
+                                            <label>High</label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+
+
+                                    <div class="ui form">
+                                      <div class="inline fields">
+                                        <label>Attack Stregth</label>
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="attackStrength" value="Default" checked="checked">
+                                            <label>Default</label>
+                                          </div>
+                                        </div>
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="attackStrength" value="Low">
+                                            <label>Low</label>
+                                          </div>
+                                        </div>
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="attackStrength" value="Medium">
+                                            <label>Medium</label>
+                                          </div>
+                                        </div>
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="attackStrength" value="High">
+                                            <label>High</label>
+                                          </div>
+                                        </div>
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="attackStrength" value="Insane">
+                                            <label>Insane</label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="ui form">
+                                      <div class="inline fields">
+                                        <label>inScopeOnly</label>
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="inScopeOnly" value="True">
+                                            <label>True</label>
+                                          </div>
+                                        </div>
+
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="inScopeOnly" value="False" checked="checked">
+                                            <label>False</label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="ui form">
+                                      <div class="inline fields">
+                                        <label>Recurse</label>
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="activeRecurse" value="True" checked="checked">
+                                            <label>True</label>
+                                          </div>
+                                        </div>
+
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="activeRecurse" value="False">
+                                            <label>False</label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                </div>
+                                <div class="ui bottom attached tab segment" data-tab="second">
+
+                                   <div class="ui form">
+                                      <div class="inline fields">
+                                        <label>SubtreeOnly</label>
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="subtreeOnly" value="True" >
+                                            <label>True</label>
+                                          </div>
+                                        </div>
+
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="subtreeOnly" value="False" checked="checked">
+                                            <label>False</label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="ui form">
+                                      <div class="inline fields">
+                                        <label>Recurse</label>
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="passiveRecurse" value="True" checked="checked">
+                                            <label>True</label>
+                                          </div>
+                                        </div>
+
+                                        <div class="field">
+                                          <div class="ui radio checkbox">
+                                            <input type="radio" name="passiveRecurse" value="False">
+                                            <label>False</label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
-                        <div class="ui primary button">Add Document</div>
-                    </div>
-                    -->
-                    <div id="succMsg" class="ui info message transition">
-                      <i class="close icon"></i>
-                      <div class="header">
-                        Scan task has finished.
-                      </div>
-                      <p>Now you can <b>download the full report (html file)</b></p>
-                    </div>
-                    
-                    <!--
-                    <div class="ui horizontal divider">
-                        Main Operation
-                    </div>
-                    -->
-                    <div class="mainbtn">
-                        <button id="startScan" class="ui blue button" v-on:click="addTable">
-                            <i class="search icon"></i>
-                            Scan
-                        </button>
+
+
+
                         <!--
-                        <button id="spiderScan" class="ui red button" style="font-size:20px;">
-                            Start passive scan
-                        </button>
-                        <button id="ascan" class="ui green button" style="font-size:20px;">
-                            Start active scan
+                        <div class="ui placeholder segment">
+                            <div class="ui icon header">
+                                <i class="pdf file outline icon"></i>
+                                    No documents are listed for this customer.
+                            </div>
+                            <div class="ui primary button">Add Document</div>
+                        </div>
+                        -->
+                        <div id="succMsg" class="ui info message transition">
+                          <i class="close icon"></i>
+                          <div class="header">
+                            Scan task has finished.
+                          </div>
+                          <p>Now you can <b>download the full report (html file)</b></p>
+                        </div>
+
+                        <!--
+                        <div class="ui horizontal divider">
+                            Main Operation
+                        </div>
+                        -->
+                        <div class="mainbtn">
+                            <button id="startScan" class="ui blue button" v-on:click="addTable">
+                                <i class="search icon"></i>
+                                Scan
+                            </button>
+                            <!--
+                            <button id="spiderScan" class="ui red button" style="font-size:20px;">
+                                Start passive scan
+                            </button>
+                            <button id="ascan" class="ui green button" style="font-size:20px;">
+                                Start active scan
+                            </button>
+                            -->
+                            <button id="downloadReport" class="ui  green disabled button">
+                                <i class="file alternate outline icon"></i>
+                                Download
+                            </button>
+                            <button id="dashboard" class="ui  orange disabled button">
+                                <i class="th list icon"></i>
+                                Dashboard
+                            </button>
+                        </div>
+                        <!--
+                        <button id="clear" class="ui white button" style="font-size:20px;">
+                            Clear
                         </button>
                         -->
-                        <button id="downloadReport" class="ui  green disabled button">
-                            <i class="file alternate outline icon"></i>
-                            Download
+                        <!--
+                        <div class="ui horizontal divider">
+                            Other Operation(Passive Scan)
+                        </div>
+                        <button id="spiderStatus" class="ui  button" style="font-size:20px;">
+                            Status
                         </button>
-                        <button id="dashboard" class="ui  orange disabled button">
-                            <i class="th list icon"></i>
-                            Dashboard
+                        <button id="spiderPause" class="ui  button" style="font-size:20px;">
+                            Pause
                         </button>
+                        <button id="spiderResume" class="ui  button" style="font-size:20px;">
+                            Resume
+                        </button>
+                        <button id="spiderRemove" class="ui  button" style="font-size:20px;">
+                            Remove
+                        </button>
+
+                        <div class="ui horizontal divider">
+                            Other Operation(Active Scan)
+                        </div>
+                        <button id="ascanStatus" class="ui  button" style="font-size:20px;">
+                            Status
+                        </button>
+                        <button id="ascanPause" class="ui  button" style="font-size:20px;">
+                            Pause
+                        </button>
+                        <button id="ascanResume" class="ui  button" style="font-size:20px;">
+                            Resume
+                        </button>
+                        <button id="ascanRemove" class="ui  button" style="font-size:20px;">
+                            Remove
+                        </button>
+                        -->
+
                     </div>
-                    <!--
-                    <button id="clear" class="ui white button" style="font-size:20px;">
-                        Clear
-                    </button>
-                    -->
-                    <!--
-                    <div class="ui horizontal divider">
-                        Other Operation(Passive Scan)
-                    </div>
-                    <button id="spiderStatus" class="ui  button" style="font-size:20px;">
-                        Status
-                    </button>
-                    <button id="spiderPause" class="ui  button" style="font-size:20px;">
-                        Pause
-                    </button>
-                    <button id="spiderResume" class="ui  button" style="font-size:20px;">
-                        Resume
-                    </button>
-                    <button id="spiderRemove" class="ui  button" style="font-size:20px;">
-                        Remove
-                    </button>
-                    
-                    <div class="ui horizontal divider">
-                        Other Operation(Active Scan)
-                    </div>
-                    <button id="ascanStatus" class="ui  button" style="font-size:20px;">
-                        Status
-                    </button>
-                    <button id="ascanPause" class="ui  button" style="font-size:20px;">
-                        Pause
-                    </button>
-                    <button id="ascanResume" class="ui  button" style="font-size:20px;">
-                        Resume
-                    </button>
-                    <button id="ascanRemove" class="ui  button" style="font-size:20px;">
-                        Remove
-                    </button>
-                    -->
-                    
-                </div>
                 
+                </div>
                 <div id="app">
-                    <h1>Scan History</h1>
+                    <div class="header">
+                        <h1 style="float:left;">Scan History</h1>
+                        <div id="tabledelete" style="margin-bottom:1rem;" class="ui right floated red button">
+                           <i class="fas fa-trash-alt"></i>
+                        </div>
+                    </div>                                      
                     <template>
-                        <v-table is-horizontal-resize style="width:100%;" :columns="columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" :select-all="selectALL" :select-change="selectChange" :select-group-change="selectGroupChange"></v-table>
+                        <v-table id="v-table" is-horizontal-resize style="width:100%;" :columns="columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" :select-all="selectALL" :select-change="selectChange" :select-group-change="selectGroupChange"></v-table>
                     </template>
                 </div>
             </div>
