@@ -127,6 +127,12 @@ def refreshTable():
 		info_token = EIToken.split('.')[1]
 		userId = json.loads(base64.b64decode(info_token))['userId']
 		scans = db.listScans(userId)
+
+ 		for scan in scans:
+			ts = scan['timeStep']
+			time = datetime.fromtimestamp(ts).strftime('%Y/%m/%d %H:%M')
+ 			time_info = {'time' : time}
+ 			scan.update(time_info)
 		return jsonify(scans)
 	else:
 		abort(401)
@@ -142,7 +148,8 @@ def refreshTable():
 	scandata2 = {
     	"userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
     	"scanId":21341234,
-    	"targetURL":"http://testphp.vulnweb.com",
+    	
+		targetURL":"http://testphp.vulnweb.com",
     	"dashboardLInk":"http://xxxx.xxx.xx",
     	"timeStep":4312412,
     	"reportPath":"http://zap-security-web.arfa.wise-paas.com/htmlreport/1564072276.html",

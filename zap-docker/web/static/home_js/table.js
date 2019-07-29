@@ -128,7 +128,7 @@ var Main ={
                             }, isFrozen: true,isResize:true
                         },
                         {field: 'targetURL', title:'Target URL', width: 350, titleAlign: 'center',columnAlign:'center',isResize:true},
-                        {field: 'timeStep', title: 'Time', width: 100, titleAlign: 'center',columnAlign:'center',isResize:true},
+                        {field: 'time', title: 'Time', width: 100, titleAlign: 'center',columnAlign:'center',isResize:true},
                         {field: 'dashboard', title: 'Dashboard', width: 50, titleAlign: 'center',columnAlign:'center',componentName:'table-dashboard',isResize:true},
                         {field: 'custome-adv', title: 'Operation',width: 150, titleAlign: 'center',columnAlign:'center',componentName:'table-operation',isResize:true}
                     ]
@@ -156,7 +156,7 @@ var Main ={
 
                 }else if (params.type === 'download'){ // do download operation
                     /*
-                    alert(`Number：${params.index} Target URL：${params.rowData['targetURL']}  time：${params.rowData['timeStep']}  scanId：${params.rowData['scanId']}`)
+                    alert(`Number：${params.index} Target URL：${params.rowData['targetURL']}  time：${params.rowData['time']}  scanId：${params.rowData['scanId']}`)
                     */
                     scanId = params.rowData['scanId'];
                     //userId = params.rowData['userId'];    

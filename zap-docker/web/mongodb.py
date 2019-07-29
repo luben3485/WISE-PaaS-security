@@ -3,7 +3,7 @@ import json
 import os
 import random
 import time
-
+from datetime import datetime
 
 
 
@@ -62,20 +62,26 @@ if __name__ == '__main__':
 		#print(scanId)
 		#print(nowtime)
 
-		#mongodb.addScan(scandata1)
+		mongodb.addScan(scandata1)
 	
 
-	#scans = mongodb.listScans('b7ea79a3-c2eb-4c79-b968-b279667f3747')
+	scans = mongodb.listScans('b7ea79a3-c2eb-4c79-b968-b279667f3747')
 	#print(scans[0])
 	#print(len(scans))
 	#scan = mongodb.findScan(5057664)	
+	for scan in scans:
+		ts = scan['timeStep']
+		time = datetime.fromtimestamp(ts).strftime('%Y/%m/%d %H:%M')
+		time_info = {'time' : time}
+		scan.update(time_info)
+	#print(time_info)
 
 
 	#print(scans)
 	#mongodb.deleteAllScans()
 	#scans = mongodb.listAllScans()
 	#print(len(scans))
-	#print(scans)
+	print(scans)
 	#print(mongodb.getCollection())
-	html = mongodb.findHtml(222)
-	print(html)
+	#html = mongodb.findHtml(222)
+	#print(html)
