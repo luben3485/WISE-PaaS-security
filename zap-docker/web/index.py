@@ -128,11 +128,11 @@ def refreshTable():
 		userId = json.loads(base64.b64decode(info_token))['userId']
 		scans = db.listScans(userId)
 
- 		for scan in scans:
+		for scan in scans:
 			ts = scan['timeStep']
 			time = datetime.fromtimestamp(ts).strftime('%Y/%m/%d %H:%M')
- 			time_info = {'time' : time}
- 			scan.update(time_info)
+			time_info = {'time' : time}
+			scan.update(time_info)
 		return jsonify(scans)
 	else:
 		abort(401)

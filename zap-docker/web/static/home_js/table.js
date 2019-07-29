@@ -22,7 +22,7 @@ var tableApp = new Vue({
                         {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashbpardLInk":"dd"}
 */
 
-/*
+
 var Data =[
         {
           "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
@@ -42,23 +42,13 @@ var Data =[
         },
                  
         ];
-*/
-var Data = [];
+
+//var Data = [];
 $(document).ready(function(){
-   
-    
-    
     
     $('#tabledelete').click(function(){
-        //Data.push({"targeturl":"http://abcdefg.vulnweb.com","time":"2019-07-25 15:30:56"});
 
-        
-        /*
-        var tmp = [ {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashboardLink":"dd"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashbpardLInk":"dd"}];
-        */
-        
-        
+
         
         
     });
@@ -117,6 +107,7 @@ function deleteScan(scanId){
 var Main ={
         data() {
             return {
+                isLoading: true,
                 tableData: Data,
                     columns: [
                         {width: 50, titleAlign: 'center',columnAlign:'center',type: 'selection' 
@@ -168,6 +159,12 @@ var Main ={
                     window.location.href = params.rowData['dashboardLInk'];
                 }
 
+            },
+            remove(){
+                alert(this.tableData[0]['targetURL']);
+                var index = this.tableData.indexof(this.tableData);
+                this.tableData.splice(index,1)
+                
             }
         }
     }
