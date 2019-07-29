@@ -22,19 +22,18 @@ var tableApp = new Vue({
                         {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashbpardLInk":"dd"}
 */
 
-/*
 var Data =[
         {
           "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
-          "scanId":1324,
-          "targetURL":"http://testphp.vulnweb.com",
+          "scanId":1,
+          "targetURL":"http://testphp.aaaaaaaa.com",
           "dashboardLInk":"https://www.google.com",
-          "timeStep":31241234,
+          "timeStep":24,
          "reportPath":"http://zap-security-web.arfa.wise-paas.com/htmlreport/1564072276.html",
         },
         {
           "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
-          "scanId":1324,
+          "scanId":2,
           "targetURL":"http://testphp.vulnweb.com",
           "dashboardLInk":"https://www.google.com",
           "timeStep":431241234,
@@ -42,7 +41,7 @@ var Data =[
         },
     {
           "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
-          "scanId":13214,
+          "scanId":3,
           "targetURL":"http://testphp.vulnweb.com",
           "dashboardLInk":"https://www.google.com",
           "timeStep":1431241234,
@@ -50,7 +49,7 @@ var Data =[
         },
     {
           "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
-          "scanId":31324,
+          "scanId":4,
           "targetURL":"http://testphp.vulnweb.com",
           "dashboardLInk":"https://www.google.com",
           "timeStep":5431241234,
@@ -58,7 +57,7 @@ var Data =[
         },
     {
           "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
-          "scanId":61324,
+          "scanId":5,
           "targetURL":"http://testphp.vulnweb.com",
           "dashboardLInk":"https://www.google.com",
           "timeStep":431241234,
@@ -66,8 +65,8 @@ var Data =[
         },
                  
         ];
-*/
-var Data = [];
+
+//var Data = [];
 $(document).ready(function(){
     
     $('#tabledelete').click(function(){
@@ -79,6 +78,22 @@ $(document).ready(function(){
     
 });
 var checked = [];
+function getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(';');
+      for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+}
+
 function downloadHtml(scanId){
     var ssoUrl = getCookie('SSO_URL');
         $.ajax({
@@ -153,6 +168,10 @@ var Main ={
         methods:{
             selectALL(selection){
                 console.log('select-aLL',selection);
+                if(selection.length ==0){
+                    
+                    console.log("??")
+                }
             },
             selectChange(selection,rowData){
                 console.log('select-change',selection,rowData);
@@ -161,11 +180,15 @@ var Main ={
 
             selectGroupChange(selection){
                 console.log('select-group-change',selection);
+                checked.length = 0
                 selection.forEach(function(item, index, array){
-                    console.log(item['targetURL'])
-                    var index =this.tableData.indexof(element);
-                    //console.log(index)
-
+                    for(var i=0;i<Data.length;i++){
+                        if(Data[i].scanId == item.scanId){
+                            checked.push(i);
+                        }   
+                        
+                    }
+                    console.log(checked)
                     
                 });
                 //console.log(selection[0]['targetURL'])

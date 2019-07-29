@@ -70,9 +70,11 @@ $(document).ready(function(){
                 withCredentials: true
             }
         }).done(function (user) {
+            
             $('#downloadReport').removeClass('disabled');
             $('#dashboard').removeClass('disabled');
             checkStop();
+            addHtml();
             $.ajax({
                 url: '/spiderRemove',
                 type: 'GET',
@@ -200,8 +202,10 @@ $(document).ready(function(){
             spiderstatus().done(function(response){
                 if(response.status < 100){
                     progressUpdate(response.status,"Passive scan");
-                    console.log('spiderStatus '+ response.status)
+                    console.log('spiderStatus '+ response.status);
+                    document.cookie = "pscanStatus="+response.status;
                 }else if(response.status==100){
+                    document.cookie = "pscanStatus=100";
                     finishedDelay(2000,'Passive scan').then(() => {
                         $('.ui.tiny.modal').modal('hide')                 
                     });
@@ -232,9 +236,11 @@ $(document).ready(function(){
             spiderstatus().done(function(response){
                 if (response.status < 100){
                     progressUpdate(response.status,"Passive scan");
-                    console.log('spiderStatus '+ response.status)  
+                    console.log('spiderStatus '+ response.status)
+                    document.cookie = "pscanStatus="+response.status;
                 }else if(response.status == 100){
                     if(astart == 0){
+                        document.cookie = "pscanStatus=100";
                         progressUpdate(100,"Passive scan");
                         $('#header>h1').text('Scan task has not finished. Please be patient.')
 
@@ -258,8 +264,10 @@ $(document).ready(function(){
                             if(res.status < 100 && res.status > 0){
                                 $('#header>h1').text('It takes a few seconds to minutes to scan your website.')
                                 progressUpdate(res.status,"Active scan");
-                                console.log('ascanStatus '+ res.status)  
+                                console.log('ascanStatus '+ res.status);
+                                document.cookie = "ascanStatus="+response.status;
                             }else if(res.status==100){
+                                document.cookie = "ascanStatus=100";
                                 finishedDelay(2000,'Active scan').then(() => {
                                     $('.ui.tiny.modal').modal('hide');           
                                     astart = 0;        
@@ -353,9 +361,15 @@ $(document).ready(function(){
         });  
     }
     function addHtml(){
+        ps = getCookie('pscanStatus');
+        as = getCookie('ascanStatus');
         $.ajax({
                 url: '/addHtml',
-                type: 'GET'
+                type: 'GET',
+                data:{
+                    'pscanStatus': ps,
+                    'ascanStatus': as
+                }
         }).done(function(){
             console.log("addHtml success")
         }).fail(function(){
@@ -376,11 +390,14 @@ $(document).ready(function(){
         $('#dashboard').removeClass('disabled');
         $('#succMsg').css('display','none');
         addHtml();
+        
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     $('#startScan').click(function(){
         var ssoUrl = getCookie('SSO_URL');
         var scanOption=$("#scanOption").val();
+        document.cookie = "pscanStatus=0";
+        document.cookie = "ascanStatus=0";
         $.ajax({
         url: ssoUrl + '/v2.0/users/me',
         method: 'GET',

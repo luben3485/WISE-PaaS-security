@@ -51,9 +51,13 @@ def addHtml():
 		info_token = EIToken.split('.')[1]
 		userId = json.loads(base64.b64decode(info_token))['userId']
 		scanId = int(request.cookies.get('scanId'))
+		ascanStatus =request.cookies.get('ascanStatus')  
+		pscanStatus =request.cookies.get('pscanStatus')  
 		r = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
 		if r.status_code == 200:
 			html_info = {
+				"ascanStatus":ascanStatus,	
+				"pscanStatus":pscanStatus,	
 				"userId":userId,
 				"scanId":scanId,
 				"html":r.content
@@ -73,11 +77,14 @@ def downloadHtml():
 		try:
 			scanId = int(request.args.get('scanId'))
 			html_info = db.findHtml(scanId)
-			html= html_info['html']
-			response = make_response(html,200)
-			response.headers['Content-Type'] = 'application/html'
-			response.headers['Content-Disposition'] = 'attachment; filename={}'.format('scan_report.html')
-			return response
+			if html_info == None:
+				return redirect('/')
+			else:
+				html= html_info['html']
+				response = make_response(html,200)
+				response.headers['Content-Type'] = 'application/html'
+				response.headers['Content-Disposition'] = 'attachment; filename={}'.format('scan_report.html')
+				return response
 		except Exception as err:
 			print('download_file error: {}'.format(str(err)))
 			abort(500)
@@ -114,7 +121,7 @@ def addScan():
 		db.addScan(scandata)
 		
 		res_cookie = make_response(redirect('/'),200)
-		res_cookie.set_cookie('scanId', scanId)
+		res_cookie.set_cookie('scanId',str(scanId))
 		return res_cookie
 	else:
 		abort(401)
@@ -143,17 +150,14 @@ def refreshTable():
     	"scanId":1324,
     	"targetURL":"http://testphp.vulnweb.com",
     	"dashboardLInk":"http://xxxx.xxx.xx",
-    	"timeStep":11111234,
-    	"reportPath":"http://zap-security-web.arfa.wise-paas.com/htmlreport/1564072276.html",
+    	"timeStemp":11111234,
 	}
 	scandata2 = {
     	"userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
     	"scanId":21341234,
-    	
 		targetURL":"http://testphp.vulnweb.com",
     	"dashboardLInk":"http://xxxx.xxx.xx",
-    	"timeStep":4312412,
-    	"reportPath":"http://zap-security-web.arfa.wise-paas.com/htmlreport/1564072276.html",
+    	"timeStemp":4312412,
 	}
 	
 	return jsonify([scandata1,scandata2])

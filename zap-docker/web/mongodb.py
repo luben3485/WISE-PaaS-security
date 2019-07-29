@@ -62,7 +62,7 @@ if __name__ == '__main__':
 		#print(scanId)
 		#print(nowtime)
 
-		mongodb.addScan(scandata1)
+		#mongodb.addScan(scandata1)
 	
 
 	scans = mongodb.listScans('b7ea79a3-c2eb-4c79-b968-b279667f3747')
@@ -80,8 +80,8 @@ if __name__ == '__main__':
 	#print(scans)
 	#mongodb.deleteAllScans()
 	#scans = mongodb.listAllScans()
-	#print(len(scans))
-	print(scans)
+	print(len(scans))
+	#print(scans)
 	#print(mongodb.getCollection())
 	#html = mongodb.findHtml(222)
 	#print(html)
