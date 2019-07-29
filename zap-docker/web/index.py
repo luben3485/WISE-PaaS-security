@@ -9,6 +9,7 @@ import json
 import zipfile,io
 import subprocess
 
+import base64
 import random
 import time
 import mongodb
@@ -24,25 +25,132 @@ except Exception as err:
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 #print(os.path.join(os.getcwd(), "static"))
 
+
 @app.route('/')
 def home():
 	return app.send_static_file('home.html')
 
-@app.route('/add')
-def add():
-	scanId = random.randint(1000000,9999999)
-	nowtime = int(time.time())
+@app.route('/deleteScan',methods=['GET'])
+def deleteScan():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		scanId = request.args.get('scanId')
+		db.deleteScan(int(scanId))
+		return jsonify({'Result':'OK'})
+	else:
+		abort(401)
+
+
+@app.route('/addHtml',methods=['GET'])
+def addHtml():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		info_token = EIToken.split('.')[1]
+		userId = json.loads(base64.b64decode(info_token))['userId']
+		scanId = int(request.cookies.get('scanId'))
+		r = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
+		if r.status_code == 200:
+			html_info = {
+				"userId":userId,
+				"scanId":scanId,
+				"html":r.content
+			}
+			db.addHtml(html_info)
+			return jsonify({'Result':'OK'})
+		else:
+			abort(500)
+	else:
+		abort(401)
+
+@app.route('/downloadHtml',methods=['GET'])
+def downloadHtml():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		try:
+			scanId = int(request.args.get('scanId'))
+			html_info = db.findHtml(scanId)
+			html= html_info['html']
+			response = make_response(html,200)
+			response.headers['Content-Type'] = 'application/html'
+			response.headers['Content-Disposition'] = 'attachment; filename={}'.format('scan_report.html')
+			return response
+		except Exception as err:
+			print('download_file error: {}'.format(str(err)))
+			abort(500)
+
+	else:
+		abort(401)
+	
+	
+
+
+
+@app.route('/addScan',methods=['GET'])
+def addScan():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		targetURL = request.args.get('targetURL')
+		scanId = random.randint(1000000,9999999)
+		nowtime = int(time.time())
+		info_token = EIToken.split('.')[1]
+		userId = json.loads(base64.b64decode(info_token))['userId']
+		
+		#call Dashboard API getting dashboardLink
+		dashboardLink = 'http://www.google.com'
+		
+		scandata = {
+    		"userId":userId,
+    		"scanId":scanId,
+    		"targetURL":targetURL,
+    		"dashboardLInk":dashboardLink,
+    		"timeStep":nowtime,
+    		"report":'',
+		}
+		db.addScan(scandata)
+		
+		res_cookie = make_response(redirect('/'),200)
+		res_cookie.set_cookie('scanId', scanId)
+		return res_cookie
+	else:
+		abort(401)
+
+@app.route('/refreshTable',methods=['GET'])
+def refreshTable():
+
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		info_token = EIToken.split('.')[1]
+		userId = json.loads(base64.b64decode(info_token))['userId']
+		scans = db.listScans(userId)
+		return jsonify(scans)
+	else:
+		abort(401)
+	'''
 	scandata1 = {
     	"userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
-    	"scanId":scanId,
+    	"scanId":1324,
     	"targetURL":"http://testphp.vulnweb.com",
-    	"dashbpardLInk":"http://xxxx.xxx.xx",
-    	"timeStep":nowtime,
+    	"dashboardLInk":"http://xxxx.xxx.xx",
+    	"timeStep":11111234,
     	"reportPath":"http://zap-security-web.arfa.wise-paas.com/htmlreport/1564072276.html",
 	}
-	#db.addScan(scandata1)
-	scans = db.listScans('a7ea79a3-c2eb-4c79-b968-b279667f3747')
-	return jsonify(scans[0])
+	scandata2 = {
+    	"userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
+    	"scanId":21341234,
+    	"targetURL":"http://testphp.vulnweb.com",
+    	"dashboardLInk":"http://xxxx.xxx.xx",
+    	"timeStep":4312412,
+    	"reportPath":"http://zap-security-web.arfa.wise-paas.com/htmlreport/1564072276.html",
+	}
+	
+	return jsonify([scandata1,scandata2])
+	'''
+
 
 @app.route('/setSSOurl')
 def setSSOurl():
@@ -405,28 +513,6 @@ def ascanRemove():
 
 
 
-'''
-REPORT
-'''
-
-@app.route('/downloadReport')
-def downloadReport():
-	EIToken =request.cookies.get('EIToken')  
-	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
-	if res.status_code == 200:
-		try:
-			r = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
-			if r.status_code == 200:
-				response = make_response(r.content,200)
-				response.headers['Content-Type'] = 'application/html'
-				response.headers['Content-Disposition'] = 'attachment; filename={}'.format('zap_report.html')
-				return response
-		except Exception as err:
-			print('download_file error: {}'.format(str(err)))
-			abort(500)
-
-	else:
-		abort(401)
 
 
 @app.route('/clear')

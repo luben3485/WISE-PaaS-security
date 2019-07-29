@@ -32,6 +32,7 @@ $(document).ready(function(){
         },
         error: function(xhr) {
             //alert('Ajax /setSSOurl error');
+
         },
         success: function(response) {        
             console.log('setSSOurl success');
@@ -43,10 +44,19 @@ $(document).ready(function(){
                     withCredentials: true
                 }
             }).done(function (user) {
+                refreshTable().done(function(response){
+                    while (Data.length > 0) Data.pop();
+                    while (response.length > 0) Data.push(response.shift());
+                    console.log("refresh table successfully")
+                }).fail(function(){
+                    console.log("refresh table fail") 
+                });
+                
+                
                 console.log('Hello! ' + user.lastName + ' ' + user.firstName);
             }).fail(function () {
-                window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-                
+               window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+                 
             });        
         }
     });
@@ -324,6 +334,36 @@ $(document).ready(function(){
         });
         
     }
+    function addScan(){
+        //Delete all scan report before
+        return $.ajax({
+                url: '/addScan',
+                type: 'GET',
+                data: {
+					'targetURL': $('input[name="input_url"]').val()
+                }
+        });
+        
+    }
+    function refreshTable(){
+        //Delete all scan report before
+        return $.ajax({
+                url: '/refreshTable',
+                type: 'GET'
+        });  
+    }
+    function addHtml(){
+        $.ajax({
+                url: '/addHtml',
+                type: 'GET'
+        }).done(function(){
+            console.log("addHtml success")
+        }).fail(function(){
+            console.log("addHtml error")
+        });  
+           
+        
+    }
     function finishedDelay(ms,scantype) {
         checkStop();
         $('#progressbar').progress({
@@ -335,6 +375,7 @@ $(document).ready(function(){
         $('#downloadReport').removeClass('disabled');
         $('#dashboard').removeClass('disabled');
         $('#succMsg').css('display','none');
+        addHtml();
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     $('#startScan').click(function(){
@@ -358,12 +399,27 @@ $(document).ready(function(){
             $('#cancelButton').css('display','');
             progressUpdate(0,"Passive scan");
 
+            
+            
             deleteData().done(function(){    
                 spiderScanStart().done(function(){
                     console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /spiderScan');
                     //start timer
                     intervalNum = setInterval(function(){ checkScan(scanOption) }, 600);
                     //alert('Start a  scan\n Set id in cookie!');
+                    addScan().done(function(){
+                        refreshTable().done(function(response){
+                            while (Data.length > 0) Data.pop();
+                            while (response.length > 0) Data.push(response.shift());
+                            console.log("refresh table successfully")
+                        }).fail(function(){
+                            console.log("refresh table fail") 
+                        });
+                        console.log("add scan to Database successfully")           
+                    }).fail(function(){
+                        console.log("add scan to Database fail")     
+                    });
+                    
                 }).fail(function(){
                     console.log('Ajax /spiderScan error');    
                 });
@@ -372,7 +428,8 @@ $(document).ready(function(){
                 console.log("deleteData error!")
             });
 
-
+            
+            
         }).fail(function () {
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
             //alert(Data[0].targeturl)

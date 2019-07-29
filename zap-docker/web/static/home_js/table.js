@@ -14,41 +14,105 @@ var tableApp = new Vue({
     }
 })
 */
+
 /*
- new Vue({
-        el: '#app',
-        data: function() {
-            return {
-                tableData: [
-                    {"name":"赵伟","tel":"156*****1987","hobby":"钢琴、书法、唱歌","address":"上海市黄浦区金陵东路569号17楼"},
-                    {"name":"李伟","tel":"182*****1538","hobby":"钢琴、书法、唱歌","address":"上海市奉贤区南桥镇立新路12号2楼"},
-                    {"name":"孙伟","tel":"161*****0097","hobby":"钢琴、书法、唱歌","address":"上海市崇明县城桥镇八一路739号"},
-                    {"name":"周伟","tel":"197*****1123","hobby":"钢琴、书法、唱歌","address":"上海市青浦区青浦镇章浜路24号"},
-                    {"name":"吴伟","tel":"183*****6678","hobby":"钢琴、书法、唱歌","address":"上海市松江区乐都西路867-871号"}
-                ],
-                columns: [
-                    {field: 'name', title:'姓名', width: 100, titleAlign: 'center',columnAlign:'center'},
-                    {field: 'tel', title: '手机号码', width: 260, titleAlign: 'center',columnAlign:'center'},
-                    {field: 'hobby', title: '爱好', width: 330, titleAlign: 'center',columnAlign:'center'},
-                    {field: 'address', title: '地址', titleAlign: 'center',columnAlign:'left'}
-                ]
-            }
-        }
-})
-*/
-var Data =[
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashboardLink":"dd"},
+ {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashboardLink":"dd"},
                         {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashbpardLInk":"dd"},
                         {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashbpardLInk":"dd"},
                         {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashbpardLInk":"dd"}
-            ];
+*/
+
+/*
+var Data =[
+        {
+          "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
+          "scanId":1324,
+          "targetURL":"http://testphp.vulnweb.com",
+          "dashboardLInk":"https://www.google.com",
+          "timeStep":31241234,
+         "reportPath":"http://zap-security-web.arfa.wise-paas.com/htmlreport/1564072276.html",
+        },
+        {
+          "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
+          "scanId":1324,
+          "targetURL":"http://testphp.vulnweb.com",
+          "dashboardLInk":"https://www.google.com",
+          "timeStep":431241234,
+         "reportPath":"http://zap-security-web.arfa.wise-paas.com/htmlreport/1564072276.html",
+        },
+                 
+        ];
+*/
+var Data = [];
 $(document).ready(function(){
+   
+    
+    
+    
     $('#tabledelete').click(function(){
         //Data.push({"targeturl":"http://abcdefg.vulnweb.com","time":"2019-07-25 15:30:56"});
+
+        
+        /*
+        var tmp = [ {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashboardLink":"dd"},
+                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashbpardLInk":"dd"}];
+        */
+        
+        
+        
+        
     });
     
-});   
-console.log(Data[0]);
+});
+
+function downloadHtml(scanId){
+    var ssoUrl = getCookie('SSO_URL');
+        $.ajax({
+            url: ssoUrl + '/v2.0/users/me',
+            method: 'GET',
+            xhrFields: {
+                withCredentials: true
+            }
+        }).done(function (user) {
+            
+            window.location.href = window.location.protocol + '//' + window.location.hostname + '/downloadHtml?'+'scanId='+scanId;
+            console.log("download html successfully")
+        }).fail(function () {
+            window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+            console.log("download html fail") 
+        });         
+    
+}
+
+
+function deleteScan(scanId){
+    $.ajax({
+                url: '/deleteScan',
+                type: 'GET',
+                 data: {
+                    'scanId':scanId
+                }
+    }).done(function(){
+        console.log("delete scan success");       
+        $.ajax({
+                url: '/refreshTable',
+                type: 'GET'
+        }).done(function(response){
+            while (Data.length > 0) Data.pop();
+            while (response.length > 0) Data.push(response.shift());
+            console.log("refresh table successfully")
+        }).fail(function(){
+            console.log("refresh table fail") 
+        });
+        
+    }).fail(function(){
+        
+        console.log("delete scan error");
+        
+    });
+
+    
+}
     
 var Main ={
         data() {
@@ -63,8 +127,8 @@ var Main ={
                                 return rowIndex >=0 ? '<span style="color:#000000;font-weight: bold;">' + (rowIndex + 1) + '</span>' : rowIndex + 1
                             }, isFrozen: true,isResize:true
                         },
-                        {field: 'targeturl', title:'Target URL', width: 350, titleAlign: 'center',columnAlign:'center',isResize:true},
-                        {field: 'time', title: 'Time', width: 100, titleAlign: 'center',columnAlign:'center',isResize:true},
+                        {field: 'targetURL', title:'Target URL', width: 350, titleAlign: 'center',columnAlign:'center',isResize:true},
+                        {field: 'timeStep', title: 'Time', width: 100, titleAlign: 'center',columnAlign:'center',isResize:true},
                         {field: 'dashboard', title: 'Dashboard', width: 50, titleAlign: 'center',columnAlign:'center',componentName:'table-dashboard',isResize:true},
                         {field: 'custome-adv', title: 'Operation',width: 150, titleAlign: 'center',columnAlign:'center',componentName:'table-operation',isResize:true}
                     ]
@@ -87,14 +151,21 @@ var Main ={
                 console.log(params);
 
                 if (params.type === 'delete'){ // do delete operation
+                    deleteScan(params.rowData['scanId']);
+                    //this.$delete(this.tableData,params.index);
 
-                    this.$delete(this.tableData,params.index);
+                }else if (params.type === 'download'){ // do download operation
+                    /*
+                    alert(`Number：${params.index} Target URL：${params.rowData['targetURL']}  time：${params.rowData['timeStep']}  scanId：${params.rowData['scanId']}`)
+                    */
+                    scanId = params.rowData['scanId'];
+                    //userId = params.rowData['userId'];    
+                    downloadHtml(scanId);
 
-                }else if (params.type === 'edit'){ // do edit operation
-
-                    alert(`Number：${params.index} Target URL：${params.rowData['targeturl']}  time：${params.rowData['dashboardLink']}`)
+                }else if (params.type === 'dashboard'){ // do download operation
+                    
                     //dashboard link
-                    //window.location.href = params.rowData['link']
+                    window.location.href = params.rowData['dashboardLInk'];
                 }
 
             }
@@ -106,8 +177,8 @@ var Main ={
         <!--<button id="dashboardlink" style="font-size:1rem;width:auto;" class="ui  green  button" @click.stop.prevent="update(rowData,index)">
             <i class="external alternate icon"></i>
             
-        </button>-->
-        <a href="" @click.stop.prevent="update(rowData,index)">Link</a>
+        </button>--> 
+        <a href="" @click.stop.prevent="dashboardLink(rowData,index)">Link</a>
         </span>`,
         props:{
             rowData:{
@@ -121,19 +192,10 @@ var Main ={
             }
         },
         methods:{
-            update(){
+            dashboardLink(){
 
-               // 参数根据业务场景随意构造
-               let params = {type:'edit',index:this.index,rowData:this.rowData};
+               let params = {type:'dashboard',index:this.index,rowData:this.rowData};
                this.$emit('on-custom-comp',params);
-            },
-
-            deleteRow(){
-
-                // 参数根据业务场景随意构造
-                let params = {type:'delete',index:this.index};
-                this.$emit('on-custom-comp',params);
-
             }
         }
     })
@@ -141,7 +203,7 @@ var Main ={
 
     Vue.component('table-operation',{
         template:`<span>
-        <a href="" @click.stop.prevent="update(rowData,index)">Download</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="" @click.stop.prevent="download(rowData,index)">Download</a>&nbsp;&nbsp;&nbsp;&nbsp;
         <a href="" @click.stop.prevent="deleteRow(rowData,index)">Delete</a>
         </span>`,
         props:{
@@ -156,17 +218,15 @@ var Main ={
             }
         },
         methods:{
-            update(){
+            download(){
 
-               // 参数根据业务场景随意构造
-               let params = {type:'edit',index:this.index,rowData:this.rowData};
+               let params = {type:'download',index:this.index,rowData:this.rowData};
                this.$emit('on-custom-comp',params);
             },
 
             deleteRow(){
 
-                // 参数根据业务场景随意构造
-                let params = {type:'delete',index:this.index};
+                let params = {type:'delete',index:this.index,rowData:this.rowData};
                 this.$emit('on-custom-comp',params);
 
             }
