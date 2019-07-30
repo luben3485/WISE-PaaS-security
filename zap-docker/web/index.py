@@ -37,7 +37,7 @@ def deleteScan():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		scanId = request.args.get('scanId')
-		db.deleteScan(int(scanId))
+		db.deleteScan(scanId)
 		return jsonify({'Result':'OK'})
 	else:
 		abort(401)
@@ -79,7 +79,7 @@ def downloadHtml():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		try:
-			scanId = int(request.cookies.get('scanId'))
+			scanId = request.cookies.get('scanId')
 			html_info = db.findHtml(scanId)
 			if html_info == None:
 				return redirect('/')
@@ -298,7 +298,7 @@ def ascan():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		url = request.cookies.get('targetUrl')
-		scanId = int(request.cookies.get('scanId'))
+		scanId = request.cookies.get('scanId')
 		recurse = request.args.get('recurse')
 		inScopeOnly = request.args.get('inScopeOnly')
 		scanPolicyName = 'custom'
@@ -315,7 +315,7 @@ def ascan():
 				r = r.json()
 				res_cookie = make_response(redirect('/'),200)
 				res_cookie.set_cookie('ascanId', r['scan'])
-				db.modifyExistInfo('ascanId',int(r['scan']),scanId)
+				db.modifyExistInfo('ascanId',r['scan'],scanId)
 				db.modifyExistInfo('status','2',scanId)
 				return res_cookie
 			else:
