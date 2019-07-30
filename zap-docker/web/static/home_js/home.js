@@ -835,6 +835,7 @@ $(document).ready(function(){
     $('#downloadReport').click(function(){
         
         var ssoUrl = getCookie('SSO_URL');
+        var scanId = getCookie('scanId');
         $.ajax({
             url: ssoUrl + '/v2.0/users/me',
             method: 'GET',
@@ -843,7 +844,7 @@ $(document).ready(function(){
             }
         }).done(function (user) {
             
-            window.location.href = myUrl + '/downloadHtml';
+            window.location.href = myUrl + '/downloadHtml/?scanId='+scanId;
             console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /downloadHtml');
         }).fail(function () {
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;

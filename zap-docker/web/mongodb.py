@@ -32,13 +32,13 @@ class mongoDB():
 		result = self.coll_html.find_one({"scanId":scanId})
 		return result
 	def listScans(self,userId):
-		results = self.collection.find({"userId":userId},{"_id":0}).sort('timeStep',pymongo.DESCENDING)
+		results = self.collection.find({"userId":userId},{"_id":0}).sort('timeStamp',pymongo.DESCENDING)
 		scans = []
 		for result in results:
 			scans.append(result)
 		return scans
 	def listAllScans(self):
-		results = self.collection.find({},{"_id":0}).sort('timeStep',pymongo.DESCENDING)
+		results = self.collection.find({},{"_id":0}).sort('timeStamp',pymongo.DESCENDING)
 		scans = []
 		for result in results:
 			scans.append(result)
@@ -98,15 +98,15 @@ if __name__ == '__main__':
 	#mongodb.deleteAllScans()
 	scans = mongodb.listAllScans()
 	print(len(scans))
-	print(scans)
+	print(type(scans[0]['scanId']))
 	#print(mongodb.getCollection())
 	#html = mongodb.findHtml(222)
 	#print(html)
-	scanId =str(777)
-	mongodb.modifyExistInfo('ascanId','0',scanId)
+	#scanId =str(777)
+	#mongodb.modifyExistInfo('ascanId','0',scanId)
 
-	scan = mongodb.findScan(scanId)	
-	print(scan)
+	#scan = mongodb.findScan(scanId)	
+	#print(scan)
 
 
 

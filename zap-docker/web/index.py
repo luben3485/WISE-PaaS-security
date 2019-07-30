@@ -79,7 +79,7 @@ def downloadHtml():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		try:
-			scanId = request.cookies.get('scanId')
+			scanId = request.args.get('scanId')
 			html_info = db.findHtml(scanId)
 			if html_info == None:
 				return redirect('/')
