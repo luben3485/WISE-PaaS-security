@@ -96,17 +96,17 @@ if __name__ == '__main__':
 
 	#print(scans)
 	#mongodb.deleteAllScans()
-	#scans = mongodb.listAllScans()
-	#print(len(scans))
+	scans = mongodb.listAllScans()
+	print(len(scans))
 	#print(scans)
 	#print(mongodb.getCollection())
 	#html = mongodb.findHtml(222)
 	#print(html)
-	scanId =777
-	mongodb.modifyExistInfo('ascanId',0,scanId)
+	#scanId =777
+	#mongodb.modifyExistInfo('ascanId',0,scanId)
 
-	scan = mongodb.findScan(777)	
-	print(scan)
+	#scan = mongodb.findScan(777)	
+	#print(scan)
 
 
 

@@ -1,8 +1,7 @@
 ---
 applications:
-- name: zap-security-debug
+- name: zap-security-web-v3
   memory: 1024M
-  no-route: true
   instances: 1
   disk_quota: 4G
   docker:

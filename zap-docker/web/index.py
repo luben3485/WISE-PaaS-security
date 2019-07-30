@@ -57,7 +57,8 @@ def addHtml():
 		# add scanStatus to db
 		db.modifyExistInfo('ascanStatus',ascanStatus,scanId)
 		db.modifyExistInfo('pscanStatus',pscanStatus,scanId)
-
+		db.modifyExistInfo('status',3,scanId)
+		
 		r = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
 		if r.status_code == 200:
 			html_info = {
@@ -105,7 +106,7 @@ def addScan():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		targetURL = request.args.get('targetURL')
-		scanOption = int(request.args.get('scanOption'))
+		scanOption = request.args.get('scanOption')
 		spiderId =int(request.cookies.get('spiderId'))  
 		scanId = random.randint(1000000,9999999)
 		nowtime = int(time.time())
@@ -115,7 +116,7 @@ def addScan():
 		#call Dashboard API getting dashboardLink
 		dashboardLink = 'http://www.google.com'
 		
-		# scanId timeStame ascanStatus pscanStatus  scanOption ascandId spiderId=> int
+		# scanId timeStame ascanStatus pscanStatus status ascandId spiderId=> int
 		# other info  => str
 		scandata = {
     		"userId":userId,
@@ -127,7 +128,8 @@ def addScan():
 			"pscanStatus":0,
 			"scanOption":scanOption,
 			"ascanId":-1,
-			"spiderId":spiderId
+			"spiderId":spiderId,
+			"status":0
 		}
 		db.addScan(scandata)
 		
@@ -173,6 +175,8 @@ def refreshTable():
 	
 	return jsonify([scandata1,scandata2])
 	'''
+
+
 
 
 @app.route('/setSSOurl')
@@ -412,6 +416,7 @@ def ascan():
 				res_cookie = make_response(redirect('/'),200)
 				res_cookie.set_cookie('ascanId', r['scan'])
 				db.modifyExistInfo('ascanId',int(r['scan']),scanId)
+				db.modifyExistInfo('status',2,scanId)
 				return res_cookie
 			else:
 				abort(400)
