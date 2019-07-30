@@ -98,7 +98,7 @@ if __name__ == '__main__':
 	#mongodb.deleteAllScans()
 	scans = mongodb.listAllScans()
 	print(len(scans))
-	print(type(scans[0]['scanId']))
+	print(scans)
 	#print(mongodb.getCollection())
 	#html = mongodb.findHtml(222)
 	#print(html)

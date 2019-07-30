@@ -266,12 +266,11 @@ $(document).ready(function(){
                                 $('#header>h1').text('It takes a few seconds to minutes to scan your website.')
                                 progressUpdate(res.status,"Active scan");
                                 console.log('ascanStatus '+ res.status);
-                                document.cookie = "ascanStatus="+response.status;
+                                document.cookie = "ascanStatus="+res.status;
                             }else if(res.status==100){
                                 document.cookie = "ascanStatus=100";
                                 finishedDelay(2000,'Active scan').then(() => {
-                                    $('.ui.tiny.modal').modal('hide');           
-                                    astart = 0;        
+                                    $('.ui.tiny.modal').modal('hide');                  
                                 });
                             }
                         }).fail(function(){
@@ -390,6 +389,7 @@ $(document).ready(function(){
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     $('#startScan').click(function(){
+        astart = 0
         var ssoUrl = getCookie('SSO_URL');
         var scanOption=$("#scanOption").val();
         document.cookie = "pscanStatus=0";
@@ -844,7 +844,7 @@ $(document).ready(function(){
             }
         }).done(function (user) {
             
-            window.location.href = myUrl + '/downloadHtml/?scanId='+scanId;
+            window.location.href = myUrl + '/downloadHtml?scanId='+scanId;
             console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /downloadHtml');
         }).fail(function () {
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
