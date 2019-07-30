@@ -51,13 +51,13 @@ class mongoDB():
 if __name__ == '__main__':
 	mongodb = mongoDB()
 	
-	for i in range(1):
+	for i in range(3):
 		#scanId = random.randint(1000000,9999999)
-		scanId = 777
+		scanId = '777'
 		nowtime = int(time.time())
 		dashboardLink = 'http://www.google.com'
-		scanOption = 0
-		spiderId = 0
+		scanOption = '0'
+		spiderId = '0'
 		targetURL = 'http://testphp.vulnweb.com'
 		scandata = {
              "userId":'b7ea79a3-c2eb-4c79-b968-b279667f3747',
@@ -65,10 +65,10 @@ if __name__ == '__main__':
              "targetURL":targetURL,
              "dashboardLInk":dashboardLink,
              "timeStamp":nowtime,
-             "ascanStatus":0,
-             "pscanStatus":0,
+             "ascanStatus":'0',
+             "pscanStatus":'0',
              "scanOption":scanOption,
-			 "ascanId":-1,
+			 "ascanId":'-1',
              "spiderId":spiderId
          }
 
@@ -98,15 +98,15 @@ if __name__ == '__main__':
 	#mongodb.deleteAllScans()
 	scans = mongodb.listAllScans()
 	print(len(scans))
-	#print(scans)
+	print(scans)
 	#print(mongodb.getCollection())
 	#html = mongodb.findHtml(222)
 	#print(html)
-	#scanId =777
-	#mongodb.modifyExistInfo('ascanId',0,scanId)
+	scanId =str(777)
+	mongodb.modifyExistInfo('ascanId','0',scanId)
 
-	#scan = mongodb.findScan(777)	
-	#print(scan)
+	scan = mongodb.findScan(scanId)	
+	print(scan)
 
 
 

@@ -50,14 +50,14 @@ def addHtml():
 	if res.status_code == 200:
 		info_token = EIToken.split('.')[1]
 		userId = json.loads(base64.b64decode(info_token))['userId']
-		scanId = int(request.cookies.get('scanId'))
-		ascanStatus =int(request.cookies.get('ascanStatus'))  
-		pscanStatus =int(request.cookies.get('pscanStatus'))
+		scanId = request.cookies.get('scanId')
+		ascanStatus =request.cookies.get('ascanStatus')
+		pscanStatus =request.cookies.get('pscanStatus')
 		
 		# add scanStatus to db
 		db.modifyExistInfo('ascanStatus',ascanStatus,scanId)
 		db.modifyExistInfo('pscanStatus',pscanStatus,scanId)
-		db.modifyExistInfo('status',3,scanId)
+		db.modifyExistInfo('status','3',scanId)
 		
 		r = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
 		if r.status_code == 200:
@@ -107,8 +107,8 @@ def addScan():
 	if res.status_code == 200:
 		targetURL = request.args.get('targetURL')
 		scanOption = request.args.get('scanOption')
-		spiderId =int(request.cookies.get('spiderId'))  
-		scanId = random.randint(1000000,9999999)
+		spiderId =request.cookies.get('spiderId')  
+		scanId = str(random.randint(1000000,9999999))
 		nowtime = int(time.time())
 		info_token = EIToken.split('.')[1]
 		userId = json.loads(base64.b64decode(info_token))['userId']
@@ -116,7 +116,7 @@ def addScan():
 		#call Dashboard API getting dashboardLink
 		dashboardLink = 'http://www.google.com'
 		
-		# scanId timeStame ascanStatus pscanStatus status ascandId spiderId=> int
+		# timeStamp => int
 		# other info  => str
 		scandata = {
     		"userId":userId,
@@ -124,17 +124,16 @@ def addScan():
     		"targetURL":targetURL,
     		"dashboardLInk":dashboardLink,
     		"timeStamp":nowtime,
-    		"ascanStatus":0,
-			"pscanStatus":0,
+    		"ascanStatus":'0',
+			"pscanStatus":'0',
 			"scanOption":scanOption,
-			"ascanId":-1,
+			"ascanId":'-1',
 			"spiderId":spiderId,
-			"status":0
+			"status":'0'
 		}
 		db.addScan(scandata)
 		
 		res_cookie = make_response(redirect('/'),200)
-		scanId = str(scanId)	
 		res_cookie.set_cookie('scanId',scanId)
 		return res_cookie
 	else:
@@ -158,26 +157,6 @@ def refreshTable():
 		return jsonify(scans)
 	else:
 		abort(401)
-	'''
-	scandata1 = {
-    	"userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
-    	"scanId":1324,
-    	"targetURL":"http://testphp.vulnweb.com",
-    	"dashboardLInk":"http://xxxx.xxx.xx",
-    	"timeStemp":11111234,
-	}
-	scandata2 = {
-    	"userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
-    	"scanId":21341234,
-		targetURL":"http://testphp.vulnweb.com",
-    	"dashboardLInk":"http://xxxx.xxx.xx",
-    	"timeStemp":4312412,
-	}
-	
-	return jsonify([scandata1,scandata2])
-	'''
-
-
 
 
 @app.route('/setSSOurl')
@@ -185,83 +164,8 @@ def setSSOurl():
 	res_cookie = make_response(redirect('/'),200)
 	res_cookie.set_cookie('SSO_URL', ssoUrl)
 	return res_cookie
-'''
-@app.route('/startScan')
-def startScan():
-	EIToken =request.cookies.get('EIToken')  
-	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
-	if res.status_code == 200:
-		scanOption = request.args.get('scanOption')
-		url = request.args.get('url')
-		try:
-			if scanOption == '0':
-				maxChildren=''
-				recurse=''
-				contextName=''
-				subtreeOnly=''
-				payload = {'url': url, 'maxChildren': maxChildren,'recurse':recurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
-				r = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan',params=payload)
-				if r.status_code == 200:
-					r = r.json()
-					#result = {'id':response['id']}
-					#return jsonify(result)
-					res_cookie = make_response(redirect('/'),200)
-					res_cookie.set_cookie('spiderId', r['scan'])
-					return res_cookie
-			
-			elif scanOption == '1':
-				recurse = True
-				inScopeOnly = False
-				scanPolicyName = ''
-				method =''
-				postData = ''
-				contextId = ''
-				payload = {'url' : url,'recurse':recurse,'inScopeOnly':inScopeOnly,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
-				r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/scan/',params=payload)
-				
-				if r.status_code == 200:
-					r = r.json()
-					res_cookie = make_response(redirect('/'),200)
-					res_cookie.set_cookie('ascanId', r['scan'])
-					return res_cookie
-
-			elif scanOption == '2':
-				maxChildren=''
-				recurse=''
-				contextName=''
-				subtreeOnly=''
-				payload = {'url': url, 'maxChildren': maxChildren,'recurse':recurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
-				r_spider = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan',params=payload)
-
-				time.sleep(3)
-
-				recurse = True
-				inScopeOnly = False
-				scanPolicyName = ''
-				method =''
-				postData = ''
-				contextId = ''
-				payload = {'url' : url,'inScopeOnly':inScopeOnly,'recurse':recurse,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
-				r_ascan = requests.get('http://127.0.0.1:5000/JSON/ascan/action/scan/',params=payload)
 
 
-				if r_spider.status_code == 200 and r_ascan.status_code == 200:
-					r_spider = r_spider.json()
-					r_ascan = r_ascan.json()
-					res_cookie = make_response(redirect('/'),200)
-					res_cookie.set_cookie('spiderId', r_spider['scan'])
-					res_cookie.set_cookie('ascanId', r_ascan['scan'])
-					return res_cookie
-
-			else:
-				abort(500)
-		except Exception as err:
-			print('error: {}'.format(str(err)))
-			abort(500)
-		
-	else:
-		abort(401)
-'''
 '''
 SPIDER + PASSIVE SCAN
 '''
@@ -282,8 +186,6 @@ def spiderScan():
 			
 			if r.status_code == 200:
 				r = r.json()
-				#result = {'id':response['id']}
-				#return jsonify(result)
 				res_cookie = make_response(redirect('/'),200)
 				res_cookie.set_cookie('spiderId', r['scan'])
 				res_cookie.set_cookie('targetUrl', url)
@@ -305,7 +207,6 @@ def spiderStatus():
 	EIToken =request.cookies.get('EIToken')  
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
-		#id = request.args.get('id')
 		spiderId=request.cookies.get('spiderId')
 		try:
 			if id:
@@ -412,12 +313,10 @@ def ascan():
 			
 			if r.status_code == 200:
 				r = r.json()
-				#result = {'id':response['id']}
-				#return jsonify(result)
 				res_cookie = make_response(redirect('/'),200)
 				res_cookie.set_cookie('ascanId', r['scan'])
 				db.modifyExistInfo('ascanId',int(r['scan']),scanId)
-				db.modifyExistInfo('status',2,scanId)
+				db.modifyExistInfo('status','2',scanId)
 				return res_cookie
 			else:
 				abort(400)
