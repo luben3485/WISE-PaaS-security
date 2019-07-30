@@ -134,6 +134,7 @@ def addScan():
 		db.addScan(scandata)
 		
 		res_cookie = make_response(redirect('/'),200)
+		scanId = str(scanId)	
 		res_cookie.set_cookie('scanId',scanId)
 		return res_cookie
 	else:
