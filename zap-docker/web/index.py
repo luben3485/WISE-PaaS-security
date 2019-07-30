@@ -51,13 +51,16 @@ def addHtml():
 		info_token = EIToken.split('.')[1]
 		userId = json.loads(base64.b64decode(info_token))['userId']
 		scanId = int(request.cookies.get('scanId'))
-		ascanStatus =request.cookies.get('ascanStatus')  
-		pscanStatus =request.cookies.get('pscanStatus')  
+		ascanStatus =int(request.cookies.get('ascanStatus'))  
+		pscanStatus =int(request.cookies.get('pscanStatus'))
+		
+		# add scanStatus to db
+		db.modifyExistInfo('ascanStatus',ascanStatus,scanId)
+		db.modifyExistInfo('pscanStatus',pscanStatus,scanId)
+
 		r = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
 		if r.status_code == 200:
 			html_info = {
-				"ascanStatus":ascanStatus,	
-				"pscanStatus":pscanStatus,	
 				"userId":userId,
 				"scanId":scanId,
 				"html":r.content
@@ -75,7 +78,7 @@ def downloadHtml():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		try:
-			scanId = int(request.args.get('scanId'))
+			scanId = int(request.cookies.get('scanId'))
 			html_info = db.findHtml(scanId)
 			if html_info == None:
 				return redirect('/')
@@ -102,26 +105,34 @@ def addScan():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		targetURL = request.args.get('targetURL')
+		scanOption = int(request.args.get('scanOption'))
+		spiderId =int(request.cookies.get('spiderId'))  
 		scanId = random.randint(1000000,9999999)
 		nowtime = int(time.time())
 		info_token = EIToken.split('.')[1]
 		userId = json.loads(base64.b64decode(info_token))['userId']
-		
+
 		#call Dashboard API getting dashboardLink
 		dashboardLink = 'http://www.google.com'
 		
+		# scanId timeStame ascanStatus pscanStatus  scanOption ascandId spiderId=> int
+		# other info  => str
 		scandata = {
     		"userId":userId,
     		"scanId":scanId,
     		"targetURL":targetURL,
     		"dashboardLInk":dashboardLink,
-    		"timeStep":nowtime,
-    		"report":'',
+    		"timeStamp":nowtime,
+    		"ascanStatus":0,
+			"pscanStatus":0,
+			"scanOption":scanOption,
+			"ascanId":-1,
+			"spiderId":spiderId
 		}
 		db.addScan(scandata)
 		
 		res_cookie = make_response(redirect('/'),200)
-		res_cookie.set_cookie('scanId',str(scanId))
+		res_cookie.set_cookie('scanId',scanId)
 		return res_cookie
 	else:
 		abort(401)
@@ -137,7 +148,7 @@ def refreshTable():
 		scans = db.listScans(userId)
 
 		for scan in scans:
-			ts = scan['timeStep']
+			ts = scan['timeStamp']
 			time = datetime.fromtimestamp(ts).strftime('%Y/%m/%d %H:%M')
 			time_info = {'time' : time}
 			scan.update(time_info)
@@ -381,6 +392,7 @@ def ascan():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		url = request.cookies.get('targetUrl')
+		scanId = int(request.cookies.get('scanId'))
 		recurse = request.args.get('recurse')
 		inScopeOnly = request.args.get('inScopeOnly')
 		scanPolicyName = 'custom'
@@ -399,6 +411,7 @@ def ascan():
 				#return jsonify(result)
 				res_cookie = make_response(redirect('/'),200)
 				res_cookie.set_cookie('ascanId', r['scan'])
+				db.modifyExistInfo('ascanId',int(r['scan']),scanId)
 				return res_cookie
 			else:
 				abort(400)

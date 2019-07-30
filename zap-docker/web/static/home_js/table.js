@@ -28,7 +28,8 @@ var Data =[
           "scanId":1,
           "targetURL":"http://testphp.aaaaaaaa.com",
           "dashboardLInk":"https://www.google.com",
-          "timeStep":24,
+          "timeStamp":24,
+            "time":87,
          "reportPath":"http://zap-security-web.arfa.wise-paas.com/htmlreport/1564072276.html",
         },
         {
@@ -36,7 +37,8 @@ var Data =[
           "scanId":2,
           "targetURL":"http://testphp.vulnweb.com",
           "dashboardLInk":"https://www.google.com",
-          "timeStep":431241234,
+          "timeStamp":431241234,
+            "time":87,
          "reportPath":"http://zap-security-web.arfa.wise-paas.com/htmlreport/1564072276.html",
         },
     {
@@ -44,7 +46,8 @@ var Data =[
           "scanId":3,
           "targetURL":"http://testphp.vulnweb.com",
           "dashboardLInk":"https://www.google.com",
-          "timeStep":1431241234,
+          "timeStamp":1431241234,
+        "time":87,
          "reportPath":"http://zap-security-web.arfa.wise-paas.com/htmlreport/1564072276.html",
         },
     {
@@ -52,7 +55,8 @@ var Data =[
           "scanId":4,
           "targetURL":"http://testphp.vulnweb.com",
           "dashboardLInk":"https://www.google.com",
-          "timeStep":5431241234,
+          "timeStamp":5431241234,
+          "time":87,
          "reportPath":"http://zap-security-web.arfa.wise-paas.com/htmlreport/1564072276.html",
         },
     {
@@ -60,7 +64,8 @@ var Data =[
           "scanId":5,
           "targetURL":"http://testphp.vulnweb.com",
           "dashboardLInk":"https://www.google.com",
-          "timeStep":431241234,
+          "timeStamp":431241234,
+         "time":87,
          "reportPath":"http://zap-security-web.arfa.wise-paas.com/htmlreport/1564072276.html",
         },
                  

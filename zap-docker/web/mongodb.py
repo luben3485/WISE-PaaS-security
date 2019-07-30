@@ -26,6 +26,8 @@ class mongoDB():
 	def findScan(self,scanId):
 		result = self.collection.find_one({"scanId":scanId})
 		return result
+	def modifyExistInfo(self,key,value,scanId):
+		self.collection.update({'scanId':scanId},{'$set':{key:value}})
 	def findHtml(self,scanId):
 		result = self.coll_html.find_one({"scanId":scanId})
 		return result
@@ -50,38 +52,61 @@ if __name__ == '__main__':
 	mongodb = mongoDB()
 	
 	for i in range(1):
-		scanId = random.randint(1000000,9999999)
+		#scanId = random.randint(1000000,9999999)
+		scanId = 777
 		nowtime = int(time.time())
-		scandata1 = {
-    "userId":"b7ea79a3-c2eb-4c79-b968-b279667f3747",
-    "scanId":scanId,
-    "targetURL":"http://testphp.vulnweb.com",
-    "dashboardLInk":"http://www.google.com",
-    "timeStep":nowtime,
-}
+		dashboardLink = 'http://www.google.com'
+		scanOption = 0
+		spiderId = 0
+		targetURL = 'http://testphp.vulnweb.com'
+		scandata = {
+             "userId":'b7ea79a3-c2eb-4c79-b968-b279667f3747',
+             "scanId":scanId,
+             "targetURL":targetURL,
+             "dashboardLInk":dashboardLink,
+             "timeStamp":nowtime,
+             "ascanStatus":0,
+             "pscanStatus":0,
+             "scanOption":scanOption,
+			 "ascanId":-1,
+             "spiderId":spiderId
+         }
+
+		
 		#print(scanId)
 		#print(nowtime)
 
-		#mongodb.addScan(scandata1)
+		#mongodb.addScan(scandata)
 	
-
-	scans = mongodb.listScans('b7ea79a3-c2eb-4c79-b968-b279667f3747')
-	#print(scans[0])
+	
+	#scans = mongodb.listScans('b7ea79a3-c2eb-4c79-b968-b279667f3747')
+	#print(scans)
 	#print(len(scans))
-	#scan = mongodb.findScan(5057664)	
+	#scan = mongodb.findScan(777)	
+	#print(scan)
+	'''
 	for scan in scans:
-		ts = scan['timeStep']
+		ts = scan['timeStamp']
 		time = datetime.fromtimestamp(ts).strftime('%Y/%m/%d %H:%M')
 		time_info = {'time' : time}
 		scan.update(time_info)
+	'''
 	#print(time_info)
 
 
 	#print(scans)
 	#mongodb.deleteAllScans()
 	#scans = mongodb.listAllScans()
-	print(len(scans))
+	#print(len(scans))
 	#print(scans)
 	#print(mongodb.getCollection())
 	#html = mongodb.findHtml(222)
 	#print(html)
+	scanId =777
+	mongodb.modifyExistInfo('ascanId',0,scanId)
+
+	scan = mongodb.findScan(777)	
+	print(scan)
+
+
+

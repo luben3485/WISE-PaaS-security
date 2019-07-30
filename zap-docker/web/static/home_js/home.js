@@ -342,13 +342,14 @@ $(document).ready(function(){
         });
         
     }
-    function addScan(){
+    function addScan(scanOption){
         //Delete all scan report before
         return $.ajax({
                 url: '/addScan',
                 type: 'GET',
                 data: {
-					'targetURL': $('input[name="input_url"]').val()
+					'targetURL': $('input[name="input_url"]').val(),
+                    'scanOption':scanOption
                 }
         });
         
@@ -361,15 +362,9 @@ $(document).ready(function(){
         });  
     }
     function addHtml(){
-        ps = getCookie('pscanStatus');
-        as = getCookie('ascanStatus');
         $.ajax({
                 url: '/addHtml',
                 type: 'GET',
-                data:{
-                    'pscanStatus': ps,
-                    'ascanStatus': as
-                }
         }).done(function(){
             console.log("addHtml success")
         }).fail(function(){
@@ -424,7 +419,7 @@ $(document).ready(function(){
                     //start timer
                     intervalNum = setInterval(function(){ checkScan(scanOption) }, 600);
                     //alert('Start a  scan\n Set id in cookie!');
-                    addScan().done(function(){
+                    addScan(scanOption).done(function(){
                         refreshTable().done(function(response){
                             while (Data.length > 0) Data.pop();
                             while (response.length > 0) Data.push(response.shift());
@@ -847,11 +842,11 @@ $(document).ready(function(){
             }
         }).done(function (user) {
             
-            window.location.href = myUrl + '/downloadReport';
-            console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /downloadReport');
+            window.location.href = myUrl + '/downloadHtml';
+            console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /downloadHtml');
         }).fail(function () {
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-            console.log('User is not logged in! /downloadReport');
+            console.log('User is not logged in! /downloadHtml');
         });            
      
 	});
