@@ -309,13 +309,14 @@ $(document).ready(function(){
             onDeny    : cancelScan,
             onApprove : function() {
                 $.ajax({
-                url: '/dashboardLink',
-                type: 'GET'
-        }).done(function(res){
-            window.open(res);
-        }).fail(function(){
-            console.log('/dashboardLInk fail');
-        });
+                        url: '/dashboardLink',
+                        type: 'GET'
+                }).done(function(res){
+                    window.open(res);
+                }).fail(function(){
+                    console.log('/dashboardLInk fail');
+                });
+                return false;
             }
             })
     .modal('show');
