@@ -547,5 +547,179 @@ def clear():
 		abort(401)
 
 
+'''
+Newly Added
+'''
+'''
+Data Source 
+'''
+@app.route('/summary/')
+def health_check():
+	return "This datasource is healthy"
+
+@app.route('/progress/')
+def health_check_p():
+	return "This datasource is healthy"
+
+# return a list of data that can be queried
+@app.route('/summary/search', methods=['POST'])
+def search():
+	count_list = []
+	for key in High.keys():
+		count_list.append( "High" + "-" + str(key) )
+		count_list.append( "Medium" + "-" + str(key) )
+		count_list.append( "Low" + "-" + str(key) )
+		count_list.append( "Informational" + "-" + str(key) )
+	return jsonify( count_list )
+
+@app.route('/progress/search', methods=['POST'])
+def search_p():
+	progress_list = []
+	for key in Passive_Scan_Progress.keys():
+		progress_list.append( "Passive_Scan_Progress" + "-" + str(key) )
+		progress_list.append( "Active_Scan_Progress" + "-" + str(key) )
+	return jsonify( progress_list )
+
+@app.route('/summary/query', methods=['POST'])
+def query():
+	req = request.get_json()
+	target = req['targets'][0]['target']
+	target_id = re.findall(r'\d*$',target)[0]
+	try: 
+		r = session.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/?')
+	except Exception as err:
+		print('error: {}'.format(str(err)))
+		abort(400)
+
+	global High
+	global Medium
+	global Low
+	global Informational
+
+	#find high_count
+	hr = re.search(r'<td><a href=\"#high\">High</a></td><td align=\"center\">(.*)</td>', r.html.raw_html.decode("utf-8"), flags=0)
+	High[target_id] = int( hr.group(1) )
+
+	#find medium_count
+	mr = re.search(r'<td><a href=\"#medium\">Medium</a></td><td align=\"center\">(.*)</td>', r.html.raw_html.decode("utf-8"), flags=0)
+	Medium[target_id] = int( mr.group(1) )
+	
+	#find low_count
+	lr = re.search(r'<td><a href=\"#low\">Low</a></td><td align=\"center\">(.*)</td>', r.html.raw_html.decode("utf-8"), flags=0)
+	Low[target_id] = int( lr.group(1) )
+
+	#find informational_count
+	ir = re.search(r'<td><a href=\"#info\">Informational</a></td><td align=\"center\">(.*)</td>', r.html.raw_html.decode("utf-8"), flags=0)
+	Informational[target_id] = int( ir.group(1) )
+
+	data = [
+        {
+            "target": "High" + "-" + str(target_id),
+            "datapoints": [
+                [High[target_id], 1563761410]
+            ]
+        },
+        {
+            "target": "Medium" + "-" + str(target_id),
+            "datapoints": [
+                [Medium[target_id],1563761410]
+            ]
+        },
+        {
+            "target": "Low" + "-" + str(target_id),
+            "datapoints": [
+                [Medium[target_id], 1563761410]
+            ]
+        },
+        {
+            "target": "Informational" + "-" + str(target_id),
+            "datapoints": [
+                [Informational[target_id], 1563761410]
+            ]
+        }
+    ]
+	return jsonify(data)
+
+@app.route('/progress/query', methods=['POST'])
+def query_p():
+	req = request.get_json()
+	target = req['targets'][0]['target']
+	target_id = re.findall(r'\d*$',target)[0]
+
+	global pscanid
+	global ascanid
+	global Passive_Scan_Progress
+	global Active_Scan_Progress
+	status = db.findScan(target_id)["status"]
+	#pscanid = db.findScan(target_id)["spiderId"]
+	#ascanid = db.findScan(target_id)["ascanId"]
+	if(status!="3"):
+		try: 
+			p =  session.get('http://127.0.0.1:5000/JSON/spider/view/status/?scanId='+str(pscanid))
+			a =  session.get('http://127.0.0.1:5000/JSON/ascan/view/status/?scanId='+str(ascanid))
+		except Exception as err:
+			print('error: {}'.format(str(err)))
+			abort(400)
+	if(status != "3"):
+		pr = re.search(r'\"status\":\"(.*)\"', p.html.raw_html.decode("utf-8"), flags=0)
+		if(pr): Passive_Scan_Progress[target_id] = int( pr.group(1) )
+		ar = re.search(r'\"status\":\"(.*)\"', a.html.raw_html.decode("utf-8"), flags=0)
+		if(ar): Active_Scan_Progress[target_id] = int( ar.group(1) )
+	else:
+		Passive_Scan_Progress[target_id] = 100
+		Active_Scan_Progress[target_id] = 100
+
+	#Passive_Scan_Progress = db.findScan(uid)["pscanStatus"]
+	#Active_Scan_Progress = db.findScan(uid)["ascanStatus"]
+
+	progress = [
+            {
+                "target": "Passive_Scan_Progress"+"-"+ str(target_id),
+                "datapoints":[
+                    [Passive_Scan_Progress[target_id], 1563761410]
+                    ]
+            },
+            {
+                "target": "Active_Scan_Progress"+"-"+ str(target_id),
+                "datapoints":[
+                    [Active_Scan_Progress[target_id], 1563761410]
+                    ]
+            }
+    ]
+	return jsonify(progress)
+
+@app.route('/datasource/report/<uid>', methods=['GET'])
+@cross_origin()
+def datasource_report(uid):
+	try: 
+		report = db.findHtml(uid)['html']
+		#report = session.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/?')
+	except Exception as err:
+		print('error: {}'.format(str(err)))
+		abort(400)
+	source = report.html.raw_html.decode("utf-8")
+	head = source.split("<h1>",1)
+	body = head[1].split("<h3>Alert Detail</h3>",1)
+	html = "".join(head[0]+body[1])
+	response = make_response(html,200)
+	response.headers['Content-Type'] = 'text/html'
+	response.headers['Access-Control-Allow-Origin'] = '*'
+	return response
+'''
+Delete Dashboard
+'''
+app.route('/dashboard/delete/<uid>', methods=['GET'])
+def dash_delete(uid):
+	EIToken =request.cookies.get('EIToken')
+	my_headers = {'Content-Type':'application/json',
+               'Authorization': 'Bearer {}'.format(EIToken)}
+	res = requests.delete(apiURL + "/api/dashboards/uid/" + uid, headers=my_headers)
+	res_json = res.json()
+	print( res_json["title"]+" has been deleted." )
+	return res.json()
+'''
+Newly Added End
+'''
+
 if __name__ == '__main__':
 	app.run(host='0.0.0.0',port=8080,debug=False)
