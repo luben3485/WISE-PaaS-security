@@ -62,35 +62,37 @@ def datasource_init(scanId):
 	Active_Scan_Progress[scanId] = 0
 def create_dashboard(scanId, EIToken):
 	my_headers = {'Content-Type':'application/json','Authorization': 'Bearer {}'.format(EIToken)}
-	template = ''
-	with open('template.json') as json_file:
-		template = json.load(json_file)
-	payload ={
-        "dashboard": template,
-        "folderId": 0,
-        "overwrite": false
-	}
-	template["uid"] = scanId
-	template["title"] = template["title"] + "-" + str(scanId)
-	template["panels"][0]["datasource"] = "ZAP-Progress"
-	template["panels"][1]["datasource"] = "ZAP-Summary"
-	template["panels"][3]["datasource"] = "ZAP-Summary"
-	template["panels"][0]["targets"][0]["target"] = "Passive_Scan_Progress"+"-"+str(scanId)
-	template["panels"][0]["targets"][1]["target"] = "Active_Scan_Progress"+"-"+str(scanId)
-	template["panels"][1]["targets"][0]["target"] = "High"+"-"+str(scanId)
-	template["panels"][1]["targets"][1]["target"] = "Medium"+"-"+str(scanId)
-	template["panels"][1]["targets"][2]["target"] = "Low"+"-"+str(scanId)
-	template["panels"][1]["targets"][3]["target"] = "Informational"+"-"+str(scanId)
-	template["panels"][3]["targets"][0]["target"] = "High" +"-"+str(scanId)
-	template["panels"][3]["targets"][0]["target"] = "Medium"+"-"+str(scanId)
-	template["panels"][3]["targets"][0]["target"] = "Low"+"-"+str(scanId)
-	template["panels"][3]["targets"][0]["target"] = "Informational"+"-"+str(scanId)
-	#template["panels"][5]["content"] = "" #The last panel for report.
-	res = requests.post(apiURL + "/api/dashboards/db", headers=my_headers, json=payload)
-	print( res.text )
-	dashboardLink = apiURL +res.json()["url"]
-	datasource_init(scanId)
-	return dashboardLink
+	try:
+		with open('template.json') as json_file:
+			template = json.load(json_file)
+		payload ={
+       	 "dashboard": template,
+    	    "folderId": 0,
+    	    "overwrite": false
+		}
+		template["uid"] = scanId
+		template["title"] = template["title"] + "-" + str(scanId)
+		template["panels"][0]["datasource"] = "ZAP-Progress"
+		template["panels"][1]["datasource"] = "ZAP-Summary"
+		template["panels"][3]["datasource"] = "ZAP-Summary"
+		template["panels"][0]["targets"][0]["target"] = "Passive_Scan_Progress"+"-"+str(scanId)
+		template["panels"][0]["targets"][1]["target"] = "Active_Scan_Progress"+"-"+str(scanId)
+		template["panels"][1]["targets"][0]["target"] = "High"+"-"+str(scanId)
+		template["panels"][1]["targets"][1]["target"] = "Medium"+"-"+str(scanId)
+		template["panels"][1]["targets"][2]["target"] = "Low"+"-"+str(scanId)
+		template["panels"][1]["targets"][3]["target"] = "Informational"+"-"+str(scanId)
+		template["panels"][3]["targets"][0]["target"] = "High" +"-"+str(scanId)
+		template["panels"][3]["targets"][0]["target"] = "Medium"+"-"+str(scanId)
+		template["panels"][3]["targets"][0]["target"] = "Low"+"-"+str(scanId)
+		template["panels"][3]["targets"][0]["target"] = "Informational"+"-"+str(scanId)
+		#template["panels"][5]["content"] = "" #The last panel for report.
+		res = requests.post(apiURL + "/api/dashboards/db", headers=my_headers, json=payload)
+		print( res.text )
+		dashboardLink = apiURL +res.json()["url"]
+		datasource_init(scanId)
+		return dashboardLink
+	except Exception as err:
+		print('error: {}'.format(str(err)))
 '''
 Newly Added End
 '''
