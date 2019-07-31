@@ -83,7 +83,6 @@ $(document).ready(function(){
     });
     
 });
-var checked = [];
 function getCookie(cname) {
       var name = cname + "=";
       var decodedCookie = decodeURIComponent(document.cookie);
@@ -122,13 +121,11 @@ function downloadHtml(scanId){
 
 function deleteScans(scanIdArr){
     $.ajax({
-                url: '/deleteScan',
-                type: 'GET',
+                url: '/deleteScans',
+                type: 'POST',
                  data: {
                     'scanIdArr':scanIdArr
-                },
-                dataType : 'json',
-                traditional: true,
+                }
     }).done(function(){
         console.log("delete scan success");       
         $.ajax({

@@ -31,13 +31,12 @@ app = Flask(__name__,static_url_path='',root_path=os.getcwd())
 def home():
 	return app.send_static_file('home.html')
 
-@app.route('/deleteScans',methods=['GET'])
+@app.route('/deleteScans',methods=['POST'])
 def deleteScans():
 	EIToken =request.cookies.get('EIToken')  
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
-		scanIdArr = request.args.get('scanIdArr')
-		scanIdArr = json.loads(scanIdArr)
+		scanIdArr = request.form.getlist('scanIdArr[]')
 		db.deleteScans(scanIdArr)
 		return jsonify({'Result':'OK'})
 	else:
