@@ -98,7 +98,7 @@ Newly Added End
 '''
 def getUserIdFromToken(EIToken):
 	info = EIToken.split('.')[1]
-	lenx = lens%4
+	lenx = len(info)%4
 	if lenx == 1:
 		info += '==='
 	if lenx == 2:
