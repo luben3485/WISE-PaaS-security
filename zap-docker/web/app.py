@@ -195,8 +195,8 @@ def addScan():
 		userId = json.loads(base64.b64decode(info_token))['userId']
 
 		#call Dashboard API getting dashboardLink
-		dashboardLink = 'http://www.google.com'
-		
+		#dashboardLink = 'http://www.google.com'
+		dashboardLink = create_dashboard(scanId,EIToken)
 		# timeStamp => int
 		# other info  => str
 		scandata = {
