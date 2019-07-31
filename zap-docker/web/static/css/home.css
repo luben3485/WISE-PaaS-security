@@ -1,3 +1,13 @@
+@import 'https://fonts.googleapis.com/css?family=Fjalla+One|Playfair+Display';
+
+body {
+   
+    
+    font-family: 'Playfair Display', serif;
+    margin: 0;
+}
+
+
 
 .ui.inverted.segment{
     margin:0px;
@@ -15,7 +25,7 @@
 #header{
     font-size: 4rem;
     font-family:Arial;
-    margin-top:3rem;
+    margin-top:4rem;
 }
 #app{
     margin-top:5rem;
@@ -34,16 +44,7 @@
     position: relative;
     
 }
-/*
-@media (min-height: 900px) and  (min-width: 900px){
- .ui.inverted.vertical.footer.segment{
-    
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-  }
-}
-*/
+
 @media (min-width: 1200px) {
     #dashboard{
         font-size:1.4rem;

@@ -1,26 +1,3 @@
-/*var scanApp = new Vue({
-    el: '#start',
-    methods: {
-        addTable: function (event) {
-            tableApp.counter+=1;
-        }
-    }
-})
-
-var tableApp = new Vue({
-    el: '#table',
-    data: {
-        counter: 0
-    }
-})
-*/
-
-/*
- {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashboardLink":"dd"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashbpardLInk":"dd"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashbpardLInk":"dd"},
-                        {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashbpardLInk":"dd"}
-*/
 var deleted=[];
 var deletedFlag = 0;
 /*var Data =[
@@ -157,15 +134,15 @@ var Main ={
                         {width: 50, titleAlign: 'center',columnAlign:'center',type: 'selection' 
                         },
                         {
-                            field: 'custome', title:'Number', width: 50, titleAlign: 'center', columnAlign: 'center',
+                            field: 'custome', title:'Number', width: 40, titleAlign: 'center', columnAlign: 'center',
                             formatter: function (rowData,rowIndex,pagingIndex,field) {
                                 return rowIndex >=0 ? '<span style="color:#000000;font-weight: bold;">' + (rowIndex + 1) + '</span>' : rowIndex + 1
                             }, isFrozen: true,isResize:true
                         },
-                        {field: 'targetURL', title:'Target URL', width: 350, titleAlign: 'center',columnAlign:'center',isResize:true},
+                        {field: 'targetURL', title:'Target URL', width: 250, titleAlign: 'center',columnAlign:'center',isResize:true},
                         {field: 'time', title: 'Time', width: 100, titleAlign: 'center',columnAlign:'center',isResize:true},
-                        {field: 'dashboard', title: 'Dashboard', width: 50, titleAlign: 'center',columnAlign:'center',componentName:'table-dashboard',isResize:true},
-                        {field: 'custome-adv', title: 'Operation',width: 150, titleAlign: 'center',columnAlign:'center',componentName:'table-operation',isResize:true}
+                        {field: 'dashboard', title: 'Dashboard', width: 40, titleAlign: 'center',columnAlign:'center',componentName:'table-dashboard',isResize:true},
+                        {field: 'custome-adv', title: 'Operation',width: 120, titleAlign: 'center',columnAlign:'center',componentName:'table-operation',isResize:true}
                     ]
 
             }
