@@ -43,6 +43,19 @@ def deleteScans():
 		abort(401)
 
 
+@app.route('/dashboardLink',methods=['GET'])
+def dashboardLInk():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		scanId =request.cookies.get('scanId')
+		scan = mongodb.findScan(scanId)
+		url = scan['dashboardLInk']
+		return url
+	else:
+		abort(401)
+
+
 @app.route('/addHtml',methods=['GET'])
 def addHtml():
 	EIToken =request.cookies.get('EIToken')  

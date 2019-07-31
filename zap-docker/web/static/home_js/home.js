@@ -60,6 +60,16 @@ $(document).ready(function(){
             });        
         }
     });
+    function goDashboard(){
+        $.ajax({
+                url: '/dashboardLink',
+                type: 'GET'
+        }).done(function(res){
+            window.location.href = res;
+        }).fail(function(){
+            console.log( /dashboardLInk fail);
+        });
+    }
     function cancelScan(){
         
         var ssoUrl = getCookie('SSO_URL');
@@ -308,7 +318,7 @@ $(document).ready(function(){
             closable  : false,
             onDeny    : cancelScan,
             onApprove : function() {
-                window.location.href = 'https://dashboard-grafana-1-3-2.arfa.wise-paas.com/d/xP3oJhHWj/zap-merge-test';
+                goDashboard();
             }
             })
     .modal('show');
@@ -853,7 +863,7 @@ $(document).ready(function(){
      
 	});
     $('#dashboard').click(function(){
-        window.location.href = 'https://dashboard-grafana-1-3-2.arfa.wise-paas.com/d/xP3oJhHWj/zap-merge-test';
+        goDashboard();
     });
     
     
