@@ -49,7 +49,7 @@ def dashboardLInk():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		scanId =request.cookies.get('scanId')
-		scan = mongodb.findScan(scanId)
+		scan = db.findScan(scanId)
 		url = scan['dashboardLInk']
 		return url
 	else:

@@ -60,16 +60,6 @@ $(document).ready(function(){
             });        
         }
     });
-    function goDashboard(){
-        $.ajax({
-                url: '/dashboardLink',
-                type: 'GET'
-        }).done(function(res){
-            window.location.href = res;
-        }).fail(function(){
-            console.log('/dashboardLInk fail');
-        });
-    }
     function cancelScan(){
         
         var ssoUrl = getCookie('SSO_URL');
@@ -318,7 +308,14 @@ $(document).ready(function(){
             closable  : false,
             onDeny    : cancelScan,
             onApprove : function() {
-                goDashboard();
+                $.ajax({
+                url: '/dashboardLink',
+                type: 'GET'
+        }).done(function(res){
+            window.open(res);
+        }).fail(function(){
+            console.log('/dashboardLInk fail');
+        });
             }
             })
     .modal('show');
@@ -863,7 +860,14 @@ $(document).ready(function(){
      
 	});
     $('#dashboard').click(function(){
-        goDashboard();
+        $.ajax({
+                url: '/dashboardLink',
+                type: 'GET'
+        }).done(function(res){
+            window.location.href = res;
+        }).fail(function(){
+            console.log('/dashboardLInk fail');
+        });
     });
     
     
