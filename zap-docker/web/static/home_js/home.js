@@ -67,7 +67,7 @@ $(document).ready(function(){
         }).done(function(res){
             window.location.href = res;
         }).fail(function(){
-            console.log( /dashboardLInk fail);
+            console.log('/dashboardLInk fail');
         });
     }
     function cancelScan(){
