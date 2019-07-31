@@ -45,6 +45,9 @@ class mongoDB():
 		return scans
 	def deleteScan(self,scanId):
 		result = self.collection.remove({'scanId': scanId})
+	def deleteScans(self,scanIdlist):
+		for scanId in scanIdlist:
+			result = self.collection.remove({'scanId': scanId})
 	def deleteAllScans(self):
 		result = self.collection.remove({})
 
@@ -96,6 +99,7 @@ if __name__ == '__main__':
 
 	#print(scans)
 	#mongodb.deleteAllScans()
+	mongodb.deleteScans(['8829705','2962665'])
 	scans = mongodb.listAllScans()
 	print(len(scans))
 	print(scans)
@@ -109,4 +113,4 @@ if __name__ == '__main__':
 	#print(scan)
 
 
-
+	

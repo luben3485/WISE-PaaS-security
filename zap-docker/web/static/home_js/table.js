@@ -21,12 +21,13 @@ var tableApp = new Vue({
                         {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashbpardLInk":"dd"},
                         {"targeturl":"http://testphp.vulnweb.com","time":"2019-07-25 15:30:56","dashbpardLInk":"dd"}
 */
-/*
-var Data =[
+var deleted=[];
+var deletedFlag = 0;
+/*var Data =[
         {
           "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
           "scanId":1,
-          "targetURL":"http://testphp.aaaaaaaa.com",
+          "targetURL":"ahttp://testphp.aaaaaaaa.com",
           "dashboardLInk":"https://www.google.com",
           "timeStamp":24,
             "time":87,
@@ -35,7 +36,7 @@ var Data =[
         {
           "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
           "scanId":2,
-          "targetURL":"http://testphp.vulnweb.com",
+          "targetURL":"bhttp://testphp.vulnweb.com",
           "dashboardLInk":"https://www.google.com",
           "timeStamp":431241234,
             "time":87,
@@ -44,7 +45,7 @@ var Data =[
     {
           "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
           "scanId":3,
-          "targetURL":"http://testphp.vulnweb.com",
+          "targetURL":"chttp://testphp.vulnweb.com",
           "dashboardLInk":"https://www.google.com",
           "timeStamp":1431241234,
         "time":87,
@@ -119,13 +120,15 @@ function downloadHtml(scanId){
 }
 
 
-function deleteScan(scanId){
+function deleteScans(scanIdArr){
     $.ajax({
                 url: '/deleteScan',
                 type: 'GET',
                  data: {
-                    'scanId':scanId
-                }
+                    'scanIdArr':scanIdArr
+                },
+                dataType : 'json',
+                traditional: true,
     }).done(function(){
         console.log("delete scan success");       
         $.ajax({
@@ -172,38 +175,46 @@ var Main ={
         },
         methods:{
             selectALL(selection){
-                console.log('select-aLL',selection);
-                if(selection.length ==0){
-                    
-                    console.log("??")
+                
+                //console.log('select-aLL',selection);
+                if(selection.length !=0){
+                    deletedFlag = 1;
+                    while (deleted.length > 0) deleted.pop();
+                    selection.forEach(function(item, index, array){
+                        deleted.push(index);
+                    });
+                    console.log('deleted:'+deleted)
+                }else{
+                    deletedFlag = 0;
                 }
             },
             selectChange(selection,rowData){
-                console.log('select-change',selection,rowData);
-
+                //console.log('select-change',selection,rowData);
+                
             },
 
             selectGroupChange(selection){
-                console.log('select-group-change',selection);
-                checked.length = 0
+                deletedFlag = 1;
+                //console.log('select-group-change',selection);
+                while (deleted.length > 0) deleted.pop();
                 selection.forEach(function(item, index, array){
                     for(var i=0;i<Data.length;i++){
                         if(Data[i].scanId == item.scanId){
-                            checked.push(i);
+                            deleted.push(i);
                         }   
                         
                     }
-                    console.log(checked)
-                    
+
                 });
-                //console.log(selection[0]['targetURL'])
+                console.log('deleted:'+deleted)
+                    
             },
             customCompFunc(params){
 
                 console.log(params);
 
                 if (params.type === 'delete'){ // do delete operation
-                    deleteScan(params.rowData['scanId']);
+                    deleteScans([params.rowData['scanId']]);
                     //this.$delete(this.tableData,params.index);
 
                 }else if (params.type === 'download'){ // do download operation
@@ -222,9 +233,26 @@ var Main ={
 
             },
             remove(){
-                alert(this.tableData[0]['targetURL']);
-                var index = this.tableData.indexof(this.tableData);
-                this.tableData.splice(index,1)
+                //alert(this.tableData[0]['targetURL']);
+                //var index = this.tableData.indexof(this.tableData);
+                //this.tableData.splice(index,1)
+
+                if(deletedFlag == 1){
+                    var scanIdArr = [];
+                    deleted.forEach(function(element, index){
+                        scanIdArr.push(Data[element]['scanId']);
+                        
+                    });
+                    deleteScans(scanIdArr)
+                    //alert(scanIdArr);
+                    deletedFlag = 0;
+                }else{
+                    
+                    alert('no');
+                }
+                    
+                
+                
                 
             }
         }
