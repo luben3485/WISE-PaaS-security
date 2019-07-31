@@ -96,6 +96,19 @@ def create_dashboard(scanId, EIToken):
 '''
 Newly Added End
 '''
+def getUserIdFromToken(EIToken):
+	info = EIToken.split('.')[1]
+	lenx = lens%4
+	if lenx == 1:
+		info += '==='
+	if lenx == 2:
+		info += '=='
+	if lenx == 3:
+		info += '='
+	userId = json.loads(base64.b64decode(info))['userId']
+	return userId
+
+
 
 @app.route('/')
 def home():
@@ -132,7 +145,7 @@ def addHtml():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		info_token = EIToken.split('.')[1]
-		userId = json.loads(base64.b64decode(info_token))['userId']
+		userId = getUserIdFromToken(EIToken)
 		scanId = request.cookies.get('scanId')
 		ascanStatus =request.cookies.get('ascanStatus')
 		pscanStatus =request.cookies.get('pscanStatus')
@@ -194,7 +207,7 @@ def addScan():
 		scanId = str(random.randint(1000000,9999999))
 		nowtime = int(time.time())
 		info_token = EIToken.split('.')[1]
-		userId = json.loads(base64.b64decode(info_token))['userId']
+		userId = getUserIdFromToken(EIToken)
 
 		#call Dashboard API getting dashboardLink
 		#dashboardLink = 'http://www.google.com'
@@ -229,7 +242,7 @@ def refreshTable():
 	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 	if res.status_code == 200:
 		info_token = EIToken.split('.')[1]
-		userId = json.loads(base64.b64decode(info_token))['userId']
+		userId = getUserIdFromToken(EIToken)
 		scans = db.listScans(userId)
 
 		for scan in scans:
