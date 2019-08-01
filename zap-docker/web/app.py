@@ -213,7 +213,7 @@ def addScan():
 		userId = getUserIdFromToken(EIToken)
 
 		#call Dashboard API getting dashboardLink
-		dashboardLink = 'http://portal-sso.afra.wise-paas.com'
+		dashboardLink = 'https://portal-sso.arfa.wise-paas.com'
 		#dashboardLink = create_dashboard(scanId,EIToken)
 		# timeStamp => int
 		# other info  => str
