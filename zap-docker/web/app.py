@@ -16,20 +16,27 @@ import random
 import time
 import mongodb
 db = mongodb.mongoDB()
-ssoUrl = ''
-domainName = ''
+
+
 
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 
 
+ssoUrl = ''
+try:
+	app_env = json.loads(os.environ['VCAP_APPLICATION'])
+	ssoUrl = 'https://portal-sso' + app_env['application_uris'][0][app_env['application_uris'][0].find('.'):]
+except Exception as err:
+	print('Can not get environment variables form: {}'.format(str(err)))
+	ssoUrl = 'https://portal-sso.arfa.wise-paas.com'
+
+domainName = ssoUrl[ssoUrl.find('.'):]
+
 def EIToken_verification(func):
 	@wraps(func)
 	def warp(*args, **kwargs):
-		global domainName
 		global ssoUrl
 		EIToken =request.cookies.get('EIToken')
-		ssoUrl =request.cookies.get('SSO_URL')
-		domainName = ssoUrl[ssoUrl.find('.'):]
 		res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 		if res.status_code == 200:
 			return func(*args, **kwargs)
