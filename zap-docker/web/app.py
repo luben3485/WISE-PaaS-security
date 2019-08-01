@@ -16,7 +16,8 @@ import random
 import time
 import mongodb
 db = mongodb.mongoDB()
-domainName = ssoUrl[ssoUrl.find('.'):]
+ssoUrl = ''
+domainName = ''
 
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 
@@ -24,8 +25,11 @@ app = Flask(__name__,static_url_path='',root_path=os.getcwd())
 def EIToken_verification(func):
 	@wraps(func)
 	def warp(*args, **kwargs):
+		global domainName
+		global ssoUrl
 		EIToken =request.cookies.get('EIToken')
 		ssoUrl =request.cookies.get('SSO_URL')
+		domainName = ssoUrl[ssoUrl.find('.'):]
 		res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
 		if res.status_code == 200:
 			return func(*args, **kwargs)
