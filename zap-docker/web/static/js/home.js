@@ -4,7 +4,12 @@ $(document).ready(function(){
     var intervalNum;
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
-    document.cookie="appUrl="+myUrl+";domain=.arfa.wise-paas.com; path=/";
+    var hostname = window.location.hostname;
+    var domainName = hostname.substr(hostname.indexOf("."));
+    var ssoUrl = 'https://portal-sso' + domainName;
+    document.cookie="appUrl="+myUrl+";domain="+domainName+"; path=/";
+    document.cookie="SSO_URL="+ssoUrl+";domain="+domainName+"; path=/";
+    
     //showMessage('aaa','fffff','successful')
     $('.menu .item').tab();
     $('.accordion').accordion({animateChildren: false});
@@ -26,9 +31,14 @@ $(document).ready(function(){
     //progressPage();
     //$('.ui.tiny.modal').modal('hide');
     //finishedDelay(2000,'Passive scan').then(() => {});
+    
+    /*
     $.ajax({
         url: '/setSSOurl',
         type: 'GET',
+        data:{
+          'ssoUrl' : ssoUrl  
+        },
         xhrFields: {
             withCredentials: true
         },
@@ -62,6 +72,28 @@ $(document).ready(function(){
             });        
         }
     });
+    */
+            $.ajax({
+                url: ssoUrl + '/v2.0/users/me',
+                method: 'GET',
+                xhrFields: {
+                    withCredentials: true
+                }
+            }).done(function (user) {
+                refreshTable().done(function(response){
+                    while (Data.length > 0) Data.pop();
+                    while (response.length > 0) Data.push(response.shift());
+                    console.log("refresh table successfully")
+                }).fail(function(){
+                    console.log("refresh table fail") 
+                });
+                
+                
+                console.log('Hello! ' + user.lastName + ' ' + user.firstName);
+            }).fail(function () {
+               window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+                 
+            });        
     function cancelScan(){
         
         var ssoUrl = getCookie('SSO_URL');

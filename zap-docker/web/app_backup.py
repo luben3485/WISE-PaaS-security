@@ -9,30 +9,29 @@ import json
 import zipfile,io
 import subprocess
 
-from functools import wraps
 from datetime import datetime
 import base64
 import random
 import time
 import mongodb
 db = mongodb.mongoDB()
-ssoUrl = 'https://portal-sso.arfa.wise-paas.com'
+ssoUrl = ''
+'''
+try:
+	app_env = json.loads(os.environ['VCAP_APPLICATION'])
+	ssoUrl = 'https://portal-sso' + app_env['application_uris'][0][app_env['application_uris'][0].find('.'):]
+except Exception as err:
+	print('Can not get environment variables form: {}'.format(str(err)))
+	ssoUrl = 'https://portal-sso.arfa.wise-paas.com'
+'''
+
 domainName = ssoUrl[ssoUrl.find('.'):]
 
+#ssoUrl=os.environ['SSO_URL'] or 'https://portal-sso.wise-paas.io'
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
+#print(os.path.join(os.getcwd(), "static"))
 
 
-def EIToken_verification(func):
-	@wraps(func)
-	def warp(*args, **kwargs):
-		EIToken =request.cookies.get('EIToken')
-		ssoUrl =request.cookies.get('SSO_URL')
-		res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
-		if res.status_code == 200:
-			return func(*args, **kwargs)
-		else:
-			return abort(401)
-	return warp
 '''
 Newly Added Begin
 '''
@@ -121,20 +120,28 @@ def home():
 	return app.send_static_file('home.html')
 
 @app.route('/deleteScans',methods=['POST'])
-@EIToken_verification
 def deleteScans():
-	scanIdArr = request.form.getlist('scanIdArr[]')
-	db.deleteScans(scanIdArr)
-	return jsonify({'Result':'OK'})
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		scanIdArr = request.form.getlist('scanIdArr[]')
+		db.deleteScans(scanIdArr)
+		return jsonify({'Result':'OK'})
+	else:
+		abort(401)
 
 
 @app.route('/dashboardLink',methods=['GET'])
-@EIToken_verification
 def dashboardLInk():
-	scanId =request.cookies.get('scanId')
-	scan = db.findScan(scanId)
-	url = scan['dashboardLInk']
-	return url
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		scanId =request.cookies.get('scanId')
+		scan = db.findScan(scanId)
+		url = scan['dashboardLInk']
+		return url
+	else:
+		abort(401)
 
 
 @app.route('/addHtml',methods=['GET'])
@@ -264,29 +271,35 @@ def setSSOurl():
 SPIDER + PASSIVE SCAN
 '''
 @app.route('/spiderScan')
-@EIToken_verification
 def spiderScan():
-	url = request.args.get('url')
-	maxChildren=''
-	recurse = request.args.get('recurse')
-	contextName=''
-	subtreeOnly= request.args.get('subtreeOnly')
-	try:
-		payload = {'url': url, 'maxChildren': maxChildren,'recurse':recurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
-		r = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan',params=payload)
-		if r.status_code == 200:
-			r = r.json()
-			res_cookie = make_response(redirect('/'),200)
-			res_cookie.set_cookie('spiderId', r['scan'],domain=domainName)
-			res_cookie.set_cookie('targetUrl', url,domain=domainName)
-		
-			return res_cookie
-		else:
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		url = request.args.get('url')
+		maxChildren=''
+		recurse = request.args.get('recurse')
+		contextName=''
+		subtreeOnly= request.args.get('subtreeOnly')
+
+		try:
+			payload = {'url': url, 'maxChildren': maxChildren,'recurse':recurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
+			r = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan',params=payload)
+			
+			if r.status_code == 200:
+				r = r.json()
+				res_cookie = make_response(redirect('/'),200)
+				res_cookie.set_cookie('spiderId', r['scan'],domain=domainName)
+				res_cookie.set_cookie('targetUrl', url,domain=domainName)
+			
+				return res_cookie
+			else:
+				abort(500)
+		except Exception as err:
+			print('error: {}'.format(str(err)))
 			abort(500)
-	except Exception as err:
-		print('error: {}'.format(str(err)))
-		abort(500)
 		
+	else:
+		abort(401)
 
 		
 
