@@ -670,5 +670,21 @@ def cancelScan():
 		print('error: {}'.format(str(err)))
 		abort(500)
 
+@app.route('/checkAnyScan',methods=['GET'])
+@EIToken_verification
+def checkAnyScan():
+	try:
+		scans = db.listNotFinishedScans()
+		if len(scans) != 0:
+			result = {'Result':'NO'}
+			return jsonify(result)
+		elif len(scans) == 0:
+			result = {'Result':'OK'}
+			return jsonify(result)
+
+	except Exception as err:
+		print('error: {}'.format(str(err)))
+		abort(500)
+
 if __name__ == '__main__':
 	app.run(host='0.0.0.0',port=8080,debug=False)

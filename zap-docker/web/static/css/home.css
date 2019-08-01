@@ -19,10 +19,7 @@ body {
 .ui.positive.message{
     display:block;
 }
-#message{
-    display:none;
-}
-#scanningmessage{
+#message #checkScanMsg #scanningmessage{
     display:none;
 }
 #header{
@@ -34,18 +31,11 @@ body {
     margin-top:1.5rem;
     margin-bottom:15rem;
 }
-#msg{
+#msg #scanningMsg #checkScanTitle{
     font-size:1.4rem;
     
 }
-#submsg{
-    font-size:1.1rem;
-}
-#scanningMsg{
-    font-size:1.4rem;
-    
-}
-#scanningSubmsg{
+#submsg #scanningSubmsg #checkScanSubtitle{
     font-size:1.1rem;
 }
 .mainbtn{

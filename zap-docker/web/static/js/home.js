@@ -21,7 +21,26 @@ $(document).ready(function(){
           .transition('fade')
         ;
       });
-
+    
+    intervalNum = setInterval(function(){ checkAnyScan() }, 5000);
+    function checkAnyScan(){
+        $.ajax({
+            url: 'checkAnyScan',
+            method: 'GET'    
+            }).done(function (res){
+                if(res.Result == 'OK'){
+                    $('#checkScanMsg').css('display','none');
+                    $('#startScan').removeClass('disabled');
+                }else(res.Result == 'NO'){
+                    $('#checkScanMsg').css('display','block');
+                    $('#startScan').addClass('disabled');
+                }
+                console.log("check any scan successfully")
+            }).fail(function(){
+                console.log("check any scan table fail") 
+            });
+        
+    }
     /*
     $('.accordion').click(function() {
         $('.title').toggleClass("active");

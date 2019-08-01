@@ -43,6 +43,12 @@ class mongoDB():
 		for result in results:
 			scans.append(result)
 		return scans
+	def listNotFinishedScans(self):
+		results = self.collection.find({'status':{ '$ne':'3' }},{"_id":0}).sort('timeStamp',pymongo.DESCENDING)
+		scans = []
+		for result in results:
+			scans.append(result)
+		return scans
 	def deleteScan(self,scanId):
 		result = self.collection.remove({'scanId': scanId})
 		result_html = self.coll_html.remove({'scanId':scanId})
@@ -56,7 +62,7 @@ class mongoDB():
 if __name__ == '__main__':
 	mongodb = mongoDB()
 	
-	for i in range(3):
+	for i in range(1):
 		#scanId = random.randint(1000000,9999999)
 		scanId = '777'
 		nowtime = int(time.time())
@@ -74,7 +80,8 @@ if __name__ == '__main__':
              "pscanStatus":'0',
              "scanOption":scanOption,
 			 "ascanId":'-1',
-             "spiderId":spiderId
+             "spiderId":spiderId,
+			 "status":'3'
          }
 
 		
@@ -87,8 +94,8 @@ if __name__ == '__main__':
 	#scans = mongodb.listScans('b7ea79a3-c2eb-4c79-b968-b279667f3747')
 	#print(scans)
 	#print(len(scans))
-	scan = mongodb.findScan('6574903')	
-	print(scan)
+	#scan = mongodb.findScan('6574903')	
+	#print(scan)
 	'''
 	for scan in scans:
 		ts = scan['timeStamp']
@@ -100,7 +107,7 @@ if __name__ == '__main__':
 
 
 	#print(scans)
-	#mongodb.deleteAllScans()
+	mongodb.deleteAllScans()
 	#mongodb.deleteScans(['8829705','2962665'])
 	#scans = mongodb.listAllScans()
 	#print(len(scans))
@@ -114,5 +121,6 @@ if __name__ == '__main__':
 	#scan = mongodb.findScan(scanId)	
 	#print(scan)
 
-
+	#scans = mongodb.listNotFinishedScans()
+	#print(scans)
 	
