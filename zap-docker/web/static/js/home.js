@@ -74,8 +74,11 @@ $(document).ready(function(){
             //$('#dashboard').removeClass('disabled');
             checkStop();
             addHtml();
-            $('#scanningmessage').css('display','none');
-            showMessage('You have stopped the scan.','You can still downlaod report below','negative');
+            showDelay(500).then(() => {
+                showMessage('You have stopped the scan.','You can still downlaod report below','negative');
+            });
+            
+           
             $.ajax({
                 url: '/spiderRemove',
                 type: 'GET',
@@ -377,11 +380,11 @@ $(document).ready(function(){
     }
     function showMessage(msg,submsg,type){
         if(type == 'successful'){
-            $('#message').addClass('blue');
+            $('#message').addClass('positive');
             $('#message').removeClass('negative');
         }else if(type == 'negative'){
             $('#message').addClass('negative');
-            $('#message').removeClass('blue');
+            $('#message').removeClass('positive');
         }
         $('#message').css('display','block');
         $('#msg').text(msg);
@@ -394,6 +397,12 @@ $(document).ready(function(){
         $('#scanningSubmsg').text(submsg);
         
     }
+    
+    function showDelay(ms) {
+        $('#scanningmessage').css('display','none');
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    
     function finishedDelay(ms,scantype) {
         checkStop();
         /*
