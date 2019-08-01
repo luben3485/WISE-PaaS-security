@@ -20,13 +20,15 @@ db = mongodb.mongoDB()
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 
 ssoUrl = ''
+appUrl = ''
 try:
 	app_env = json.loads(os.environ['VCAP_APPLICATION'])
 	ssoUrl = 'https://portal-sso' + app_env['application_uris'][0][app_env['application_uris'][0].find('.'):]
+	appUrl = app_env['application_uris'][0]
 except Exception as err:
 	print('Can not get environment variables form: {}'.format(str(err)))
 	ssoUrl = 'https://portal-sso.arfa.wise-paas.com'
-
+	appUrl = 'https://zap-security-debug.arfa.wise-paas.com'
 domainName = ssoUrl[ssoUrl.find('.'):]
 
 def EIToken_verification(func):
