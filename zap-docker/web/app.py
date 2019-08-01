@@ -22,6 +22,9 @@ try:
 except Exception as err:
 	print('Can not get environment variables form: {}'.format(str(err)))
 	ssoUrl = 'https://portal-sso.arfa.wise-paas.com'
+
+domainName = ssoUrl[ssoUrl.find('.'):]
+
 #ssoUrl=os.environ['SSO_URL'] or 'https://portal-sso.wise-paas.io'
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 #print(os.path.join(os.getcwd(), "static"))
@@ -210,7 +213,7 @@ def addScan():
 		userId = getUserIdFromToken(EIToken)
 
 		#call Dashboard API getting dashboardLink
-		dashboardLink = 'http://www.google.com'
+		dashboardLink = 'http://portal-sso.afra.wise-paas.com'
 		#dashboardLink = create_dashboard(scanId,EIToken)
 		# timeStamp => int
 		# other info  => str
@@ -230,7 +233,7 @@ def addScan():
 		db.addScan(scandata)
 		
 		res_cookie = make_response(redirect('/'),200)
-		res_cookie.set_cookie('scanId',scanId)
+		res_cookie.set_cookie('scanId',scanId,domain=domainName)
 		return res_cookie
 	else:
 		abort(401)
