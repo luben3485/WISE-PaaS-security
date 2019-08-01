@@ -85,8 +85,8 @@ if __name__ == '__main__':
 	#scans = mongodb.listScans('b7ea79a3-c2eb-4c79-b968-b279667f3747')
 	#print(scans)
 	#print(len(scans))
-	#scan = mongodb.findScan(777)	
-	#print(scan)
+	scan = mongodb.findScan('6574903')	
+	print(scan)
 	'''
 	for scan in scans:
 		ts = scan['timeStamp']
@@ -104,8 +104,8 @@ if __name__ == '__main__':
 	#print(len(scans))
 	#print(scans)
 	#print(mongodb.getCollection())
-	html = mongodb.findHtml('5741376')
-	print(html)
+	#html = mongodb.findHtml('5741376')
+	#print(html)
 	#scanId =str(777)
 	#mongodb.modifyExistInfo('ascanId','0',scanId)
 

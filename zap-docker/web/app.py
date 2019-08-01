@@ -180,7 +180,7 @@ def downloadHtml():
 		scanId = request.args.get('scanId')
 		html_info = db.findHtml(scanId)
 		if html_info == None:
-			return redirect('/')
+			return 'fail'
 		else:
 			html= html_info['html']
 			response = make_response(html,200)
