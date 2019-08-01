@@ -675,7 +675,7 @@ def cancelScan():
 def checkAnyScan():
 	try:
 		scans = db.listNotFinishedScans()
-		if len(scans) > 0:
+		if len(scans) > 1:
 			result = {'Result':'NO'}
 			return jsonify(result)
 		elif len(scans) == 0:
