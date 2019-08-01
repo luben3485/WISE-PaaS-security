@@ -205,7 +205,7 @@ $(document).ready(function(){
         $.ajax({
                 url: '/checkScan',
                 type: 'GET'
-        }.done(function(res){
+        }).done(function(res){
             if(res.Result == 'OK'){
                 checkStatus(scanOption);
             }else{
