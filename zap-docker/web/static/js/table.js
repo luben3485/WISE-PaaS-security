@@ -87,7 +87,8 @@ function downloadHtml(scanId){
         }).done(function (user) {
              $.ajax({
                     url: 'downloadHtml',
-                    method: 'GET'
+                    method: 'GET',
+                    data:{'scanId':scanId}
                 }).done(function (res) {
                     if(res=='fail'){
                         
