@@ -210,8 +210,8 @@ def addScan():
 		userId = getUserIdFromToken(EIToken)
 
 		#call Dashboard API getting dashboardLink
-		#dashboardLink = 'http://www.google.com'
-		dashboardLink = create_dashboard(scanId,EIToken)
+		dashboardLink = 'http://www.google.com'
+		#dashboardLink = create_dashboard(scanId,EIToken)
 		# timeStamp => int
 		# other info  => str
 		scandata = {

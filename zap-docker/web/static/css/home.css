@@ -19,7 +19,7 @@ body {
 .ui.positive.message{
     display:block;
 }
-#succMsg{
+#message{
     display:none;
 }
 #header{
@@ -30,7 +30,13 @@ body {
 #app{
     margin-top:5rem;
     margin-bottom:15rem;
+}
+#msg{
+    font-size:1.5rem;
     
+}
+#submsg{
+    font-size:1.2rem;
 }
 #app td span span{
     text-align: center;
@@ -46,38 +52,48 @@ body {
 }
 
 @media (min-width: 1200px) {
-    #dashboard{
+    /*#dashboard{
         font-size:1.4rem;
 
     }
+    
     #downloadReport{ 
         font-size:1.4rem;
 
-    }
+    }*/
     #startScan{ 
         font-size:1.4rem;
-;
+    }      
+    
+    #cancelButton{ 
+        font-size:1.4rem;
     }   
     
 }
 
 @media (min-width: 1000px) and (max-width: 1200px) {
+    /*
     #dashboard{
         font-size:1.4rem;
 
     }
+    
     #downloadReport{ 
         font-size:1.4rem;
 
-    }
+    }*/
     #startScan{ 
         font-size:1.4rem;
     }   
+    #cancelButton{ 
+        font-size:1.4rem;
+    } 
     
    
 }
 
 @media (max-width: 1000px) {
+    /*
     #dashboard{
         font-size:1.3rem;
         width:100%;
@@ -87,11 +103,16 @@ body {
         font-size:1.3rem;
         width:100%;
         margin-bottom:0.5rem;
-    }
+    }*/
     #startScan{ 
         font-size:1.3rem;
         width:100%;
         margin-bottom:0.5rem;
-    }   
+    }
+    #cancelButton{ 
+        font-size:1.3rem;
+        width:100%;
+        margin-bottom:0.5rem;
+    } 
     
 }

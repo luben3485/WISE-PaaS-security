@@ -3,6 +3,11 @@ $(document).ready(function(){
     var intervalNum;
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
+    $('#progressbar').progress({
+            percent: 100
+        });
+    
+    
     $('.menu .item').tab();
     $('.accordion').accordion({animateChildren: false});
     $('.ui.checkbox').checkbox();
@@ -22,7 +27,6 @@ $(document).ready(function(){
     */
     //progressPage();
     //$('.ui.tiny.modal').modal('hide');
-    //progressUpdate(87,"Passive scan");
     //finishedDelay(2000,'Passive scan').then(() => {});
     $.ajax({
         url: '/setSSOurl',
@@ -70,9 +74,8 @@ $(document).ready(function(){
                 withCredentials: true
             }
         }).done(function (user) {
-            
-            $('#downloadReport').removeClass('disabled');
-            $('#dashboard').removeClass('disabled');
+            //$('#downloadReport').removeClass('disabled');
+            //$('#dashboard').removeClass('disabled');
             checkStop();
             addHtml();
             $.ajax({
@@ -202,48 +205,34 @@ $(document).ready(function(){
         if(scanOption == 0){
             spiderstatus().done(function(response){
                 if(response.status < 100){
-                    progressUpdate(response.status,"Passive scan");
+                    //progressUpdate(response.status,"Passive scan");
+                    showMessage('Passive scan... '+response.status,'It takes a few seconds to minutes to scan your website.');
                     console.log('spiderStatus '+ response.status);
                     document.cookie = "pscanStatus="+response.status;
                 }else if(response.status==100){
+                    showMessage('Passive scan... 100%','It takes a few seconds to minutes to scan your website.');
                     document.cookie = "pscanStatus=100";
-                    finishedDelay(2000,'Passive scan').then(() => {
+                    finishedDelay(500,'Passive scan').then(() => {
                         $('.ui.tiny.modal').modal('hide')                 
                     });
                 }
             }).fail(function(){
                 alert('Ajax /spiderStatus error from checkScan');
             });
-        }
-        /*
-        else if(scanOption == 1){
-            ascanstatus().done(function(response){
-                 if(response.status < 100){
-                   progressUpdate(response.status,"Active scan");
-                    console.log('ascanStatus '+ response.status)  
-                }else if(response.status==100){
-                    finishedDelay(2000,'Active scan').then(() => {
-                        $('.ui.tiny.modal').modal('hide')                   
-                    });
-                }
-
-            }).fail(function(){
-                alert('Ajax /ascanStatus error from checkScan');
-            });
-        }
-        */
-                        
+        }               
         else if(scanOption == 2){
             spiderstatus().done(function(response){
                 if (response.status < 100){
-                    progressUpdate(response.status,"Passive scan");
+                    showMessage('Passive scan... '+response.status,'It takes a few seconds to minutes to scan your website.');
+                    //progressUpdate(response.status,"Passive scan");
                     console.log('spiderStatus '+ response.status)
                     document.cookie = "pscanStatus="+response.status;
                 }else if(response.status == 100){
                     if(astart == 0){
                         document.cookie = "pscanStatus=100";
-                        progressUpdate(100,"Passive scan");
-                        $('#header>h1').text('Scan task has not finished. Please be patient.')
+                        //progressUpdate(100,"Passive scan");
+                        //$('#header>h1').text('Scan task has not finished. Please be patient.')
+                        showMessage('Passive scan... 100%','Scan task has not finished. Please be patient.');
 
                         addScanPolicy().done(function(res){
                             console.log(res.code);
@@ -263,13 +252,15 @@ $(document).ready(function(){
                     }else if(astart == 1){
                         ascanstatus().done(function(res){
                             if(res.status < 100 && res.status > 0){
-                                $('#header>h1').text('It takes a few seconds to minutes to scan your website.')
-                                progressUpdate(res.status,"Active scan");
+                                //$('#header>h1').text('It takes a few seconds to minutes to scan your website.')
+                                showMessage('Aassive scan... '+res.status,'It takes a few seconds to minutes to scan your website.');
+                                //progressUpdate(res.status,"Active scan");
                                 console.log('ascanStatus '+ res.status);
                                 document.cookie = "ascanStatus="+res.status;
                             }else if(res.status==100){
+                                showMessage('Aassive scan... 100%','It takes a few seconds to minutes to scan your website.');
                                 document.cookie = "ascanStatus=100";
-                                finishedDelay(2000,'Active scan').then(() => {
+                                finishedDelay(5000,'Active scan').then(() => {
                                     $('.ui.tiny.modal').modal('hide');                  
                                 });
                             }
@@ -293,14 +284,15 @@ $(document).ready(function(){
         //stop function checkScan
         clearInterval(intervalNum);
     }
-    
+    /*
     function progressUpdate(percent,scantype){
         $('#progressbar').progress({
             percent: percent
         });
         $('#progressNumber').text(scantype +"   "+ percent+'%  Earned')
     }
-    
+    */
+    /*
     function progressPage() {
     
         $('.ui.tiny.modal')
@@ -321,7 +313,7 @@ $(document).ready(function(){
             })
     .modal('show');
     }
-    
+    */
     function getCookie(cname) {
       var name = cname + "=";
       var decodedCookie = decodeURIComponent(document.cookie);
@@ -381,27 +373,39 @@ $(document).ready(function(){
            
         
     }
+    function showMessage(msg,submsg){
+        $('#message').css('display','block');
+        $('#msg').text(msg);
+        $('#submsg').text(submsg);
+        
+    }
     function finishedDelay(ms,scantype) {
         checkStop();
+        /*
         $('#progressbar').progress({
             percent: 100
         });
         $('#progressNumber').text(scantype +'  100%  Earned')
         $('#header>h1').text('Scan task has finished. Page will return immediately.')
-        $('#cancelButton').css('display','none');
-        $('#downloadReport').removeClass('disabled');
-        $('#dashboard').removeClass('disabled');
-        $('#succMsg').css('display','none');
+        */
+        showMessage(scantype+'... 100%','Scan task has finished.You can downlaod report at Scan History');
+        $('#cancelButton').addClass('disabled');
+        //$('#downloadReport').removeClass('disabled');
+        //$('#dashboard').removeClass('disabled');
+        $('#message').css('display','none');
         addHtml();
         
         return new Promise(resolve => setTimeout(resolve, ms));
     }
+    $('#cancelButton').click(function(){
+        $(this).addClass('disabled');
+        showMessage('Start passive scan... 0%','It takes a few seconds to minutes to scan your website.');
+        //cancelScan();
+    });
+    
     $('#startScan').click(function(){
-        astart = 0
+        
         var ssoUrl = getCookie('SSO_URL');
-        var scanOption=$("#scanOption").val();
-        document.cookie = "pscanStatus=0";
-        document.cookie = "ascanStatus=0";
         $.ajax({
         url: ssoUrl + '/v2.0/users/me',
         method: 'GET',
@@ -409,21 +413,24 @@ $(document).ready(function(){
             withCredentials: true
         }
         }).done(function (user) {
-
-            progressPage();
-            $('#succMsg').css('display','none');
-            $('#header>h1').text('It takes a few seconds to minutes to scan your website.')
-            $('#downloadReport').removeClass('disabled');
-            $('#dashboard').removeClass('disabled');
-            $('#downloadReport').addClass('disabled');
-            $('#dashboard').addClass('disabled');
-            $('#cancelButton').css('display','');
-            progressUpdate(0,"Passive scan");
+            astart = 0
+            var scanOption=$("#scanOption").val();
+            document.cookie = "pscanStatus=0";
+            document.cookie = "ascanStatus=0";
+            $('#cancelButton').removeClass('disabled');
+            //progressPage();
+            //$('#succMsg').css('display','none');
+            //$('#header>h1').text('It takes a few seconds to minutes to scan your website.')
+            //$('#downloadReport').addClass('disabled');
+            //$('#dashboard').addClass('disabled');
+            $('#cancelButton').css('display','none');
+            //progressUpdate(0,"Passive scan");
 
             
             
             deleteData().done(function(){    
                 spiderScanStart().done(function(){
+                    showMessage('Passive scan... 0%','It takes a few seconds to minutes to scan your website.');
                     console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /spiderScan');
                     //start timer
                     intervalNum = setInterval(function(){ checkScan(scanOption) }, 600);

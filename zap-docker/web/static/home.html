@@ -232,19 +232,18 @@
                             </div>
 
 
-                            <div id="succMsg" class="ui info message transition">
-                              <i class="close icon"></i>
-                              <div class="header">
-                                Scan task has finished.
-                              </div>
-                              <p>Now you can <b>download the full report (html file)</b></p>
-                            </div>
+
 
                             <div class="mainbtn">
                                 <button id="startScan" class="ui blue button" v-on:click="addTable">
                                     <i class="search icon"></i>
                                     Scan
                                 </button>
+                                <button id="cancelButton" class="ui red  cancel button">
+                                <i class="window close icon"></i>  
+                                Stop
+                                </button>
+                                <!--
                                 <button id="downloadReport" class="ui  green disabled button">
                                     <i class="file alternate outline icon"></i>
                                     Download
@@ -253,6 +252,20 @@
                                     <i class="th list icon"></i>
                                     Dashboard
                                 </button>
+                                -->
+                                <!--
+                                <div class="ui teal progress" id="progressbar">
+                                    <div class="bar"></div>
+                                    <div id="progressNumber" class="label" style="font-size: 1.5rem;color:white;"></div>
+                                
+                                </div>
+                                -->
+                            </div>
+                            
+                            <div id="message" class="ui info message transition">
+                              <i class="close icon"></i>
+                              <div class="header" id="msg"></div>
+                              <p id="submsg"></p>
                             </div>
 
 
@@ -285,16 +298,13 @@
             <div class="three wide column"></div>
         </div>
         <!-- scanning block-->
+        <!--
         <div class="ui tiny basic modal">
             
             <div id="header" class="ui icon header">
                 <i class="cloud icon"></i>
                 <h1>It takes a few seconds to minutes to scan your website.</h1>
                     
-            </div>
-            <div class="ui teal progress" id="progressbar">
-                <div class="bar"></div>
-                <div id="progressNumber" class="label" style="font-size: 1.5rem;color:white;"></div>
             </div>
             <div class="actions">
                 <div id="cancelButton" class="ui red  cancel inverted button">
@@ -310,6 +320,7 @@
             
    
         </div>
+        -->
         <!-- scanning block-->
         
         
