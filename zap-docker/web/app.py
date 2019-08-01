@@ -745,10 +745,8 @@ def checkScan():
 			scan = db.findScan(scanId)
 			scanOption = scan['scanOption']
 			spiderId = scan['spiderId']
-			result = {'Result':'OK'}
-			return jsonify(result)		
 			
-			'''
+			
 			if scanOption == 0:
 				#r = requests.get('http://127.0.0.1:5000/JSON/spider/view/scans/?')	
 				#r = r.json()
@@ -784,7 +782,7 @@ def checkScan():
 			
 			else:
 				abort(500)
-			'''
+			
 		except Exception as err:
 			print('error: {}'.format(str(err)))
 			abort(500)
