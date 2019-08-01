@@ -16,7 +16,6 @@ import random
 import time
 import mongodb
 db = mongodb.mongoDB()
-ssoUrl = 'https://portal-sso.arfa.wise-paas.com'
 domainName = ssoUrl[ssoUrl.find('.'):]
 
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
