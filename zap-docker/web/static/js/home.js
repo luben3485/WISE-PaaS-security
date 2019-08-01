@@ -31,11 +31,13 @@ $(document).ready(function(){
                 if(res.Result == 'OK'){
                     $('#checkScanMsg').css('display','none');
                     $('#startScan').removeClass('disabled');
+                    console.log("No one scan");
                 }else if(res.Result == 'NO'){
                     $('#checkScanMsg').css('display','block');
                     $('#startScan').addClass('disabled');
+                    console.log("Someone is scanning");
                 }
-                console.log("check any scan successfully")
+                
             }).fail(function(){
                 console.log("check any scan table fail") 
             });
