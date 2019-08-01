@@ -279,11 +279,16 @@ def spiderScan():
 @EIToken_verification
 def spiderStatus():
 	try:
-		spiderId=request.cookies.get('spiderId')
+		scanId = request.cookies.get('scanId')
+		#spiderId=request.cookies.get('spiderId')
+		scan_info = db.findScan(scanId)
+		spiderId = scan_info['spiderId']
 		payload = {'scanId':spiderId}
 		r = requests.get('http://127.0.0.1:5000/JSON/spider/view/status/',params=payload)	
 		r = r.json()
-		result = {'status':r['status']}
+		status = r['status']
+		db.modifyExistInfo('pscanStatus',status,scanId)
+		result = {'status':status}
 		return jsonify(result)
 	except Exception as err:
 		print('error: {}'.format(str(err)))
@@ -382,10 +387,15 @@ def addScanPolicy():
 @EIToken_verification
 def ascanStatus():
 	try:
-		ascanId=request.cookies.get('ascanId')
+		scanId = request.cookies.get('scanId')
+		scan_info = db.findScan(scanId)
+		ascanId = scan_info['ascanId']
+		#ascanId=request.cookies.get('ascanId')
 		payload = {'ascanId':ascanId}
 		r = requests.get('http://127.0.0.1:5000/JSON/ascan/view/status/',params=payload)	
 		r = r.json()
+		status = r['status']
+		db.modifyExistInfo('ascanStatus',status,scanId)
 		result = {'status':r['status']}
 		return jsonify(result)
 	except Exception as err:
