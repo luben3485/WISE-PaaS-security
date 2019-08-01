@@ -3,7 +3,7 @@ $(document).ready(function(){
     var intervalNum;
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
-
+    //showMessage('aaa','fffff','successful')
     $('.menu .item').tab();
     $('.accordion').accordion({animateChildren: false});
     $('.ui.checkbox').checkbox();
@@ -377,11 +377,11 @@ $(document).ready(function(){
     }
     function showMessage(msg,submsg,type){
         if(type == 'successful'){
-            $('#message').addClass('successful');
+            $('#message').addClass('blue');
             $('#message').removeClass('negative');
         }else if(type == 'negative'){
             $('#message').addClass('negative');
-            $('#message').removeClass('successfully');
+            $('#message').removeClass('blue');
         }
         $('#message').css('display','block');
         $('#msg').text(msg);
