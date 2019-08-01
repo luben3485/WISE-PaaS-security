@@ -216,6 +216,7 @@ $(document).ready(function(){
         }).fail(function(){
             console.log('/checkScan error');
         });
+    }
     function checkStatus(scanOption){
         if(scanOption == 0){
             spiderstatus().done(function(response){
