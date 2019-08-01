@@ -94,7 +94,7 @@ function downloadHtml(scanId){
                         console.log('now u cannot download report');
                     }else{
                         var a = document.createElement('a');
-                        var url = window.URL.createObjectURL(res);
+                        var url = window.URL.createObjectURL(new Blob(res, {type: "application/html"}));
                         a.href = url;
                         a.download = 'scan_report.html';
                         document.body.append(a);

@@ -187,10 +187,11 @@ def downloadHtml():
 			return 'fail'
 		else:
 			html= html_info['html']
-			response = make_response(html,200)
-			response.headers['Content-Type'] = 'application/html'
-			response.headers['Content-Disposition'] = 'attachment; filename={}'.format('scan_report.html')
-			return response
+			#response = make_response(html,200)
+			#response.headers['Content-Type'] = 'application/html'
+			#response.headers['Content-Disposition'] = 'attachment; filename={}'.format('scan_report.html')
+			#return response
+			return html
 	except Exception as err:
 		print('download_file error: {}'.format(str(err)))
 		abort(500)
