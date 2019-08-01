@@ -473,7 +473,7 @@ $(document).ready(function(){
                     showScanning('Passive scan... 0%','It takes a few seconds to minutes to scan your website.');
                     console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /spiderScan');
                     //start timer
-                    intervalNum = setInterval(function(){ checkScan(scanOption) }, 2000);
+                    intervalNum = setInterval(function(){ checkScan(scanOption) }, 1000);
                     //alert('Start a  scan\n Set id in cookie!');
                     addScan(scanOption).done(function(){
                         refreshTable().done(function(response){

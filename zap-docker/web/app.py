@@ -746,15 +746,15 @@ def checkScan():
 			scanOption = scan['scanOption']
 			spiderId = scan['spiderId']
 			if scanOption == 0:
-				r = requests.get('http://127.0.0.1:5000/JSON/spider/view/scans/?')	
-				r = r.json()
-				scanList = r['scans']
-				for scan in scanList:
-					if scan['id'] == spiderId:
-						result = {'Result':'OK'}
-						return jsonify(result)		
-				result = {'Result':'NO'}
-				return jsonify(result)
+				#r = requests.get('http://127.0.0.1:5000/JSON/spider/view/scans/?')	
+				#r = r.json()
+				#scanList = r['scans']
+				#for scan in scanList:
+				#	if scan['id'] == spiderId:
+				result = {'Result':'OK'}
+				return jsonify(result)		
+				#result = {'Result':'NO'}
+				#return jsonify(result)
 				
 			elif scanOption == 2:
 				r = requests.get('http://127.0.0.1:5000/JSON/spider/view/scans/?')	
