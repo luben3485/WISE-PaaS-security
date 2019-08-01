@@ -3,11 +3,9 @@ $(document).ready(function(){
     var intervalNum;
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
-    $('#progressbar').progress({
-            percent: 100
-        });
+    showScanning('aaaaaa','fffffffffff');
     
-    
+
     $('.menu .item').tab();
     $('.accordion').accordion({animateChildren: false});
     $('.ui.checkbox').checkbox();
@@ -78,6 +76,7 @@ $(document).ready(function(){
             //$('#dashboard').removeClass('disabled');
             checkStop();
             addHtml();
+            showMessage('You have stopped the scan.','You can still downlaod report below','negative');
             $.ajax({
                 url: '/spiderRemove',
                 type: 'GET',
@@ -206,14 +205,16 @@ $(document).ready(function(){
             spiderstatus().done(function(response){
                 if(response.status < 100){
                     //progressUpdate(response.status,"Passive scan");
-                    showMessage('Passive scan... '+response.status,'It takes a few seconds to minutes to scan your website.');
+                    showScanning('Passive scan... '+response.status+'%','It takes a few seconds to minutes to scan your website.');
                     console.log('spiderStatus '+ response.status);
                     document.cookie = "pscanStatus="+response.status;
                 }else if(response.status==100){
-                    showMessage('Passive scan... 100%','It takes a few seconds to minutes to scan your website.');
+                    showScanning('Passive scan... 100%','It takes a few seconds to minutes to scan your website.');
                     document.cookie = "pscanStatus=100";
                     finishedDelay(500,'Passive scan').then(() => {
-                        $('.ui.tiny.modal').modal('hide')                 
+                        $('#scanningmessage').css('display','none');
+                        showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
+                        //$('.ui.tiny.modal').modal('hide')                 
                     });
                 }
             }).fail(function(){
@@ -223,7 +224,7 @@ $(document).ready(function(){
         else if(scanOption == 2){
             spiderstatus().done(function(response){
                 if (response.status < 100){
-                    showMessage('Passive scan... '+response.status,'It takes a few seconds to minutes to scan your website.');
+                    showScanning('Passive scan... '+response.status+'%','It takes a few seconds to minutes to scan your website.');
                     //progressUpdate(response.status,"Passive scan");
                     console.log('spiderStatus '+ response.status)
                     document.cookie = "pscanStatus="+response.status;
@@ -232,7 +233,7 @@ $(document).ready(function(){
                         document.cookie = "pscanStatus=100";
                         //progressUpdate(100,"Passive scan");
                         //$('#header>h1').text('Scan task has not finished. Please be patient.')
-                        showMessage('Passive scan... 100%','Scan task has not finished. Please be patient.');
+                        showScanning('Passive scan... 100%','Scan task has not finished. Please be patient.');
 
                         addScanPolicy().done(function(res){
                             console.log(res.code);
@@ -253,15 +254,17 @@ $(document).ready(function(){
                         ascanstatus().done(function(res){
                             if(res.status < 100 && res.status > 0){
                                 //$('#header>h1').text('It takes a few seconds to minutes to scan your website.')
-                                showMessage('Aassive scan... '+res.status,'It takes a few seconds to minutes to scan your website.');
+                                showScanning('Active scan... '+res.status+'%','It takes a few seconds to minutes to scan your website.');
                                 //progressUpdate(res.status,"Active scan");
                                 console.log('ascanStatus '+ res.status);
                                 document.cookie = "ascanStatus="+res.status;
                             }else if(res.status==100){
-                                showMessage('Aassive scan... 100%','It takes a few seconds to minutes to scan your website.');
+                                showScanning('Active scan... 100%','It takes a few seconds to minutes to scan your website.');
                                 document.cookie = "ascanStatus=100";
-                                finishedDelay(5000,'Active scan').then(() => {
-                                    $('.ui.tiny.modal').modal('hide');                  
+                                finishedDelay(500,'Active scan').then(() => {
+                                    $('#scanningmessage').css('display','none');
+                                    showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
+                                    //$('.ui.tiny.modal').modal('hide');                  
                                 });
                             }
                         }).fail(function(){
@@ -373,10 +376,23 @@ $(document).ready(function(){
            
         
     }
-    function showMessage(msg,submsg){
+    function showMessage(msg,submsg,type){
+        if(type == 'successfully'){
+            $('#message').removeClass('negative');
+            $('#message').addClass('successfully');
+        }else if(type == 'negative'){
+            $('#message').addClass('negative');
+            $('#message').removeClass('successfully');
+        }
         $('#message').css('display','block');
         $('#msg').text(msg);
         $('#submsg').text(submsg);
+        
+    }
+    function showScanning(msg,submsg){
+        $('#scanningmessage').css('display','block');
+        $('#scanningMsg').text(msg);
+        $('#scanningSubmsg').text(submsg);
         
     }
     function finishedDelay(ms,scantype) {
@@ -388,19 +404,19 @@ $(document).ready(function(){
         $('#progressNumber').text(scantype +'  100%  Earned')
         $('#header>h1').text('Scan task has finished. Page will return immediately.')
         */
-        showMessage(scantype+'... 100%','Scan task has finished.You can downlaod report at Scan History');
+        
         $('#cancelButton').addClass('disabled');
         //$('#downloadReport').removeClass('disabled');
         //$('#dashboard').removeClass('disabled');
-        $('#message').css('display','none');
         addHtml();
         
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     $('#cancelButton').click(function(){
         $(this).addClass('disabled');
-        showMessage('Start passive scan... 0%','It takes a few seconds to minutes to scan your website.');
-        //cancelScan();
+        cancelScan();
+        
+        showMessage('Scan has been stopped','You can still dowload the report below.');
     });
     
     $('#startScan').click(function(){
@@ -423,14 +439,14 @@ $(document).ready(function(){
             //$('#header>h1').text('It takes a few seconds to minutes to scan your website.')
             //$('#downloadReport').addClass('disabled');
             //$('#dashboard').addClass('disabled');
-            $('#cancelButton').css('display','none');
             //progressUpdate(0,"Passive scan");
 
             
             
             deleteData().done(function(){    
                 spiderScanStart().done(function(){
-                    showMessage('Passive scan... 0%','It takes a few seconds to minutes to scan your website.');
+                    $('#message').css('display','none');
+                    showScanning('Passive scan... 0%','It takes a few seconds to minutes to scan your website.');
                     console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /spiderScan');
                     //start timer
                     intervalNum = setInterval(function(){ checkScan(scanOption) }, 600);

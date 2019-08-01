@@ -22,6 +22,9 @@ body {
 #message{
     display:none;
 }
+#scanningmessage{
+    display:none;
+}
 #header{
     font-size: 4rem;
     font-family:Arial;
