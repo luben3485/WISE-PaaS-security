@@ -202,7 +202,8 @@ var Main ={
                 }else if (params.type === 'dashboard'){ // do download operation
                     
                     //dashboard link
-                    window.location.href = params.rowData['dashboardLInk'];
+                    window.open(params.rowData['dashboardLInk']);
+                    //window.location.href = params.rowData['dashboardLInk'];
                 }
 
             },
