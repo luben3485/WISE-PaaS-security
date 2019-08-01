@@ -31,7 +31,7 @@ $(document).ready(function(){
                 if(res.Result == 'OK'){
                     $('#checkScanMsg').css('display','none');
                     $('#startScan').removeClass('disabled');
-                }else(res.Result == 'NO'){
+                }else if(res.Result == 'NO'){
                     $('#checkScanMsg').css('display','block');
                     $('#startScan').addClass('disabled');
                 }
