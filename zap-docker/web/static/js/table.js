@@ -85,9 +85,16 @@ function downloadHtml(scanId){
                 withCredentials: true
             }
         }).done(function (user) {
-            
-            window.location.href = window.location.protocol + '//' + window.location.hostname + '/downloadHtml?'+'scanId='+scanId;
-            console.log("download html successfully")
+             $.ajax({
+                    url: 'downloadHtml',
+                    method: 'GET'
+                }).done(function (res) {
+                    if(res=='fail'){
+                        console.log('now u cannot download report');
+                    }
+                }).fail(function () {
+                    console.log("/downloadHtml fail") 
+                });         
         }).fail(function () {
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
             console.log("download html fail") 

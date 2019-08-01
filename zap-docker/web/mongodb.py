@@ -45,9 +45,11 @@ class mongoDB():
 		return scans
 	def deleteScan(self,scanId):
 		result = self.collection.remove({'scanId': scanId})
+		result_html = self.coll_html.remove({'scanId':scanId})
 	def deleteScans(self,scanIdlist):
 		for scanId in scanIdlist:
 			result = self.collection.remove({'scanId': scanId})
+			result_html = self.coll_html.remove({'scanId':scanId})
 	def deleteAllScans(self):
 		result = self.collection.remove({})
 

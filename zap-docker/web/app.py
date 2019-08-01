@@ -133,7 +133,11 @@ def home():
 @EIToken_verification
 def deleteScans():
 	scanIdArr = request.form.getlist('scanIdArr[]')
-	db.deleteScans(scanIdArr)
+	for scanId in scanIdArr:
+		status = db.findScan(scanId)
+		if status == '3':
+			db.deleteScan(scanId)
+
 	return jsonify({'Result':'OK'})
 
 
