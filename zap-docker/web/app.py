@@ -147,6 +147,7 @@ def dashboardLInk():
 @app.route('/addHtml',methods=['GET'])
 @EIToken_verification
 def addHtml():
+	EIToken = request.cookies.get('EIToken')
 	info_token = EIToken.split('.')[1]
 	userId = getUserIdFromToken(EIToken)
 	scanId = request.cookies.get('scanId')
@@ -196,6 +197,7 @@ def addScan():
 	spiderId =request.cookies.get('spiderId')  
 	scanId = str(random.randint(1000000,9999999))
 	nowtime = int(time.time())
+	EIToken = request.cookies.get('EIToken')
 	info_token = EIToken.split('.')[1]
 	userId = getUserIdFromToken(EIToken)
 		
@@ -226,6 +228,7 @@ def addScan():
 @app.route('/refreshTable',methods=['GET'])
 @EIToken_verification
 def refreshTable():
+	EIToken =request.cookies.get('EIToken')
 	info_token = EIToken.split('.')[1]
 	userId = getUserIdFromToken(EIToken)
 	scans = db.listScans(userId)
