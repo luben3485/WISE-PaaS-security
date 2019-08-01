@@ -208,12 +208,12 @@ $(document).ready(function(){
                 url: '/checkScan',
                 type: 'GET'
         }).done(function(res){
-            if(res.Result == 'OK'){
+            if(res.Result == 'SCAN'){
                 checkStatus(scanOption);
             }else{
                 //checkStop();
                 //addHtml();
-                
+                //stop from dashboard
                 showDelay(10).then(() => {
                 showMessage('You have stopped the scan.','You can still downlaod report below','negative');
             });
