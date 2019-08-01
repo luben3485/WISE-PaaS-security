@@ -753,6 +753,8 @@ def checkScan():
 					if scan['id'] == spiderId:
 						result = {'Result':'OK'}
 						return jsonify(result)		
+				result = {'Result':'NO'}
+				return jsonify(result)
 				
 			elif scanOption == 2:
 				r = requests.get('http://127.0.0.1:5000/JSON/spider/view/scans/?')	
@@ -775,6 +777,7 @@ def checkScan():
 	
 				result = {'Result':'NO'}
 				return jsonify(result)
+			
 			else:
 				abort(500)
 		except Exception as err:
