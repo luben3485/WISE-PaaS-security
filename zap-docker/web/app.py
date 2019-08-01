@@ -134,7 +134,7 @@ def home():
 def deleteScans():
 	scanIdArr = request.form.getlist('scanIdArr[]')
 	for scanId in scanIdArr:
-		status = db.findScan(scanId)
+		status = db.findScan(scanId)['status']
 		if status == '3':
 			db.deleteScan(scanId)
 
