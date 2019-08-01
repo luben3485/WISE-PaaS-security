@@ -201,8 +201,22 @@ $(document).ready(function(){
         });	  
         
     }
-    
     function checkScan(scanOption){
+        $.ajax({
+                url: '/checkScan',
+                type: 'GET'
+        }.done(function(res){
+            if(res.Result == 'OK'){
+                checkStatus(scanOption);
+            }else{
+                checkStop();
+                addHtml();
+            }
+        
+        }).fail(function(){
+            console.log('/checkScan error');
+        });
+    function checkStatus(scanOption){
         if(scanOption == 0){
             spiderstatus().done(function(response){
                 if(response.status < 100){

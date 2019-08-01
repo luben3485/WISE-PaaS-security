@@ -734,5 +734,82 @@ def dash_delete(uid):
 Newly Added End
 '''
 
+## Web check scan
+@app.route('/checkScan',methods=['GET'])
+def checkScan():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		try:
+			scanId =request.cookies.get('scanId') 
+			scan = db.findScan(scanId)
+			scanOption = scan['scanOption']
+			spiderId = scan['spiderId']
+			if scanOption == 0:
+				r = requests.get('http://127.0.0.1:5000/JSON/spider/view/scans/?')	
+				r = r.json()
+				scanList = r['scans']
+				for scan in scanList:
+					if scan['id'] == spiderId:
+						result = {'Result':'OK'}
+						return jsonify(result)		
+				
+			elif scanOption == 2:
+				r = requests.get('http://127.0.0.1:5000/JSON/spider/view/scans/?')	
+				r = r.json()
+				scanList = r['scans']
+				for scan in scanList:
+					if scan['id'] == spiderId:
+						finish = 1
+						result = {'Result':'OK'}
+						return jsonify(result)		
+				
+				ascanId = scan['ascanId']
+				r = requests.get('http://127.0.0.1:5000/JSON/ascan/view/scans/?')	
+				r = r.json()
+				scanList = r['scans']
+				for scan in scanList:
+					if scan['id'] == ascanId:
+						result = {'Result':'OK'}
+						return jsonify(result)		
+	
+				result = {'Result':'NO'}
+				return jsonify(result)
+			else:
+				abort(500)
+		except Exception as err:
+			print('error: {}'.format(str(err)))
+			abort(500)
+
+			
+
+
+
+# Dashboard cancel button
+@app.route('/cancelScan',methods=['GET'])
+def cancelScan():
+	EIToken =request.cookies.get('EIToken')  
+	res=requests.get(ssoUrl + "/v2.0/users/me",cookies={'EIToken': EIToken})	
+	if res.status_code == 200:
+		try:
+			rp = requests.get('http://127.0.0.1:5000/JSON/spider/action/removeAllScans/')	
+			ra = requests.get('http://127.0.0.1:5000/JSON/ascan/action/removeAllScans/')	
+			rp = rp.json()
+			ra = ra.json()
+			if rp['Result'] == OK and ra['Result']=='OK':
+				result = {'Result':'OK'}
+				return jsonify(result)
+			else:
+				abort(500)
+
+		except Exception as err:
+			print('error: {}'.format(str(err)))
+			abort(500)
+
+	else:
+		abort(401)
+
+
+
 if __name__ == '__main__':
 	app.run(host='0.0.0.0',port=8080,debug=False)
