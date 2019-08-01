@@ -675,19 +675,16 @@ def cancelScan():
 def checkAnyScan():
 	try:
 		scans = db.listNotFinishedScans()
-		if len(scans) > 1:
-			result = {'Result':'NO'}
+		if len(scans) !=0:
+			scanId = request.cookies.get('scanId')
+			for scan in scans:
+				if scan['scanId'] != scanId:
+					result = {'Result':'NO'}
+					return jsonify(result)
+			result = {'Result':'OK'}
 			return jsonify(result)
 		elif len(scans) == 0:
 			result = {'Result':'OK'}
-			return jsonify(result)
-		elif len(scans) == 1:
-			scanId = request.cookies.get('scanId')
-			for scan in scans:
-				if scan['scanId'] == scanId:
-					result = {'Result':'OK'}
-					return jsonify(result)
-			result = {'Result':'NO'}
 			return jsonify(result)
 
 	except Exception as err:
