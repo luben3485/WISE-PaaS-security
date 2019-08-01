@@ -745,11 +745,8 @@ def checkScan():
 			scan = db.findScan(scanId)
 			scanOption = scan['scanOption']
 			spiderId = scan['spiderId']
-			print(scanOption)
-			print(spiderId)
 			
 			if scanOption == '0':
-				print('test')
 				r = requests.get('http://127.0.0.1:5000/JSON/spider/view/scans/?')	
 				r = r.json()
 				scanList = r['scans']
