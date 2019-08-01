@@ -35,11 +35,18 @@ body {
     margin-bottom:15rem;
 }
 #msg{
-    font-size:1.5rem;
+    font-size:1.4rem;
     
 }
 #submsg{
-    font-size:1.2rem;
+    font-size:1.1rem;
+}
+#scanningMsg{
+    font-size:1.4rem;
+    
+}
+#scanningSubmsg{
+    font-size:1.1rem;
 }
 #app td span span{
     text-align: center;

@@ -3,8 +3,6 @@ $(document).ready(function(){
     var intervalNum;
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
-    showScanning('aaaaaa','fffffffffff');
-    
 
     $('.menu .item').tab();
     $('.accordion').accordion({animateChildren: false});
@@ -76,6 +74,7 @@ $(document).ready(function(){
             //$('#dashboard').removeClass('disabled');
             checkStop();
             addHtml();
+            $('#scanningmessage').css('display','none');
             showMessage('You have stopped the scan.','You can still downlaod report below','negative');
             $.ajax({
                 url: '/spiderRemove',
@@ -377,9 +376,9 @@ $(document).ready(function(){
         
     }
     function showMessage(msg,submsg,type){
-        if(type == 'successfully'){
+        if(type == 'successful'){
+            $('#message').addClass('successful');
             $('#message').removeClass('negative');
-            $('#message').addClass('successfully');
         }else if(type == 'negative'){
             $('#message').addClass('negative');
             $('#message').removeClass('successfully');
