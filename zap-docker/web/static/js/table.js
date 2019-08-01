@@ -90,8 +90,20 @@ function downloadHtml(scanId){
                     method: 'GET'
                 }).done(function (res) {
                     if(res=='fail'){
+                        
                         console.log('now u cannot download report');
+                    }else{
+                        var a = document.createElement('a');
+                        var url = window.URL.createObjectURL(res);
+                        a.href = url;
+                        a.download = 'scan_report.html';
+                        document.body.append(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                        
                     }
+                    
                 }).fail(function () {
                     console.log("/downloadHtml fail") 
                 });         
