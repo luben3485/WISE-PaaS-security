@@ -74,7 +74,7 @@ $(document).ready(function(){
             //$('#dashboard').removeClass('disabled');
             checkStop();
             addHtml();
-            showDelay(500).then(() => {
+            showDelay(10).then(() => {
                 showMessage('You have stopped the scan.','You can still downlaod report below','negative');
             });
             
@@ -386,9 +386,10 @@ $(document).ready(function(){
             $('#message').addClass('negative');
             $('#message').removeClass('positive');
         }
-        $('#message').css('display','block');
+
         $('#msg').text(msg);
         $('#submsg').text(submsg);
+        $('#message').css('display','block');
         
     }
     function showScanning(msg,submsg){
