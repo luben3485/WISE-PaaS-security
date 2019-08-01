@@ -261,7 +261,7 @@ def refreshTable():
 @app.route('/setSSOurl')
 def setSSOurl():
 	res_cookie = make_response(redirect('/'),200)
-	res_cookie.set_cookie('SSO_URL', ssoUrl)
+	res_cookie.set_cookie('SSO_URL', ssoUrl,domain=domainName)
 	return res_cookie
 
 
@@ -286,8 +286,8 @@ def spiderScan():
 			if r.status_code == 200:
 				r = r.json()
 				res_cookie = make_response(redirect('/'),200)
-				res_cookie.set_cookie('spiderId', r['scan'])
-				res_cookie.set_cookie('targetUrl', url)
+				res_cookie.set_cookie('spiderId', r['scan'],domain=domainName)
+				res_cookie.set_cookie('targetUrl', url,domain=domainName)
 			
 				return res_cookie
 			else:
@@ -413,7 +413,7 @@ def ascan():
 			if r.status_code == 200:
 				r = r.json()
 				res_cookie = make_response(redirect('/'),200)
-				res_cookie.set_cookie('ascanId', r['scan'])
+				res_cookie.set_cookie('ascanId', r['scan'],domain=domainName)
 				db.modifyExistInfo('ascanId',r['scan'],scanId)
 				db.modifyExistInfo('status','2',scanId)
 				return res_cookie
@@ -790,8 +790,6 @@ def checkScan():
 
 			
 
-
-
 # Dashboard cancel button
 @app.route('/cancelScan',methods=['GET'])
 def cancelScan():
@@ -803,7 +801,7 @@ def cancelScan():
 			ra = requests.get('http://127.0.0.1:5000/JSON/ascan/action/removeAllScans/')	
 			rp = rp.json()
 			ra = ra.json()
-			if rp['Result'] == OK and ra['Result']=='OK':
+			if rp['Result'] == 'OK' and ra['Result']=='OK':
 				result = {'Result':'OK'}
 				return jsonify(result)
 			else:

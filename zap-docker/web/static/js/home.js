@@ -1,8 +1,10 @@
 $(document).ready(function(){
+    
     var astart = 0 ;
     var intervalNum;
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
+    document.cookie="appUrl="+myUrl+";domain=.arfa.wise-paas.com; path=/";
     //showMessage('aaa','fffff','successful')
     $('.menu .item').tab();
     $('.accordion').accordion({animateChildren: false});
@@ -209,8 +211,12 @@ $(document).ready(function(){
             if(res.Result == 'OK'){
                 checkStatus(scanOption);
             }else{
-                checkStop();
-                addHtml();
+                //checkStop();
+                //addHtml();
+                
+                showDelay(10).then(() => {
+                showMessage('You have stopped the scan.','You can still downlaod report below','negative');
+            });
             }
         
         }).fail(function(){
