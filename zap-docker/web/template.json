@@ -325,7 +325,7 @@
             "type": "text"
         },
         {
-            "content": "<script>\n        window.setInterval(function() {\n            reloadIFrame()\n        }, 2000);\n\n        function reloadIFrame() {\n            console.log('reloading report...');\n            document.getElementById('iframe').contentWindow.location.reload();\n        }\n    </script>\n\n<iframe id=\"iframe\" src=\"https://zap-security-merge-0725.arfa.wise-paas.com/datasource/report\" width=100%\" height=\"100%\" frameborder=\"0\"></iframe>",
+            "content":"",
             "createUid": "9cda56d1-a886-1061-d932-294ba2b4854b",
             "gridPos": {
                 "h": 23,

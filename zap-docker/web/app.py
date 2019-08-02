@@ -102,15 +102,9 @@ def create_dashboard(scanId, EIToken):
         template["panels"][3]["targets"][0]["target"] = "Medium"+"-"+str(scanId)
         template["panels"][3]["targets"][0]["target"] = "Low"+"-"+str(scanId)
         template["panels"][3]["targets"][0]["target"] = "Informational"+"-"+str(scanId)
-        template["panels"][4]["content"] = '''<head>
-        <meta http-equiv="Access-Control-Allow-Origin" content="*" />
-        <!--<link href="css/style.css" rel="stylesheet" type="text/css" >-->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/></head>
-        <button class="ui button"><a href="'''+appURL+"/cancelScan"+'''">Stop this Scan</a></button>
-        <button class="ui button" id="downloadReport"><a href="'''+appURL+"/downloadlink"+'''" download="report.html" target="_blank">Download Report</a></button>
-        $('#downloadReport').removeClass('disabled');'''
+        template["panels"][4]["content"] = ''
         #These are Buttons.
-        template["panels"][5]["url"] = appURL+'/datasource/report/'+str(scanId)
+        #template["panels"][5]["url"] = appURL+'/datasource/report/'+str(scanId)
         #template["panels"][5]["content"] = '<iframe id="iframe" src="'+appURL+'/datasource/report/'+str(scanId)+'" width=100%" height="100%" frameborder="0"></iframe>' 
         #This is the last panel for report.
         res = requests.post(apiURL + "/api/dashboards/db", headers=my_headers, json=payload)
