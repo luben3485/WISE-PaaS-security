@@ -39,6 +39,7 @@ $(document).ready(function(){
                 }
                 
             }).fail(function(){
+                window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
                 console.log("check any scan table fail") 
             });
         
