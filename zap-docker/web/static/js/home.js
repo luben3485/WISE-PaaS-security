@@ -28,6 +28,9 @@ $(document).ready(function(){
         refreshTable().done(function(response){
             while (Data.length > 0) Data.pop();
             while (response.length > 0) Data.push(response.shift());
+        }).fail(function(){
+            console.log('refreshTable error')
+        });
     }
     function checkAnyScan(){
         $.ajax({
