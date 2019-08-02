@@ -651,9 +651,10 @@ Newly Added End
 '''
 
 ## Web check scan
+
 @app.route('/checkScan',methods=['GET'])
-@EIToken_verification
 @cross_origin()
+@EIToken_verification
 def checkScan():
     try:
         scanId =request.cookies.get('scanId') 
