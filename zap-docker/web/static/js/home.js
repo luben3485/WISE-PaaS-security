@@ -984,8 +984,29 @@ $(document).ready(function(){
             }
         }).done(function (user) {
             
-            window.location.href = myUrl + '/downloadHtml?scanId='+scanId;
-            console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /downloadHtml');
+            $.ajax({
+                    url: '/downloadHtml',
+                    method: 'GET',
+                    data:{'scanId':scanId}
+            }).done(function (res) {
+                    if(res=='fail'){
+                        
+                        console.log('now u cannot download report');
+                    }else{
+                        var a = document.createElement('a');
+                        var url = window.URL.createObjectURL(new Blob([res], {type: "application/html"}));
+                        a.href = url;
+                        a.download = 'scan_report.html';
+                        document.body.append(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                        
+                    }
+                    
+            }).fail(function () {
+                    console.log("/downloadHtml fail") 
+            });
         }).fail(function () {
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
             console.log('User is not logged in! /downloadHtml');

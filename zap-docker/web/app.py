@@ -679,6 +679,7 @@ def checkScan():
 # Dashboard cancel button
 @app.route('/cancelScan',methods=['GET'])
 @EIToken_verification
+@cross_origin()
 def cancelScan():
     try:
         rp = requests.get('http://127.0.0.1:5000/JSON/spider/action/removeAllScans/')   
