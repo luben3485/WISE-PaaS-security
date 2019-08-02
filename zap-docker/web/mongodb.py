@@ -109,14 +109,14 @@ if __name__ == '__main__':
 
 
 	#print(scans)
-	#mongodb.deleteAllScans()
+	mongodb.deleteAllScans()
 	#mongodb.deleteScans(['8829705','2962665'])
 	#scans = mongodb.listAllScans()
 	#print(len(scans))
 	#print(scans)
 	#print(mongodb.getCollection())
-	html = mongodb.findHtml('1988141')
-	print(html)
+	#html = mongodb.findHtml('1988141')
+	#print(html)
 	#scanId =str(777)
 	#mongodb.modifyExistInfo('ascanId','0',scanId)
 

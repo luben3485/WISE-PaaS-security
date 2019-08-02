@@ -44,6 +44,7 @@ def EIToken_verification(func):
             return abort(401)
     return warp
 
+
 '''
 Newly Added Begin
 '''
@@ -56,7 +57,8 @@ session = HTMLSession()
 null = None
 false = False
 true = True
-
+#apiURL='https://dashboard-grafana-1-3-2.arfa.wise-paas.com'
+#appURL='https://ensaas-security-scanner-0730.arfa.wise-paas.com/'
 
 High = {}
 Medium = {}
@@ -104,9 +106,9 @@ def create_dashboard(scanId, EIToken):
         template["panels"][3]["targets"][0]["target"] = "Informational"+"-"+str(scanId)
         template["panels"][4]["content"] = ''
         #These are Buttons.
-        #template["panels"][5]["url"] = appURL+'/datasource/report/'+str(scanId)
+        template["panels"][5]["url"] = appURL+'/datasource/report/'+str(scanId) #for new template
         #template["panels"][5]["content"] = '<iframe id="iframe" src="'+appURL+'/datasource/report/'+str(scanId)+'" width=100%" height="100%" frameborder="0"></iframe>' 
-        #This is the last panel for report.
+        #for old template
         res = requests.post(apiURL + "/api/dashboards/db", headers=my_headers, json=payload)
         print( res.text )
         dashboardLink = apiURL +res.json()["url"]
@@ -114,9 +116,17 @@ def create_dashboard(scanId, EIToken):
         return dashboardLink
     except Exception as err:
         print('error: {}'.format(str(err)))
+def delete_dashboard(scanId, EIToken):
+    my_headers = {'Content-Type':'application/json',
+               'Authorization': 'Bearer {}'.format(EIToken)}
+    res = requests.delete(apiURL + "/api/dashboards/uid/" + scanId, headers=my_headers)
+    res_json = res.json()
+    print( res_json["title"]+" has been deleted." )
+    return res.json()
 '''
 Newly Added End
 '''
+
 
 def getUserIdFromToken(EIToken):
     info = EIToken.split('.')[1]
@@ -144,7 +154,7 @@ def deleteScans():
         status = db.findScan(scanId)['status']
         if status == '3':
             db.deleteScan(scanId)
-
+            delete_dashboard(scanId, EIToken)
     return jsonify({'Result':'OK'})
 
 
@@ -476,6 +486,8 @@ def clear():
     except Exception as err:
         print('error: {}'.format(str(err)))
         abort(500)
+
+
 '''
 Newly Added
 '''
@@ -515,13 +527,13 @@ def query():
     target = req['targets'][0]['target']
     target_id = re.findall(r'\d*$',target)[0]
     try: 
-        report = db.findHtml(scanId)['html']
-        source = report
-        print("summary is extracted from DB.")
-    except:
+        report = db.findHtml(target_id)['html']
+        source = report.decode("utf-8")
+        print("summary is extracted from DB.(with id {})".format(target_id))
+    except Exception as err:
         report = session.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/?')
         source = report.html.raw_html.decode("utf-8")
-        print("summary is extracted from ZAP.")
+        print("summary is extracted from ZAP. Because {}.".format(err))
 
     global High
     global Medium
@@ -582,34 +594,19 @@ def query_p():
     global ascanid
     global Passive_Scan_Progress
     global Active_Scan_Progress
-    #Passive_Scan_Progress[target_id] = 0
-    #Active_Scan_Progress[target_id] = 0
+    Passive_Scan_Progress[target_id] = 0
+    Active_Scan_Progress[target_id] = 0
     try:
         status = db.findScan(target_id)["status"]
         pscanid = db.findScan(target_id)["spiderId"]
         ascanid = db.findScan(target_id)["ascanId"]
+        Passive_Scan_Progress[target_id] = int (db.findScan(target_id)["pscanStatus"])
+        Active_Scan_Progress[target_id] = int (db.findScan(target_id)["ascanStatus"])
         print ("status: {} | spiderId is {}, and ascanId is {} (from DB)(target_id={})".format(status,pscanid, ascanid, target_id) )
     except Exception as err:
         pscanid = 0
         ascanid = 0
         print ("fail to findScan in DB. Because {}".format(err))
-        
-    if status!="3":
-        try: 
-            p =  session.get('http://127.0.0.1:5000/JSON/spider/view/status/?scanId='+str(pscanid))
-            a =  session.get('http://127.0.0.1:5000/JSON/ascan/view/status/?scanId='+str(ascanid))
-        except Exception as err:
-            print('error: {}'.format(str(err)))
-            abort(400)
-    if(status != "3" and status != None):
-        pr = re.search(r'\"status\":\"(.*)\"', p.html.raw_html.decode("utf-8"), flags=0)
-        if(pr): Passive_Scan_Progress[target_id] = int( pr.group(1) )
-        ar = re.search(r'\"status\":\"(.*)\"', a.html.raw_html.decode("utf-8"), flags=0)
-        if(ar): Active_Scan_Progress[target_id] = int( ar.group(1) )
-    else:
-        Passive_Scan_Progress[target_id] = int (db.findScan(target_id)["pscanStatus"])
-        Active_Scan_Progress[target_id] = int (db.findScan(target_id)["ascanStatus"])
-
     progress = [
             {
                 "target": "Passive_Scan_Progress"+"-"+ str(target_id),
@@ -645,21 +642,11 @@ def datasource_report(scanId):
     response.headers['Content-Type'] = 'text/html'
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
-'''
-Delete Dashboard
-'''
-app.route('/dashboard/delete/<uid>', methods=['GET'])
-def dash_delete(uid):
-    EIToken =request.cookies.get('EIToken')
-    my_headers = {'Content-Type':'application/json',
-               'Authorization': 'Bearer {}'.format(EIToken)}
-    res = requests.delete(apiURL + "/api/dashboards/uid/" + uid, headers=my_headers)
-    res_json = res.json()
-    print( res_json["title"]+" has been deleted." )
-    return res.json()
+
 '''
 Newly Added End
 '''
+
 
 ## Web check scan
 
