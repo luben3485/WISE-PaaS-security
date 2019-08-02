@@ -482,7 +482,6 @@ $(document).ready(function(){
         
     }
     function showScanning(msg,submsg){
-        $('#scanningmessage').css('display','block');
         $('#scanningMsg').text(msg);
         $('#scanningSubmsg').text(submsg);
         
@@ -547,6 +546,7 @@ $(document).ready(function(){
             deleteData().done(function(){    
                 spiderScanStart().done(function(){
                     $('#message').css('display','none');
+                    $('#scanningmessage').css('display','block');
                     showScanning('Passive scan... 0%','It takes a few seconds to minutes to scan your website.');
                     console.log('Hello! ' + user.lastName + ' ' + user.firstName + ', you call /spiderScan');
                     //start timer
