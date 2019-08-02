@@ -138,7 +138,9 @@ $(document).ready(function(){
             //$('#downloadReport').removeClass('disabled');
             //$('#dashboard').removeClass('disabled');
             checkStop();
-            addHtml();
+            updateHtml();
+            finishStatus();
+            
             $('#startScan').removeClass('disabled');
             
             showDelay(10).then(() => {
@@ -278,7 +280,7 @@ $(document).ready(function(){
                 checkStatus(scanOption);
             }else{
                 //checkStop();
-                //addHtml();
+                //updateHtml();
                 //stop from dashboard
                 showDelay(10).then(() => {
                 showMessage('You have stopped the scan.','You can still downlaod report below','negative');
@@ -296,10 +298,8 @@ $(document).ready(function(){
                     //progressUpdate(response.status,"Passive scan");
                     showScanning('Passive scan... '+response.status+'%','It takes a few seconds to minutes to scan your website.');
                     console.log('spiderStatus '+ response.status);
-                    document.cookie = "pscanStatus="+response.status;
                 }else if(response.status==100){
                     showScanning('Passive scan... 100%','It takes a few seconds to minutes to scan your website.');
-                    document.cookie = "pscanStatus=100";
                     finishedDelay(500,'Passive scan').then(() => {
                         $('#scanningmessage').css('display','none');
                         showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
@@ -318,10 +318,8 @@ $(document).ready(function(){
                     showScanning('Passive scan... '+response.status+'%','It takes a few seconds to minutes to scan your website.');
                     //progressUpdate(response.status,"Passive scan");
                     console.log('spiderStatus '+ response.status)
-                    document.cookie = "pscanStatus="+response.status;
                 }else if(response.status == 100){
                     if(astart == 0){
-                        document.cookie = "pscanStatus=100";
                         //progressUpdate(100,"Passive scan");
                         //$('#header>h1').text('Scan task has not finished. Please be patient.')
                         showScanning('Passive scan... 100%','Scan task has not finished. Please be patient.');
@@ -348,10 +346,8 @@ $(document).ready(function(){
                                 showScanning('Active scan... '+res.status+'%','It takes a few seconds to minutes to scan your website.');
                                 //progressUpdate(res.status,"Active scan");
                                 console.log('ascanStatus '+ res.status);
-                                document.cookie = "ascanStatus="+res.status;
                             }else if(res.status==100){
                                 showScanning('Active scan... 100%','It takes a few seconds to minutes to scan your website.');
-                                document.cookie = "ascanStatus=100";
                                 finishedDelay(500,'Active scan').then(() => {
                                     $('#scanningmessage').css('display','none');
                                     showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
@@ -455,18 +451,29 @@ $(document).ready(function(){
                 type: 'GET'
         });  
     }
-    function addHtml(){
+    function updateHtml(){
         $.ajax({
-                url: '/addHtml',
+                url: '/updateHtml',
                 type: 'GET',
         }).done(function(){
-            console.log("addHtml success")
+            console.log("updateHtml success")
         }).fail(function(){
-            console.log("addHtml error")
+            console.log("updateHtml error")
         });  
            
         
     }
+    function finishStatus(){
+        $.ajax({
+                url: '/finishStatus',
+                type: 'GET',
+        }).done(function(){
+            console.log("finishStatus success")
+        }).fail(function(){
+            console.log("finishStatus error")
+        });   
+    }
+    
     function showMessage(msg,submsg,type){
         if(type == 'successful'){
             $('#message').addClass('positive');
@@ -506,7 +513,8 @@ $(document).ready(function(){
         $('#cancelButton').addClass('disabled');
         //$('#downloadReport').removeClass('disabled');
         //$('#dashboard').removeClass('disabled');
-        addHtml();
+        updateHtml();
+        finishStatus();
         
         return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -531,8 +539,6 @@ $(document).ready(function(){
         }).done(function (user) {
             astart = 0
             var scanOption=$("#scanOption").val();
-            document.cookie = "pscanStatus=0";
-            document.cookie = "ascanStatus=0";
             $('#cancelButton').removeClass('disabled');
             //progressPage();
             //$('#succMsg').css('display','none');

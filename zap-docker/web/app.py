@@ -157,29 +157,24 @@ def dashboardLInk():
     return url
 
 
-@app.route('/addHtml',methods=['GET'])
+
+
+@app.route('/finishStatus',methods=['GET'])
 @EIToken_verification
-def addHtml():
-    EIToken = request.cookies.get('EIToken')
-    info_token = EIToken.split('.')[1]
-    userId = getUserIdFromToken(EIToken)
+def finishStatus():
     scanId = request.cookies.get('scanId')
-    ascanStatus =request.cookies.get('ascanStatus')
-    pscanStatus =request.cookies.get('pscanStatus')
-        
-    # add scanStatus to db
-    db.modifyExistInfo('ascanStatus',ascanStatus,scanId)
-    db.modifyExistInfo('pscanStatus',pscanStatus,scanId)
     db.modifyExistInfo('status','3',scanId)
-        
+    return 'OK' 
+
+
+
+@app.route('/updateHtml',methods=['GET'])
+@EIToken_verification
+def updateHtml():
+    scanId = request.cookies.get('scanId')      
     r = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
     if r.status_code == 200:
-        html_info = {
-            "userId":userId,
-            "scanId":scanId,
-            "html":r.content
-        }
-        db.addHtml(html_info)
+        modifyExistHtml('html',r.content,scanId)
         return jsonify({'Result':'OK'})
     else:
         abort(500)
@@ -235,6 +230,12 @@ def addScan():
     }
     db.addScan(scandata)
     
+    html_info = {
+        "userId":userId,
+        "scanId":scanId,
+        "html":""
+    }
+    db.addHtml(html_info)
     res_cookie = make_response(redirect('/'),200)
     res_cookie.set_cookie('scanId',scanId,domain=domainName)
     return res_cookie
@@ -300,6 +301,11 @@ def spiderStatus():
         r = r.json()
         status = r['status']
         db.modifyExistInfo('pscanStatus',status,scanId)
+        
+        r_html = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
+        if r_html.status_code == 200:
+            modifyExistHtml('html',r_html.content,scanId)
+
         result = {'status':status}
         return jsonify(result)
     except Exception as err:
@@ -408,6 +414,11 @@ def ascanStatus():
         r = r.json()
         status = r['status']
         db.modifyExistInfo('ascanStatus',status,scanId)
+        
+        r_html = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
+        if r_html.status_code == 200:
+            modifyExistHtml('html',r_html.content,scanId)
+        
         result = {'status':r['status']}
         return jsonify(result)
     except Exception as err:
