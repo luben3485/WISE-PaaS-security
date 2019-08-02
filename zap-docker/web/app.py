@@ -25,7 +25,8 @@ appURL = ''
 try:
     app_env = json.loads(os.environ['VCAP_APPLICATION'])
     ssoUrl = 'https://portal-sso' + app_env['application_uris'][0][app_env['application_uris'][0].find('.'):]
-    appURL = app_env['application_uris'][0]
+    appURL = 'https://'+app_env['application_uris'][0]
+    print('get environment variables!')
 except Exception as err:
     print('Can not get environment variables form: {}'.format(str(err)))
     ssoUrl = 'https://portal-sso.arfa.wise-paas.com'
