@@ -149,6 +149,7 @@ def home():
 @app.route('/deleteScans',methods=['POST'])
 @EIToken_verification
 def deleteScans():
+    EIToken = request.cookie.get('EIToken')
     scanIdArr = request.form.getlist('scanIdArr[]')
     for scanId in scanIdArr:
         status = db.findScan(scanId)['status']
