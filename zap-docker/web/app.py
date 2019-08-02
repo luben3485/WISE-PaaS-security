@@ -304,7 +304,7 @@ def spiderStatus():
         
         r_html = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
         if r_html.status_code == 200:
-            modifyExistHtml('html',r_html.content,scanId)
+            db.modifyExistHtml('html',r_html.content,scanId)
 
         result = {'status':status}
         return jsonify(result)
@@ -417,7 +417,7 @@ def ascanStatus():
         
         r_html = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
         if r_html.status_code == 200:
-            modifyExistHtml('html',r_html.content,scanId)
+            db.modifyExistHtml('html',r_html.content,scanId)
         
         result = {'status':r['status']}
         return jsonify(result)
