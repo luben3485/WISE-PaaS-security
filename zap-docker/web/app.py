@@ -83,7 +83,7 @@ def datasource_init(scanId):
 def create_dashboard(scanId, EIToken):
     my_headers = {'Content-Type':'application/json','Authorization': 'Bearer {}'.format(EIToken)}
     try:
-        with open('template_adjust.json') as json_file:
+        with open('template.json') as json_file:
             template = json.load(json_file)
         payload ={
             "dashboard": template,
