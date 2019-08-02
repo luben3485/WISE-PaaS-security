@@ -19,12 +19,13 @@ db = mongodb.mongoDB()
 
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 
+apiURL='https://dashboard-grafana-1-3-2.arfa.wise-paas.com'
 ssoUrl = ''
-appUrl = ''
+appURL = ''
 try:
     app_env = json.loads(os.environ['VCAP_APPLICATION'])
     ssoUrl = 'https://portal-sso' + app_env['application_uris'][0][app_env['application_uris'][0].find('.'):]
-    appUrl = app_env['application_uris'][0]
+    appURL = app_env['application_uris'][0]
 except Exception as err:
     print('Can not get environment variables form: {}'.format(str(err)))
     ssoUrl = 'https://portal-sso.arfa.wise-paas.com'
@@ -55,8 +56,7 @@ session = HTMLSession()
 null = None
 false = False
 true = True
-apiURL='https://dashboard-grafana-1-3-2.arfa.wise-paas.com'
-appURL='https://ensaas-security-scanner-0730.arfa.wise-paas.com/'
+
 
 High = {}
 Medium = {}
