@@ -243,7 +243,7 @@ var Main ={
                     deletedFlag = 0;
                 }else{
                     
-                    alert('no');
+                    //alert('no');
                 }
                     
                 
