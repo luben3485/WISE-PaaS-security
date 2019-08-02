@@ -28,6 +28,8 @@ class mongoDB():
 		return result
 	def modifyExistInfo(self,key,value,scanId):
 		self.collection.update({'scanId':scanId},{'$set':{key:value}})
+	def modifyExistHtml(self,key,value,scanId):
+		self.coll_html.update({'scanId':scanId},{'$set':{key:value}})
 	def findHtml(self,scanId):
 		result = self.coll_html.find_one({"scanId":scanId})
 		return result
