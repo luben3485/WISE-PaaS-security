@@ -192,7 +192,7 @@ def updateHtml():
         abort(500)
 
 @app.route('/downloadHtml',methods=['GET'])
-@EIToken_verification
+@cross_origin()
 def downloadHtml():
     try:
         scanId = request.args.get('scanId')
