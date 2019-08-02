@@ -28,18 +28,6 @@ $(document).ready(function(){
         refreshTable().done(function(response){
             while (Data.length > 0) Data.pop();
             while (response.length > 0) Data.push(response.shift());
-            $.ajax({
-                url: '/dashboardLink',
-                type: 'GET'
-                }).done(function(res){
-                    window.open(res);
-                }).fail(function(){
-                    console.log('/dashboardLInk fail');
-                });
-                    console.log("refresh table successfully")
-                }).fail(function(){
-                    console.log("refresh table fail") 
-                });
     }
     function checkAnyScan(){
         $.ajax({
