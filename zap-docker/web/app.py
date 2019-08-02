@@ -696,16 +696,18 @@ def cancelScan():
 
 @app.route('/checkAnyScan',methods=['GET'])
 @EIToken_verification
+
+'''
+checkAnyScan is for checking if there is any scan on ZAP api server
+it prevents zap api server from multi-scanning.(Now only support scanning once for one browser page) 
+when starting a new scan,browser will stop timer of calling checkAnyScan.
+If scan has finished or been stopped,timer would resume to check it.
+'''
 def checkAnyScan():
     try:
         scans = db.listNotFinishedScans()
         if len(scans) !=0:
-            scanId = request.cookies.get('scanId')
-            for scan in scans:
-                if scan['scanId'] != scanId:
-                    result = {'Result':'NO'}
-                    return jsonify(result)
-            result = {'Result':'OK'}
+            result = {'Result':'NO'}
             return jsonify(result)
         elif len(scans) == 0:
             result = {'Result':'OK'}

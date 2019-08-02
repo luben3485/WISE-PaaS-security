@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    
+    var checkAnuScanTimer;
     var astart = 0 ;
     var intervalNum;
 	var message;
@@ -21,8 +21,8 @@ $(document).ready(function(){
           .transition('fade')
         ;
       });
-    
-    intervalNum = setInterval(function(){ checkAnyScan() }, 5000);
+    checkAnyScan();
+    checkAnuScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
     function checkAnyScan(){
         $.ajax({
             url: 'checkAnyScan',
@@ -130,6 +130,9 @@ $(document).ready(function(){
             //$('#dashboard').removeClass('disabled');
             checkStop();
             addHtml();
+            $('#startScan').removeClass('disabled');
+            checkAnyScan()
+            checkAnuScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
             showDelay(10).then(() => {
                 showMessage('You have stopped the scan.','You can still downlaod report below','negative');
             });
@@ -481,6 +484,8 @@ $(document).ready(function(){
     
     function finishedDelay(ms,scantype) {
         checkStop();
+        checkAnyScan();
+        checkAnuScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
         /*
         $('#progressbar').progress({
             percent: 100
@@ -488,7 +493,7 @@ $(document).ready(function(){
         $('#progressNumber').text(scantype +'  100%  Earned')
         $('#header>h1').text('Scan task has finished. Page will return immediately.')
         */
-        
+        $('#startScan').removeClass('disabled');
         $('#cancelButton').addClass('disabled');
         //$('#downloadReport').removeClass('disabled');
         //$('#dashboard').removeClass('disabled');
@@ -497,6 +502,7 @@ $(document).ready(function(){
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     $('#cancelButton').click(function(){
+
         $(this).addClass('disabled');
         cancelScan();
         
@@ -504,7 +510,8 @@ $(document).ready(function(){
     });
     
     $('#startScan').click(function(){
-        
+        $(this).addClass('disabled');
+        clearInterval(checkAnuScanTimer);
         var ssoUrl = getCookie('SSO_URL');
         $.ajax({
         url: ssoUrl + '/v2.0/users/me',
