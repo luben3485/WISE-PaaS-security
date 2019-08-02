@@ -654,7 +654,6 @@ Newly Added End
 
 @app.route('/checkScan',methods=['GET'])
 @cross_origin()
-@EIToken_verification
 def checkScan():
     try:
         scanId =request.cookies.get('scanId') 
@@ -674,7 +673,6 @@ def checkScan():
 
 # Dashboard cancel button
 @app.route('/cancelScan',methods=['GET'])
-@EIToken_verification
 @cross_origin()
 def cancelScan():
     try:
