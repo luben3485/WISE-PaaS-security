@@ -594,7 +594,7 @@ def query_p():
         ascanid = 0
         print ("fail to findScan in DB. Because {}".format(err))
         
-    if(status!="3"):
+    if status!="3":
         try: 
             p =  session.get('http://127.0.0.1:5000/JSON/spider/view/status/?scanId='+str(pscanid))
             a =  session.get('http://127.0.0.1:5000/JSON/ascan/view/status/?scanId='+str(ascanid))
