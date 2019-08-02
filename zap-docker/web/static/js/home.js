@@ -131,8 +131,7 @@ $(document).ready(function(){
             checkStop();
             addHtml();
             $('#startScan').removeClass('disabled');
-            checkAnyScan()
-            checkAnuScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
+            
             showDelay(10).then(() => {
                 showMessage('You have stopped the scan.','You can still downlaod report below','negative');
             });
@@ -169,7 +168,8 @@ $(document).ready(function(){
           
             });
            
-            
+            checkAnyScan()
+            checkAnuScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
         }).fail(function () {
         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
             console.log('User is not logged in! /spiderRemove');
@@ -294,6 +294,8 @@ $(document).ready(function(){
                     finishedDelay(500,'Passive scan').then(() => {
                         $('#scanningmessage').css('display','none');
                         showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
+                        checkAnyScan();
+                        checkAnuScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
                         //$('.ui.tiny.modal').modal('hide')                 
                     });
                 }
@@ -484,8 +486,7 @@ $(document).ready(function(){
     
     function finishedDelay(ms,scantype) {
         checkStop();
-        checkAnyScan();
-        checkAnuScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
+        
         /*
         $('#progressbar').progress({
             percent: 100
