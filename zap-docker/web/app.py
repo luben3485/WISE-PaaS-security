@@ -694,8 +694,7 @@ def cancelScan():
         print('error: {}'.format(str(err)))
         abort(500)
 
-@app.route('/checkAnyScan',methods=['GET'])
-@EIToken_verification
+
 
 '''
 checkAnyScan is for checking if there is any scan on ZAP api server
@@ -703,6 +702,8 @@ it prevents zap api server from multi-scanning.(Now only support scanning once f
 when starting a new scan,browser will stop timer of calling checkAnyScan.
 If scan has finished or been stopped,timer would resume to check it.
 '''
+@app.route('/checkAnyScan',methods=['GET'])
+@EIToken_verification
 def checkAnyScan():
     try:
         scans = db.listNotFinishedScans()
