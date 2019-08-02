@@ -24,7 +24,7 @@ $(document).ready(function(){
     checkAnyScan();
     checkAnuScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
     autoRefreshTableTimer = setInterval(function(){ autoRefreshTable() }, 10000);
-    fucntion autoRefreshTable(){
+    function autoRefreshTable(){
         refreshTable().done(function(response){
             while (Data.length > 0) Data.pop();
             while (response.length > 0) Data.push(response.shift());
