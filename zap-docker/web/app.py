@@ -174,7 +174,7 @@ def updateHtml():
     scanId = request.cookies.get('scanId')      
     r = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
     if r.status_code == 200:
-        modifyExistHtml('html',r.content,scanId)
+        db.modifyExistHtml('html',r.content,scanId)
         return jsonify({'Result':'OK'})
     else:
         abort(500)
