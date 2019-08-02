@@ -85,7 +85,7 @@ def create_dashboard(scanId, EIToken):
         payload ={
             "dashboard": template,
             "folderId": 0,
-            "overwrite": false
+            "overwrite": true
         }
         template["uid"] = scanId
         template["title"] = template["title"] + "-" + str(scanId)
