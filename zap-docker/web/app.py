@@ -83,7 +83,7 @@ def datasource_init(scanId):
 def create_dashboard(scanId, EIToken):
     my_headers = {'Content-Type':'application/json','Authorization': 'Bearer {}'.format(EIToken)}
     try:
-        with open('template.json') as json_file:
+        with open('template_adjust.json') as json_file:
             template = json.load(json_file)
         payload ={
             "dashboard": template,
@@ -105,7 +105,79 @@ def create_dashboard(scanId, EIToken):
         template["panels"][3]["targets"][0]["target"] = "Medium"+"-"+str(scanId)
         template["panels"][3]["targets"][0]["target"] = "Low"+"-"+str(scanId)
         template["panels"][3]["targets"][0]["target"] = "Informational"+"-"+str(scanId)
-        template["panels"][4]["content"] = ''
+        template["panels"][4]["content"] = '''<html>
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/>
+    </head>
+    <body>
+      <button id="downloadReport" class="ui  blue button" style="font-size:2rem;">
+            <i class="file alternate outline icon"></i>
+            Download
+        </button>
+    
+        
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                function getCookie(cname) {
+                    var name = cname + "=";
+                    var decodedCookie = decodeURIComponent(document.cookie);
+                    var ca = decodedCookie.split(';');
+                    for(var i = 0; i <ca.length; i++) {
+                        var c = ca[i];
+                        while (c.charAt(0) == ' ') {
+                            c = c.substring(1);
+                        }
+                        if (c.indexOf(name) == 0) {
+                            return c.substring(name.length, c.length);
+                        }
+                    }
+                    return "";
+                }
+
+                function getScanId(){
+                  var url = window.location.toString();
+                  var tmp1 =url.split("web-app-scanner-")[1];
+                  var tmp2 = tmp1.split("?")[0]
+                  return tmp2;
+                  
+                }
+                $('#downloadReport').click(function(){
+                    scanId = getScanId();
+                    appUrl = getCookie('appUrl');
+                    $.ajax({
+                        url: appUrl+'/downloadHtml',
+                        method: 'GET',
+                        data:{'scanId':scanId}
+                    }).done(function (res) {
+                        if(res=='fail'){
+
+                            console.log('now u cannot download report');
+                        }else{
+                            var a = document.createElement('a');
+                            var url = window.URL.createObjectURL(new Blob([res], {type: "application/html"}));
+                            a.href = url;
+                            a.download = 'scan_report.html';
+                            document.body.append(a);
+                            a.click();
+                            a.remove();
+                            window.URL.revokeObjectURL(url);
+
+                        }
+
+                    }).fail(function () {
+                        console.log("/downloadHtml fail") 
+                    });
+                    
+                });
+                
+                
+            });
+
+        </script>
+    
+    </body>
+</html>'''
         #These are Buttons.
         template["panels"][5]["url"] = appURL+'/datasource/report/'+str(scanId) #for new template
         #template["panels"][5]["content"] = '<iframe id="iframe" src="'+appURL+'/datasource/report/'+str(scanId)+'" width=100%" height="100%" frameborder="0"></iframe>' 
