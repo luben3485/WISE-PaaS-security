@@ -30,7 +30,7 @@ try:
 except Exception as err:
     print('Can not get environment variables form: {}'.format(str(err)))
     ssoUrl = 'https://portal-sso.arfa.wise-paas.com'
-    appURL = 'https://zap-security-debug.arfa.wise-paas.com'
+    appURL = 'https://zap-security-web-v4.arfa.wise-paas.com'
 domainName = ssoUrl[ssoUrl.find('.'):]
 
 def EIToken_verification(func):
@@ -110,7 +110,7 @@ def create_dashboard(scanId, EIToken):
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/>
     </head>
     <body>
-      <button id="downloadReport" class="ui  blue button" style="font-size:2rem;">
+      <button id="downloadReport" class="ui  blue button" style="font-size:1.3rem;">
             <i class="file alternate outline icon"></i>
             Download
         </button>
