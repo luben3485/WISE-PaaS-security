@@ -93,20 +93,15 @@ $(document).ready(function(){
                  
             });        
     function cancelScan(){
-       
-            //checkStop();
-            //updateHtml();
-            //finishStatus();
-            
-                   
+                               
             $.ajax({
                 url: '/cancelScan',
-                type: 'GET'
+                type: 'GET',
                 error: function(xhr) {
                     console.log('Ajax /cancelScan error');
                 },
                 success: function(response) {
-                console.log('cancelScan '+response.Result)    
+                    console.log('cancelScan '+response.Result)    
                 }
             });
         
