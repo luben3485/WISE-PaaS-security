@@ -93,7 +93,8 @@ $(document).ready(function(){
                  
             });        
     function cancelScan(){
-                               
+            clearInterval(passiveScanTimer);
+            clearInterval(activeScanTimer);          
             $.ajax({
                 url: '/cancelScan',
                 type: 'GET',
@@ -104,7 +105,7 @@ $(document).ready(function(){
                     console.log('cancelScan '+response.Result)    
                 }
             });
-        
+  
             showDelay(10).then(() => {
                 showMessage('You have stopped the scan.','You can still downlaod report below','negative');
             });
@@ -175,7 +176,7 @@ $(document).ready(function(){
             });
             
         }).fail(function(){
-             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl; 
+             console.log('passsive scan error')
         });
         
         
@@ -222,6 +223,27 @@ $(document).ready(function(){
     /*passive scan end */
     
     
+    /*active scan begin*/
+    function activeScan(targetURL,recurse,inScopeOnly,alertThreshold,attackStrength,scanOption){
+        $.ajax({
+            url: '/passiveScan',
+            type: 'GET',
+            data:{
+                'targetURL': targetURL,
+                'recurse': recurse,
+                'inScopeOnly':inScopeOnly,
+                'scanOption':scanOption,
+                'alertThreshold':alertThreshold,
+                'attackStrength':attackStrength,
+            }
+        }).done(function(){
+        
+        }).fail(function(){
+             console.log('active scan error')
+        });
+         
+    }
+    /*active scan end*/
     
     //startScan button
     $('#startScan').click(function(){
@@ -240,7 +262,17 @@ $(document).ready(function(){
                 targetURL = $('input[name="input_url"]').val();
                 passiveScan(targetURL,recurse,subtreeOnly,scanOption);
             }else if(scanOption == 2){
-                
+                var recurse;
+                var inScopeOnly;
+                var targetURL;
+                var alertThreshold;
+                var attackStrength;
+                $("input[name=alertThreshold]:checked").each(function () { alertThreshold = $(this).val()});
+                $("input[name=attackStrength]:checked").each(function () { attackStrength = $(this).val()});
+                $("input[name=activeRecurse]:checked").each(function () { recurse = $(this).val()});
+                $("input[name=inScopeOnly]:checked").each(function () { inScopeOnly = $(this).val()});
+                targetURL = $('input[name="input_url"]').val();
+                activeScan(targetURL,recurse,inScopeOnly,alertThreshold,attackStrength,scanOption);
             }
             
         }).fail(function(){
@@ -523,7 +555,7 @@ $(document).ready(function(){
             $(this).addClass('disabled');
             $('#startScan').removeClass('disabled');
             cancelScan();
-
+            
             
         }).fail(function(){
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;

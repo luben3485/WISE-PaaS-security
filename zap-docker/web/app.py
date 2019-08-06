@@ -448,6 +448,29 @@ def pscanStatusDB():
         abort(500)
 
 
+@app.route('/activeScan',methods=['GET'])
+@EIToken_verification
+def activeScan():
+    try:
+        r_delete = requests.get('http://127.0.0.1:5000/JSON/core/action/deleteAllAlerts')
+        if r_delete.status_code == 200:
+            # Get params from user setting
+            targetURL = request.args.get('targetURL')
+            recurse = request.args.get('recurse')
+            subtreeOnly= request.args.get('subtreeOnly') 
+            maxChildren=''
+            contextName=''
+            
+            
+            
+            #blah~ blah
+
+
+
+
+    except Exception as err:
+        print('error: {}'.format(str(err)))
+        abort(500)
 
 
 
