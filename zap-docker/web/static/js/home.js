@@ -23,8 +23,8 @@ $(document).ready(function(){
           .transition('fade')
         ;
       });
-    checkAnyScan();
-    checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
+    //checkAnyScan();
+    //checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
     autoRefreshTableTimer = setInterval(function(){ autoRefreshTable() }, 10000);
     function autoRefreshTable(){
         refreshTable().done(function(response){
@@ -235,9 +235,12 @@ $(document).ready(function(){
             }else if(response.status==100){
                 showScanning('Passive scan... 100%','It takes a few seconds to minutes to scan your website.');
                 pscanFinish(500).then(() => {
+                    $('#scanningmessage').css('display','none');
                     showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
+                    /*
                     checkAnyScan();
                     checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000);   });
+                    */
             }
         }).fail(function(){
             console.log('Ajax /pscanStatus error from checkPassiveScan');
@@ -246,7 +249,6 @@ $(document).ready(function(){
     }
     function pscanFinish(ms) {
         clearInterval(passiveScanTimer);
-        $('#scanningmessage').css('display','none');
         $('#startScan').removeClass('disabled');
         $('#cancelButton').addClass('disabled');
         
@@ -259,7 +261,7 @@ $(document).ready(function(){
     //startScan button
     $('#startScan').click(function(){
         EIToken_verification().done(function(){
-            clearInterval(checkAnyScanTimer);
+            //clearInterval(checkAnyScanTimer);
             $('#startScan').addClass('disabled');
             var scanOption=$("#scanOption").val();
             $('#message').css('display','none');
