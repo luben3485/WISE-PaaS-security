@@ -1,7 +1,9 @@
 $(document).ready(function(){
-    var checkAnuScanTimer;
+    var checkAnyScanTimer;
     var astart = 0 ;
     var intervalNum;
+    var passiveScanTimer;
+    var activeScanTimer;
 	var message;
     var myUrl = window.location.protocol + '//' + window.location.hostname;
     var hostname = window.location.hostname;
@@ -22,7 +24,7 @@ $(document).ready(function(){
         ;
       });
     checkAnyScan();
-    checkAnuScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
+    checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
     autoRefreshTableTimer = setInterval(function(){ autoRefreshTable() }, 10000);
     function autoRefreshTable(){
         refreshTable().done(function(response){
@@ -32,6 +34,19 @@ $(document).ready(function(){
             console.log('refreshTable error')
         });
     }
+    
+    // check EIToken
+    function EIToken_verification(){
+        var ssoUrl = getCookie('SSO_URL');
+        return  $.ajax({
+                    url: ssoUrl + '/v2.0/users/me',
+                    method: 'GET',
+                    xhrFields: {
+                        withCredentials: true
+                    }
+                });
+    }
+    
     function checkAnyScan(){
         $.ajax({
             url: 'checkAnyScan',
@@ -53,57 +68,9 @@ $(document).ready(function(){
             });
         
     }
-    /*
-    $('.accordion').click(function() {
-        $('.title').toggleClass("active");
-        $('.content').toggleClass("active");
-    });
-    */
-    //progressPage();
-    //$('.ui.tiny.modal').modal('hide');
-    //finishedDelay(2000,'Passive scan').then(() => {});
     
-    /*
-    $.ajax({
-        url: '/setSSOurl',
-        type: 'GET',
-        data:{
-          'ssoUrl' : ssoUrl  
-        },
-        xhrFields: {
-            withCredentials: true
-        },
-        error: function(xhr) {
-            //alert('Ajax /setSSOurl error');
-
-        },
-        success: function(response) {        
-            console.log('setSSOurl success');
-            var ssoUrl = getCookie('SSO_URL');
-            $.ajax({
-                url: ssoUrl + '/v2.0/users/me',
-                method: 'GET',
-                xhrFields: {
-                    withCredentials: true
-                }
-            }).done(function (user) {
-                refreshTable().done(function(response){
-                    while (Data.length > 0) Data.pop();
-                    while (response.length > 0) Data.push(response.shift());
-                    console.log("refresh table successfully")
-                }).fail(function(){
-                    console.log("refresh table fail") 
-                });
-                
-                
-                console.log('Hello! ' + user.lastName + ' ' + user.firstName);
-            }).fail(function () {
-               window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-                 
-            });        
-        }
-    });
-    */
+    
+    
             $.ajax({
                 url: ssoUrl + '/v2.0/users/me',
                 method: 'GET',
@@ -180,7 +147,7 @@ $(document).ready(function(){
             });
            
             checkAnyScan()
-            checkAnuScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
+            checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
         }).fail(function () {
         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
             console.log('User is not logged in! /spiderRemove');
@@ -191,12 +158,7 @@ $(document).ready(function(){
     function spiderstatus(){
         return $.ajax({
                 url: '/spiderStatus',
-                type: 'GET',
-                cache: false,
-                xhrFields: {
-                    withCredentials: true
-                }
-          
+                type: 'GET'
         });
         
     }
@@ -212,6 +174,116 @@ $(document).ready(function(){
         });
         
     }
+    /*passive scan begin*/
+    function passiveScan(targetURL,recurse,subtreeOnly){
+        
+        $.ajax({
+            url: '/passiveScan',
+            type: 'GET',
+            data:{
+                'targetURL': targetURL,
+                 'recurse': recurse,
+                 'subtreeOnly':subtreeOnly
+            }
+        }).done(function(){
+            $('#cancelButton').removeClass('disabled');
+            $('#scanningmessage').css('display','block');
+            showScanning('Passive scan... 0%','It takes a few seconds to minutes to scan your website.');
+            console.log('/passiveScan success');
+            //TIMER
+            checkPassiveScan();
+            passiveScanTimer = setInterval(function(){ checkPassiveScan() }, 1000);
+            
+            refreshTable().done(function(response){
+                while (Data.length > 0) Data.pop();
+                while (response.length > 0) Data.push(response.shift());
+                $.ajax({
+                        url: '/dashboardLink',
+                        type: 'GET'
+                }).done(function(res){
+                        window.open(res);
+                }).fail(function(){
+                        console.log('/dashboardLInk fail');
+                });
+                console.log("refresh table successfully")
+            }).fail(function(){
+                console.log("refresh table fail") 
+            });
+            
+        }).fail(function(){
+             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl; 
+        });
+        
+        
+    }
+    
+    function checkPassiveScan(){
+        $.ajax({
+            url: '/pscanStatusDB',
+            type: 'GET'
+        }).done(function(response){
+            if(response.status == -1){
+                //init
+                $('#startScan').removeClass('disabled');
+                $('#cancelButton').addClass('disabled');
+                $('#scanningmessage').css('display','none');
+                $('#message').css('display','none');
+            }else if(response.status < 100){
+                showScanning('Passive scan... '+response.status+'%','It takes a few seconds to minutes to scan your website.');
+                console.log('pscanStatus '+ response.status);
+            }else if(response.status==100){
+                showScanning('Passive scan... 100%','It takes a few seconds to minutes to scan your website.');
+                pscanFinish(500).then(() => {
+                    showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
+                    checkAnyScan();
+                    checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000);   });
+            }
+        }).fail(function(){
+            console.log('Ajax /pscanStatus error from checkPassiveScan');
+        });
+        
+    }
+    function pscanFinish(ms) {
+        clearInterval(passiveScanTimer);
+        $('#scanningmessage').css('display','none');
+        $('#startScan').removeClass('disabled');
+        $('#cancelButton').addClass('disabled');
+        
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    /*passive scan end */
+    
+    
+    
+    //startScan button
+    $('#startScan').click(function(){
+        EIToken_verification().done(function(){
+            clearInterval(checkAnyScanTimer);
+            $(this).addClass('disabled');
+            var scanOption=$("#scanOption").val();
+            $('#message').css('display','none');
+        
+            if(scanOption == 0){
+                var subtreeOnly;
+                var recurse;
+                var targetURL;
+                $("input[name=subtreeOnly]:checked").each(function () { subtreeOnly = $(this).val()});
+                $("input[name=passiveRecurse]:checked").each(function () { recurse = $(this).val()});
+                targetURL = $('input[name="input_url"]').val();
+                passiveScan(targetURL,recurse,subtreeOnly);
+            }else if(scanOption == 2){
+                
+            }
+            
+        }).fail(function(){
+            window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl; 
+        });
+    });
+    
+
+
+
+
     function ascanStart(){
         var recurse;
         var inScopeOnly;
@@ -304,7 +376,7 @@ $(document).ready(function(){
                         $('#scanningmessage').css('display','none');
                         showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
                         checkAnyScan();
-                        checkAnuScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
+                        checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
                         //$('.ui.tiny.modal').modal('hide')                 
                     });
                 }
@@ -374,36 +446,7 @@ $(document).ready(function(){
         //stop function checkScan
         clearInterval(intervalNum);
     }
-    /*
-    function progressUpdate(percent,scantype){
-        $('#progressbar').progress({
-            percent: percent
-        });
-        $('#progressNumber').text(scantype +"   "+ percent+'%  Earned')
-    }
-    */
-    /*
-    function progressPage() {
     
-        $('.ui.tiny.modal')
-            .modal({
-            closable  : false,
-            onDeny    : cancelScan,
-            onApprove : function() {
-                $.ajax({
-                        url: '/dashboardLink',
-                        type: 'GET'
-                }).done(function(res){
-                    window.open(res);
-                }).fail(function(){
-                    console.log('/dashboardLInk fail');
-                });
-                return false;
-            }
-            })
-    .modal('show');
-    }
-    */
     function getCookie(cname) {
       var name = cname + "=";
       var decodedCookie = decodeURIComponent(document.cookie);
@@ -501,21 +544,10 @@ $(document).ready(function(){
     
     function finishedDelay(ms,scantype) {
         checkStop();
-        
-        /*
-        $('#progressbar').progress({
-            percent: 100
-        });
-        $('#progressNumber').text(scantype +'  100%  Earned')
-        $('#header>h1').text('Scan task has finished. Page will return immediately.')
-        */
         $('#startScan').removeClass('disabled');
         $('#cancelButton').addClass('disabled');
-        //$('#downloadReport').removeClass('disabled');
-        //$('#dashboard').removeClass('disabled');
         updateHtml();
         finishStatus();
-        
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     $('#cancelButton').click(function(){
@@ -525,10 +557,10 @@ $(document).ready(function(){
         
         showMessage('Scan has been stopped','You can still dowload the report below.');
     });
-    
+    /*
     $('#startScan').click(function(){
         $(this).addClass('disabled');
-        clearInterval(checkAnuScanTimer);
+        clearInterval(checkAnyScanTimer);
         var ssoUrl = getCookie('SSO_URL');
         $.ajax({
         url: ssoUrl + '/v2.0/users/me',
@@ -540,12 +572,6 @@ $(document).ready(function(){
             astart = 0
             var scanOption=$("#scanOption").val();
             $('#cancelButton').removeClass('disabled');
-            //progressPage();
-            //$('#succMsg').css('display','none');
-            //$('#header>h1').text('It takes a few seconds to minutes to scan your website.')
-            //$('#downloadReport').addClass('disabled');
-            //$('#dashboard').addClass('disabled');
-            //progressUpdate(0,"Passive scan");
 
             
             
@@ -597,6 +623,10 @@ $(document).ready(function(){
         
         
 	});
+    
+    */
+    
+    
     /*--------------------------------ACTIVE SCAN----------------------------*/
 	$('#ascan').click(function(){
         var ssoUrl = getCookie('SSO_URL');

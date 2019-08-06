@@ -22,6 +22,7 @@ app = Flask(__name__,static_url_path='',root_path=os.getcwd())
 apiURL='https://dashboard-grafana-1-3-2.arfa.wise-paas.com'
 ssoUrl = ''
 appURL = ''
+
 try:
     app_env = json.loads(os.environ['VCAP_APPLICATION'])
     ssoUrl = 'https://portal-sso' + app_env['application_uris'][0][app_env['application_uris'][0].find('.'):]
@@ -33,6 +34,8 @@ except Exception as err:
     appURL = 'https://zap-security-web-v4.arfa.wise-paas.com'
 domainName = ssoUrl[ssoUrl.find('.'):]
 
+
+#decorator
 def EIToken_verification(func):
     @wraps(func)
     def warp(*args, **kwargs):
@@ -44,6 +47,32 @@ def EIToken_verification(func):
         else:
             return abort(401)
     return warp
+
+def checkPassiveStatus(scanId):
+    try:
+        while True:
+            scan_info = db.findScan(scanId)
+            pscanId = scan_info['pscanId']
+            payload = {'scanId':pscanId}
+            r = requests.get('http://127.0.0.1:5000/JSON/spider/view/status/',params=payload)   
+            if r.status_code == 200:
+                r = r.json()
+                status = r['status']
+                db.modifyExistInfo('pscanStatus',status,scanId)
+  
+            r_html = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
+            if r_html.status_code == 200:
+                db.modifyExistHtml('html',r_html.content,scanId)
+
+            #scan finish
+            if status == '100':
+                db.modifyExistInfo('status','3',scanId)
+                break
+            time.sleep(1)
+    except Exception as err:
+        print('error: {}'.format(str(err)))
+    
+
 
 
 '''
@@ -298,6 +327,102 @@ def downloadHtml():
         print('download_file error: {}'.format(str(err)))
         abort(500)
 
+
+@app.route('/passiveScan',methods=['GET'])
+@EIToken_verification
+def passiveScan():
+    try:
+        # Delete all previous datas on ZAP server
+        r_delete = requests.get('http://127.0.0.1:5000/JSON/core/action/deleteAllAlerts')
+        if r_delete.status_code == 200:
+            # Get params from user setting
+            targetURL = request.args.get('targetURL')
+            recurse = request.args.get('recurse')
+            subtreeOnly= request.args.get('subtreeOnly')
+            
+            maxChildren=''
+            contextName=''
+
+            payload = {'url': url, 'maxChildren': maxChildren,'recurse':recurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
+            r_passive = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan',params=payload)
+            if r_passive.status_code == 200:
+                
+                pscanId = r_passive['scan']
+                scanId = str(random.randint(1000000,9999999))
+                nowtime = int(time.time())
+                EIToken = request.cookies.get('EIToken')
+                info_token = EIToken.split('.')[1]
+                userId = getUserIdFromToken(EIToken)
+                
+                #call Dashboard API getting dashboardLink
+                dashboardLink = create_dashboard(scanId,EIToken)
+    
+                # timeStamp => int type
+                # other info  => str type
+                scandata = {
+                    "userId":userId,
+                    "scanId":scanId,
+                    "targetURL":targetURL,
+                    "dashboardLInk":dashboardLink,
+                    "timeStamp":nowtime,
+                    "ascanStatus":'0',
+                    "pscanStatus":'0',
+                    "scanOption":scanOption,
+                    "ascanId":'-1',
+                    "pscanId":pscanId,
+                    "status":'0'
+                }
+                db.addScan(scandata)
+    
+                html_info = {
+                    "userId":userId,
+                    "scanId":scanId,
+                    "html":""
+                }
+                db.addHtml(html_info)
+                
+                #thread
+                checkStatusThread = threading.Thread(target=checkPassiveStatus,args=[scanId])
+                checkStatusThread.start()
+                
+                #set scanId to cookie
+                res_cookie = make_response(redirect('/'),200)
+                res_cookie.set_cookie('scanId',scanId,domain=domainName)
+                return res_cookie
+            else:
+                print('passive scan start error!')
+
+
+        else:
+            print('passive scan delete error!')
+    except Exception as err:
+        print('error: {}'.format(str(err)))
+        abort(500)
+    
+
+
+@app.route('/pscanStatusDB',methods=['GET'])
+@EIToken_verification
+def pscanStatusDB():
+    try:
+        scanId = request.cookies.get('scanId')
+        if scanId:
+            scan_info = db.findScan(scanId)
+            pscanStatus = scan_info['pscanStatus']
+            result = {'status':pscanStatus}
+            return jsonify(result)
+        else:
+            result = {'status':'-1'}
+            return status
+    except Exception as err:
+        print('error: {}'.format(str(err)))
+        abort(500)
+
+
+
+
+
+
 @app.route('/addScan',methods=['GET'])
 @EIToken_verification
 def addScan():
@@ -388,15 +513,14 @@ def spiderScan():
         print('error: {}'.format(str(err)))
         abort(500)
         
-@app.route('/spiderStatus')
+@app.route('/pscanStatus')
 @EIToken_verification
-def spiderStatus():
+def pscanStatus():
     try:
         scanId = request.cookies.get('scanId')
-        #spiderId=request.cookies.get('spiderId')
         scan_info = db.findScan(scanId)
-        spiderId = scan_info['spiderId']
-        payload = {'scanId':spiderId}
+        pscanId = scan_info['pscanId']
+        payload = {'scanId':pscanId}
         r = requests.get('http://127.0.0.1:5000/JSON/spider/view/status/',params=payload)   
         r = r.json()
         status = r['status']
