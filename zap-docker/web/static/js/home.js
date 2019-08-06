@@ -240,8 +240,9 @@ $(document).ready(function(){
                     showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
                     /*
                     checkAnyScan();
-                    checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000);   });
-                    */
+                    checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000); */  
+                });
+                    
             }
         }).fail(function(){
             console.log('Ajax /pscanStatus error from checkPassiveScan');
@@ -261,10 +262,9 @@ $(document).ready(function(){
     
     //startScan button
     $('#startScan').click(function(){
-        $('#startScan').addClass('disabled');
         EIToken_verification().done(function(){
             //clearInterval(checkAnyScanTimer);
-            
+            $('#startScan').addClass('disabled');
             var scanOption=$("#scanOption").val();
             $('#message').css('display','none');
         
