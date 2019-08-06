@@ -51,6 +51,7 @@ def EIToken_verification(func):
 
 def checkPassiveStatus(scanId):
     try:
+        print("Add check passive status threading...")
         while True:
             scan_info = db.findScan(scanId)
             pscanId = scan_info['pscanId']
@@ -385,6 +386,7 @@ def passiveScan():
                 #thread
                 checkStatusThread = threading.Thread(target=checkPassiveStatus,args=[scanId])
                 checkStatusThread.start()
+                
                 
                 #set scanId to cookie
                 res_cookie = make_response(redirect('/'),200)

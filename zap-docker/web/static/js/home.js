@@ -260,7 +260,7 @@ $(document).ready(function(){
     $('#startScan').click(function(){
         EIToken_verification().done(function(){
             clearInterval(checkAnyScanTimer);
-            $(this).addClass('disabled');
+            $('#startScan').addClass('disabled');
             var scanOption=$("#scanOption").val();
             $('#message').css('display','none');
         
