@@ -146,8 +146,8 @@ $(document).ready(function(){
           
             });
            
-            checkAnyScan()
-            checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
+            //checkAnyScan()
+            //checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
         }).fail(function () {
         window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
             console.log('User is not logged in! /spiderRemove');
@@ -188,8 +188,9 @@ $(document).ready(function(){
             }
         }).done(function(){
             $('#cancelButton').removeClass('disabled');
-            $('#scanningmessage').css('display','block');
+            $('#startScan').addClass('disabled');
             showScanning('Passive scan... 0%','It takes a few seconds to minutes to scan your website.');
+            $('#scanningmessage').css('display','block');
             console.log('/passiveScan success');
             //TIMER
             checkPassiveScan();
@@ -260,9 +261,10 @@ $(document).ready(function(){
     
     //startScan button
     $('#startScan').click(function(){
+        $('#startScan').addClass('disabled');
         EIToken_verification().done(function(){
             //clearInterval(checkAnyScanTimer);
-            $('#startScan').addClass('disabled');
+            
             var scanOption=$("#scanOption").val();
             $('#message').css('display','none');
         
