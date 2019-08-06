@@ -23,7 +23,7 @@ app = Flask(__name__,static_url_path='',root_path=os.getcwd())
 apiURL='https://dashboard-grafana-1-3-2.arfa.wise-paas.com'
 ssoUrl = ''
 appURL = ''
-
+checkPassiveStatusThread = ''
 try:
     app_env = json.loads(os.environ['VCAP_APPLICATION'])
     ssoUrl = 'https://portal-sso' + app_env['application_uris'][0][app_env['application_uris'][0].find('.'):]
@@ -384,8 +384,9 @@ def passiveScan():
                 db.addHtml(html_info)
                 
                 #thread
-                checkStatusThread = threading.Thread(target=checkPassiveStatus,args=[scanId])
-                checkStatusThread.start()
+                global checkPassiveStatusThread
+                checkPassiveStatusThread = threading.Thread(target=checkPassiveStatus,args=[scanId])
+                checkPaddiveStatusThread.start()
                 
                 
                 #set scanId to cookie
@@ -402,6 +403,31 @@ def passiveScan():
         print('error: {}'.format(str(err)))
         abort(500)
     
+# cancel button
+@app.route('/cancelScan',methods=['GET'])
+@cross_origin()
+def cancelScan():
+    try:
+        scanId = request.cookies.get('scanId')
+        rp = requests.get('http://127.0.0.1:5000/JSON/spider/action/removeAllScans/')   
+        ra = requests.get('http://127.0.0.1:5000/JSON/ascan/action/removeAllScans/')    
+        rp = rp.json()
+        ra = ra.json()
+        if rp['Result'] == 'OK' and ra['Result']=='OK':
+        
+            r_html = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
+            if r_html.status_code == 200:
+                db.modifyExistHtml('html',r_html.content,scanId)
+                db.modifyExistInfo('status','3',scanId)
+                result = {'Result':'OK'}
+                return jsonify(result)
+            else:
+                abort(500)
+        else:
+            abort(500)
+    except Exception as err:
+        print('error: {}'.format(str(err)))
+        abort(500)
 
 
 @app.route('/pscanStatusDB',methods=['GET'])
@@ -422,6 +448,22 @@ def pscanStatusDB():
         abort(500)
 
 
+@app.route('/cancelScan',methods=['GET'])
+@EIToken_verification
+def pscanStatusDB():
+    try:
+        scanId = request.cookies.get('scanId')
+        if scanId:
+            scan_info = db.findScan(scanId)
+            pscanStatus = scan_info['pscanStatus']
+            result = {'status':pscanStatus}
+            return jsonify(result)
+        else:
+            result = {'status':'-1'}
+            return status
+    except Exception as err:
+        print('error: {}'.format(str(err)))
+        abort(500)
 
 
 
@@ -886,23 +928,7 @@ def checkScan():
         print('error: {}'.format(str(err)))
         abort(500)
 
-# Dashboard cancel button
-@app.route('/cancelScan',methods=['GET'])
-@cross_origin()
-def cancelScan():
-    try:
-        rp = requests.get('http://127.0.0.1:5000/JSON/spider/action/removeAllScans/')   
-        ra = requests.get('http://127.0.0.1:5000/JSON/ascan/action/removeAllScans/')    
-        rp = rp.json()
-        ra = ra.json()
-        if rp['Result'] == 'OK' and ra['Result']=='OK':
-            result = {'Result':'OK'}
-            return jsonify(result)
-        else:
-            abort(500)
-    except Exception as err:
-        print('error: {}'.format(str(err)))
-        abort(500)
+
 
 
 

@@ -93,67 +93,34 @@ $(document).ready(function(){
                  
             });        
     function cancelScan(){
+       
+            //checkStop();
+            //updateHtml();
+            //finishStatus();
+            
+                   
+            $.ajax({
+                url: '/cancelScan',
+                type: 'GET'
+                error: function(xhr) {
+                    console.log('Ajax /cancelScan error');
+                },
+                success: function(response) {
+                console.log('cancelScan '+response.Result)    
+                }
+            });
         
-        var ssoUrl = getCookie('SSO_URL');
-        $.ajax({
-            url: ssoUrl + '/v2.0/users/me',
-            method: 'GET',
-            xhrFields: {
-                withCredentials: true
-            }
-        }).done(function (user) {
-            //$('#downloadReport').removeClass('disabled');
-            //$('#dashboard').removeClass('disabled');
-            checkStop();
-            updateHtml();
-            finishStatus();
-            
-            $('#startScan').removeClass('disabled');
-            
             showDelay(10).then(() => {
                 showMessage('You have stopped the scan.','You can still downlaod report below','negative');
             });
             
-           
-            $.ajax({
-                url: '/spiderRemove',
-                type: 'GET',
-                cache: false,
-                xhrFields: {
-                    withCredentials: true
-                },
-                error: function(xhr) {
-                    console.log('Ajax /spiderRemove from progressPage error');
-                },
-                success: function(response) {
-                console.log('spiderRemove from progressPage '+response.Result)    
-                }
-            });
+
             
-            $.ajax({
-                url: '/ascanRemove',
-                type: 'GET',
-                cache: false,
-                xhrFields: {
-                    withCredentials: true
-                },
-                error: function(xhr) {
-                    console.log('Ajax /ascanRemove from progressPage error');
-                },
-                success: function(response) {
-                    console.log('ascanRemove from progressPage '+response.Result)    
-                }
-          
-            });
            
             //checkAnyScan()
             //checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
-        }).fail(function () {
-        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-            console.log('User is not logged in! /spiderRemove');
-        });      
-        
-        return true;    
+   
+  
     }
     function spiderstatus(){
         return $.ajax({
@@ -235,8 +202,8 @@ $(document).ready(function(){
                 console.log('pscanStatus '+ response.status);
             }else if(response.status==100){
                 showScanning('Passive scan... 100%','It takes a few seconds to minutes to scan your website.');
-                pscanFinish(500).then(() => {
-                    $('#scanningmessage').css('display','none');
+                pscanFinish(100).then(() => {
+                    
                     showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
                     /*
                     checkAnyScan();
@@ -251,6 +218,7 @@ $(document).ready(function(){
     }
     function pscanFinish(ms) {
         clearInterval(passiveScanTimer);
+        $('#scanningmessage').css('display','none');
         $('#startScan').removeClass('disabled');
         $('#cancelButton').addClass('disabled');
         
@@ -556,11 +524,16 @@ $(document).ready(function(){
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     $('#cancelButton').click(function(){
+        EIToken_verification().done(function(){
+            $(this).addClass('disabled');
+            $('#startScan').removeClass('disabled');
+            cancelScan();
 
-        $(this).addClass('disabled');
-        cancelScan();
+            
+        }.fail(function(){
+            window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+        });
         
-        showMessage('Scan has been stopped','You can still dowload the report below.');
     });
     /*
     $('#startScan').click(function(){
