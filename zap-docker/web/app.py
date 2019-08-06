@@ -448,23 +448,6 @@ def pscanStatusDB():
         abort(500)
 
 
-@app.route('/cancelScan',methods=['GET'])
-@EIToken_verification
-def pscanStatusDB():
-    try:
-        scanId = request.cookies.get('scanId')
-        if scanId:
-            scan_info = db.findScan(scanId)
-            pscanStatus = scan_info['pscanStatus']
-            result = {'status':pscanStatus}
-            return jsonify(result)
-        else:
-            result = {'status':'-1'}
-            return status
-    except Exception as err:
-        print('error: {}'.format(str(err)))
-        abort(500)
-
 
 
 
