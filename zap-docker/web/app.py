@@ -343,7 +343,7 @@ def passiveScan():
             maxChildren=''
             contextName=''
 
-            payload = {'url': url, 'maxChildren': maxChildren,'recurse':recurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
+            payload = {'url': targetURL, 'maxChildren': maxChildren,'recurse':recurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
             r_passive = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan',params=payload)
             if r_passive.status_code == 200:
                 
