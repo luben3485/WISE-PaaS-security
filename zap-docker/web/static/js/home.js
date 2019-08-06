@@ -182,8 +182,9 @@ $(document).ready(function(){
             type: 'GET',
             data:{
                 'targetURL': targetURL,
-                 'recurse': recurse,
-                 'subtreeOnly':subtreeOnly
+                'recurse': recurse,
+                'subtreeOnly':subtreeOnly,
+                'scanOption':scanOption
             }
         }).done(function(){
             $('#cancelButton').removeClass('disabled');
@@ -270,7 +271,7 @@ $(document).ready(function(){
                 $("input[name=subtreeOnly]:checked").each(function () { subtreeOnly = $(this).val()});
                 $("input[name=passiveRecurse]:checked").each(function () { recurse = $(this).val()});
                 targetURL = $('input[name="input_url"]').val();
-                passiveScan(targetURL,recurse,subtreeOnly);
+                passiveScan(targetURL,recurse,subtreeOnly,scanOption);
             }else if(scanOption == 2){
                 
             }

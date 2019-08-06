@@ -338,8 +338,7 @@ def passiveScan():
             # Get params from user setting
             targetURL = request.args.get('targetURL')
             recurse = request.args.get('recurse')
-            subtreeOnly= request.args.get('subtreeOnly')
-            
+            subtreeOnly= request.args.get('subtreeOnly') 
             maxChildren=''
             contextName=''
 
@@ -353,6 +352,7 @@ def passiveScan():
                 EIToken = request.cookies.get('EIToken')
                 info_token = EIToken.split('.')[1]
                 userId = getUserIdFromToken(EIToken)
+                scanOption = request.args.get('scanOption')
                 
                 #call Dashboard API getting dashboardLink
                 dashboardLink = create_dashboard(scanId,EIToken)
