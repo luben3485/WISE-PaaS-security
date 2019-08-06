@@ -346,7 +346,7 @@ def passiveScan():
             payload = {'url': targetURL, 'maxChildren': maxChildren,'recurse':recurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
             r_passive = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan',params=payload)
             if r_passive.status_code == 200:
-                
+                r_passive = r_passive.json() 
                 pscanId = r_passive['scan']
                 scanId = str(random.randint(1000000,9999999))
                 nowtime = int(time.time())
