@@ -175,7 +175,7 @@ $(document).ready(function(){
         
     }
     /*passive scan begin*/
-    function passiveScan(targetURL,recurse,subtreeOnly){
+    function passiveScan(targetURL,recurse,subtreeOnly,scanOption){
         
         $.ajax({
             url: '/passiveScan',
