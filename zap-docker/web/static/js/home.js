@@ -525,7 +525,7 @@ $(document).ready(function(){
             cancelScan();
 
             
-        }.fail(function(){
+        }).fail(function(){
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
         });
         
