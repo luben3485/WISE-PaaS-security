@@ -298,7 +298,7 @@ $(document).ready(function(){
             }else{
                 showScanning(response.scanType+'... '+response.status+'%','It takes a few seconds to minutes to scan your website.');
                 console.log(response.scanType+' '+ response.status);
-                
+            }
         }).fail(function(){
             console.log('Ajax /pscanStatus error from checkPassiveScan');
         });
