@@ -139,6 +139,8 @@ $(document).ready(function(){
     
     function cancelScan(){
             clearAllTimer();
+            checkUserScan();
+            var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
             $.ajax({
                 url: '/cancelScan',
                 type: 'GET',
@@ -240,7 +242,6 @@ $(document).ready(function(){
                     pscanFinish(100).then(() => {
                         //clearInterval(passiveScanTimer);
                         //clearInterval(activeScanTimer); 
-                        console.log(passiveScanTimer)
                         showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
 
                     });
