@@ -546,11 +546,9 @@ def fullScanStatusDB():
             pscanStatus = scan_info['pscanStatus']
             if int(pscanStatus) <= 100 and int(ascanStatus) ==0:
                 result = {'scanType':'Passive scan','status':pscanStatus}                
-                result = {'scanType':'Active scan','status':ascanStatus}                
-                return jsonify(result)
                 return jsonify(result)
             elif int(pscanStatus) == 100 and int(ascanStatus)<=100:
-                result = {'scanType':'ascan','status':ascanStatus}                
+                result = {'scanType':'Active scan','status':ascanStatus}                
                 return jsonify(result)
                 
         else:
