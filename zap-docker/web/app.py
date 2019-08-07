@@ -114,7 +114,7 @@ def checkActiveStatus(scanId,targetURL,arecurse,inScopeOnly,method,postData,cont
 
                 payload = {'url' : targetURL,'inScopeOnly':inScopeOnly,'recurse':arecurse,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
                 r_ascan = requests.get('http://127.0.0.1:5000/JSON/ascan/action/scan/',params=payload)
-                if r_scan.status_code == 200:
+                if r_ascan.status_code == 200:
                     r_ascan = r_ascan.json()
                     db.modifyExistInfo('ascanId',r_ascan['scan'],scanId)
                     db.modifyExistInfo('status','2',scanId)
