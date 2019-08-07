@@ -10,6 +10,6 @@ RUN sudo apt-get update;\
      sudo apt-get -y upgrade;\
      sudo apt-get install -y python3 python3-pip
 
-RUN sudo pip3 install flask requests
+RUN sudo pip3 install flask requests  requests-html flask-cors
 EXPOSE 8080
 WORKDIR /WISE-PaaS-security/zap-docker/web

@@ -10,7 +10,7 @@ RUN sudo apt-get update;\
      sudo apt-get -y upgrade;\
      sudo apt-get install -y python3 python3-pip
 
-RUN sudo pip3 install flask requests pymongo
+RUN sudo pip3 install flask requests pymongo  requests-html flask-cors
 EXPOSE 8080
 WORKDIR /WISE-PaaS-security/zap-docker/web
 CMD sudo /zap/zap.sh -host 0.0.0.0 -port 5000 -daemon -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=true &
