@@ -43,8 +43,8 @@ $(document).ready(function(){
             console.log("refresh table fail") 
         });
         
-        checkUserScan();
-        var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
+        //checkUserScan();
+        //var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
                 
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
