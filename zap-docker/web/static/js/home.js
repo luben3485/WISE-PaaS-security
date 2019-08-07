@@ -45,7 +45,7 @@ $(document).ready(function(){
         });
         
         checkUserScan();
-                
+        var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
                 
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
@@ -665,7 +665,7 @@ $(document).ready(function(){
     }
     $('#cancelButton').click(function(){
         EIToken_verification().done(function(){
-            $(this).addClass('disabled');
+            $('#cancelButton').addClass('disabled');
             $('#startScan').removeClass('disabled');
             cancelScan();
             
