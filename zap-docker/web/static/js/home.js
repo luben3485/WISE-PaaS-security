@@ -239,8 +239,8 @@ $(document).ready(function(){
             }else if(response.status==100){
                 showScanning('Passive scan... 100%','It takes a few seconds to minutes to scan your website.');
                 pscanFinish(100).then(() => {
-                    clearInterval(passiveScanTimer);
-                    clearInterval(activeScanTimer); 
+                    //clearInterval(passiveScanTimer);
+                    //clearInterval(activeScanTimer); 
                     console.log(passiveScanTimer)
                     showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
                   
