@@ -134,6 +134,7 @@ $(document).ready(function(){
     
     function cancelScan(){
             clearTimeout(passiveScanTimer);
+            passiveScanTimer = null;
             clearTimeout(activeScanTimer);          
             $.ajax({
                 url: '/cancelScan',
