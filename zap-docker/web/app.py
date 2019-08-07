@@ -150,6 +150,8 @@ def checkActiveStatus(scanId,targetURL,arecurse,inScopeOnly,method,postData,cont
     except Exception as err:
         print('error: {}'.format(str(err)))
 
+
+
 '''
 Newly Added Begin
 '''
@@ -238,7 +240,6 @@ def create_dashboard(scanId, EIToken):
                     }
                     return "";
                 }
-
                 function getScanId(){
                   var url = window.location.toString();
                   var tmp1 =url.split("web-app-scanner-")[1];
@@ -255,7 +256,6 @@ def create_dashboard(scanId, EIToken):
                         data:{'scanId':scanId}
                     }).done(function (res) {
                         if(res=='fail'){
-
                             console.log('now u cannot download report');
                         }else{
                             var a = document.createElement('a');
@@ -266,15 +266,12 @@ def create_dashboard(scanId, EIToken):
                             a.click();
                             a.remove();
                             window.URL.revokeObjectURL(url);
-
                         }
-
                     }).fail(function () {
                         console.log("/downloadHtml fail") 
                     });
                     
                 });
-
                 function getCookie(cname) {
                     var name = cname + "=";
                     var decodedCookie = decodeURIComponent(document.cookie);
@@ -293,7 +290,6 @@ def create_dashboard(scanId, EIToken):
                 
                 
             });
-
         </script>
     
     </body>
@@ -319,7 +315,6 @@ def delete_dashboard(scanId, EIToken):
 '''
 Newly Added End
 '''
-
 
 def getUserIdFromToken(EIToken):
     info = EIToken.split('.')[1]
@@ -858,21 +853,21 @@ def health_check_p():
 # return a list of data that can be queried
 @app.route('/summary/search', methods=['POST'])
 def search():
-    count_list = []
-    for key in High.keys():
-        count_list.append( "High" + "-" + str(key) )
-        count_list.append( "Medium" + "-" + str(key) )
-        count_list.append( "Low" + "-" + str(key) )
-        count_list.append( "Informational" + "-" + str(key) )
-    return jsonify( count_list )
+    count_set = set()
+    for scan in db.listAllScans():
+        count_set.add( "High" + "-" + scan['scanId'] )
+        count_set.add( "Medium" + "-" + scan['scanId'] )
+        count_set.add( "Low" + "-" +  scan['scanId'] )
+        count_set.add( "Informational" + "-" + scan['scanId'] )
+    return jsonify( list(count_set) )
 
 @app.route('/progress/search', methods=['POST'])
 def search_p():
-    progress_list = []
-    for key in Passive_Scan_Progress.keys():
-        progress_list.append( "Passive_Scan_Progress" + "-" + str(key) )
-        progress_list.append( "Active_Scan_Progress" + "-" + str(key) )
-    return jsonify( progress_list )
+    progress_set = set()
+    for scan in db.listAllScans():
+        progress_set.add( "Passive_Scan_Progress" + "-" + scan['scanId'] )
+        progress_set.add( "Active_Scan_Progress" + "-" + scan['scanId'] )
+    return jsonify( list(progress_set) )
 
 @app.route('/summary/query', methods=['POST'])
 def query():
@@ -884,9 +879,7 @@ def query():
         source = report.decode("utf-8")
         print("summary is extracted from DB.(with id {})".format(target_id))
     except Exception as err:
-        report = session.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/?')
-        source = report.html.raw_html.decode("utf-8")
-        print("summary is extracted from ZAP. Because {}.".format(err))
+        print("summary can not extracted from DB. Because {}.".format(err))
 
     global High
     global Medium
@@ -943,22 +936,15 @@ def query_p():
     target = req['targets'][0]['target']
     target_id = re.findall(r'\d*$',target)[0]
 
-    global pscanid
-    global ascanid
     global Passive_Scan_Progress
     global Active_Scan_Progress
     Passive_Scan_Progress[target_id] = 0
     Active_Scan_Progress[target_id] = 0
     try:
-        status = db.findScan(target_id)["status"]
-        pscanid = db.findScan(target_id)["spiderId"]
-        ascanid = db.findScan(target_id)["ascanId"]
         Passive_Scan_Progress[target_id] = int (db.findScan(target_id)["pscanStatus"])
         Active_Scan_Progress[target_id] = int (db.findScan(target_id)["ascanStatus"])
-        print ("status: {} | spiderId is {}, and ascanId is {} (from DB)(target_id={})".format(status,pscanid, ascanid, target_id) )
+        print ("spiderId is {}, and ascanId is {} (from DB)(target_id={})".format(pscanid, ascanid, target_id) )
     except Exception as err:
-        pscanid = 0
-        ascanid = 0
         print ("fail to findScan in DB. Because {}".format(err))
     progress = [
             {
@@ -984,9 +970,7 @@ def datasource_report(scanId):
         source = report['html'].decode("utf-8")
         print("report is extracted from DB.")
     except Exception as err:
-        report = session.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/?')
-        source = report.html.raw_html.decode("utf-8")
-        print("Report is extracted from ZAP. Becasue {}".format(err))
+        print("Report can not extracted from DB. Becasue {}".format(err))
         print("You're scanId is {}".format(scanId))
     head = source.split("<h1>",1)
     body = head[1].split("<h3>Alert Detail</h3>",1)
@@ -999,7 +983,6 @@ def datasource_report(scanId):
 '''
 Newly Added End
 '''
-
 
 ## Web check scan
 
