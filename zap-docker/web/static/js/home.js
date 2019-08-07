@@ -197,8 +197,8 @@ $(document).ready(function(){
             console.log('/passiveScan success');
             //TIMER
             checkPassiveScan();
-            passiveScanTimer = setInterval(function(){ checkPassiveScan() }, 1000);
-            
+            //passiveScanTimer = setInterval(function(){ checkPassiveScan() }, 1000);
+
             refreshTable().done(function(response){
                 while (Data.length > 0) Data.pop();
                 while (response.length > 0) Data.push(response.shift());
@@ -223,6 +223,7 @@ $(document).ready(function(){
     }
     
     function checkPassiveScan(){
+        window.setTimeout(function(){}
         $.ajax({
             url: '/pscanStatusDB',
             type: 'GET'
@@ -236,6 +237,7 @@ $(document).ready(function(){
             }else if(response.status < 100){
                 showScanning('Passive scan... '+response.status+'%','It takes a few seconds to minutes to scan your website.');
                 console.log('pscanStatus '+ response.status);
+                checkPassiveScan();
             }else if(response.status==100){
                 showScanning('Passive scan... 100%','It takes a few seconds to minutes to scan your website.');
                 pscanFinish(100).then(() => {
@@ -250,6 +252,8 @@ $(document).ready(function(){
         }).fail(function(){
             console.log('Ajax /pscanStatus error from checkPassiveScan');
         });
+        
+        ,1500);
         
     }
     function pscanFinish(ms) {
