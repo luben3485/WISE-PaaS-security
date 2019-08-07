@@ -8,7 +8,7 @@ $(document).ready(function(){
     var hostname = window.location.hostname;
     var domainName = hostname.substr(hostname.indexOf("."));
     var ssoUrl = 'https://portal-sso' + domainName;
-    var timerStart = 0
+    var timerStart = 0;
     //set cookies
     document.cookie="appUrl="+myUrl+";domain="+domainName+"; path=/";
     document.cookie="SSO_URL="+ssoUrl+";domain="+domainName+"; path=/";
@@ -239,7 +239,9 @@ $(document).ready(function(){
             }else if(response.status==100){
                 showScanning('Passive scan... 100%','It takes a few seconds to minutes to scan your website.');
                 pscanFinish(100).then(() => {
-                    
+                    clearInterval(passiveScanTimer);
+                    clearInterval(activeScanTimer); 
+                    console.log(passiveScanTimer)
                     showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
                   
                 });
@@ -251,7 +253,7 @@ $(document).ready(function(){
         
     }
     function pscanFinish(ms) {
-        clearInterval(passiveScanTimer);
+
         $('#scanningmessage').css('display','none');
         $('#startScan').removeClass('disabled');
         $('#cancelButton').addClass('disabled');
@@ -326,11 +328,10 @@ $(document).ready(function(){
                                 
                 showScanning('Active scan... 100%','It takes a few seconds to minutes to scan your website.');
                 ascanFinish(100).then(() => {
-                    
+                    clearInterval(passiveScanTimer);
+                    clearInterval(activeScanTimer); 
                     showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
-                    /*
-                    checkAnyScan();
-                    checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000); */  
+
                 });
             
             }else{
@@ -338,12 +339,11 @@ $(document).ready(function(){
                 console.log(response.scanType+' '+ response.status);
             }
         }).fail(function(){
-            console.log('Ajax /pscanStatus error from checkPassiveScan');
+            console.log('Ajax /pscanStatus error from checkActiveScan');
         });
         
     }
     function ascanFinish(ms) {
-        clearInterval(activeScanTimer);
         $('#scanningmessage').css('display','none');
         $('#startScan').removeClass('disabled');
         $('#cancelButton').addClass('disabled');
