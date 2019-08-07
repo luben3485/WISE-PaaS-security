@@ -1048,5 +1048,27 @@ def checkAnyScan():
         print('error: {}'.format(str(err)))
         abort(500)
 
+@app.route('/checkUserScan',methods=['GET'])
+@EIToken_verification
+def checkUserScan():
+    try:
+    
+        EIToken = request.cookies.get('EIToken')
+        info_token = EIToken.split('.')[1]
+        userId = getUserIdFromToken(EIToken)
+        scan = db.listUserNotFinishedScan(userId)
+        if scan == None:
+            result = {'Result':'NOSCAN'}
+            return jsonify(result)
+        else:
+            scanId = scan['scanId']
+            scanOption = scan['scanOption']
+            result = jsonify({'Result':'SCANNING','scanOption':scanOption})
+            res_cookie.set_cookie('scanId',scanId,domain=domainName)
+            return res_cookie
+
+    except Exception as err:
+        print('error: {}'.format(str(err)))
+        abort(500)
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=8080,debug=False)

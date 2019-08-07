@@ -9,10 +9,12 @@ $(document).ready(function(){
     var hostname = window.location.hostname;
     var domainName = hostname.substr(hostname.indexOf("."));
     var ssoUrl = 'https://portal-sso' + domainName;
+    
+    //set cookies
     document.cookie="appUrl="+myUrl+";domain="+domainName+"; path=/";
     document.cookie="SSO_URL="+ssoUrl+";domain="+domainName+"; path=/";
     
-    //showMessage('aaa','fffff','successful')
+    //animation setting
     $('.menu .item').tab();
     $('.accordion').accordion({animateChildren: false});
     $('.ui.checkbox').checkbox();
@@ -23,8 +25,34 @@ $(document).ready(function(){
           .transition('fade')
         ;
       });
-    //checkAnyScan();
-    //checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
+    
+    //initial
+    $.ajax({
+        url: ssoUrl + '/v2.0/users/me',
+        method: 'GET',
+        xhrFields: {
+            withCredentials: true
+        }
+    }).done(function (user) {
+        
+        //refresh table
+        refreshTable().done(function(response){
+            while (Data.length > 0) Data.pop();
+            while (response.length > 0) Data.push(response.shift());
+            console.log("refresh table successfully");
+        }).fail(function(){
+            console.log("refresh table fail") 
+        });
+        
+        checkUserScan();
+                
+                
+        console.log('Hello! ' + user.lastName + ' ' + user.firstName);
+    }).fail(function () {
+        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+    });        
+    
+    
     autoRefreshTableTimer = setInterval(function(){ autoRefreshTable() }, 10000);
     function autoRefreshTable(){
         refreshTable().done(function(response){
@@ -68,30 +96,41 @@ $(document).ready(function(){
             });
         
     }
+
     
-    
-    
-            $.ajax({
-                url: ssoUrl + '/v2.0/users/me',
-                method: 'GET',
-                xhrFields: {
-                    withCredentials: true
+    function checkUserScan(){
+        $.ajax({
+            url: 'checkUserScan',
+            method: 'GET'    
+            }).done(function (res){
+                if(res.Result == 'NOSCAN'){
+                    $('#startScan').removeClass('disabled');
+                    $('#cancelButton').addClass('disabled');
+                    $('#scanningmessage').css('display','none');
+                    $('#message').css('display','none');
+                    console.log("NOSCAN");
+                }else if(res.Result == 'SCANNING'){
+                    $('#startScan').addClass('disabled');
+                    $('#cancelButton').removeClass('disabled');
+                    if(res.scanOption == '0'){
+                        checkPassiveScan();
+                        passiveScanTimer = setInterval(function(){ checkPassiveScan() }, 1000);
+                    }else if(res.scanOption == '2'){
+                        checkActiveScan();
+                        activeScanTimer = setInterval(function(){ checkActiveScan() }, 1000);
+                    }
+                    console.log("SCANNING");
                 }
-            }).done(function (user) {
-                refreshTable().done(function(response){
-                    while (Data.length > 0) Data.pop();
-                    while (response.length > 0) Data.push(response.shift());
-                    console.log("refresh table successfully")
-                }).fail(function(){
-                    console.log("refresh table fail") 
-                });
                 
-                
-                console.log('Hello! ' + user.lastName + ' ' + user.firstName);
-            }).fail(function () {
-               window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-                 
-            });        
+            }).fail(function(){
+                console.log("check any scan table fail") 
+            });
+        
+    }
+    
+    
+    
+    
     function cancelScan(){
             clearInterval(passiveScanTimer);
             clearInterval(activeScanTimer);          
@@ -201,9 +240,7 @@ $(document).ready(function(){
                 pscanFinish(100).then(() => {
                     
                     showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
-                    /*
-                    checkAnyScan();
-                    checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000); */  
+                  
                 });
                     
             }
