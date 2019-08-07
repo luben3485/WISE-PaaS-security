@@ -43,8 +43,8 @@ $(document).ready(function(){
             console.log("refresh table fail") 
         });
         
-        //checkUserScan();
-        //var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
+        checkUserScan();
+        var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
                 
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
@@ -113,11 +113,11 @@ $(document).ready(function(){
                     $('#cancelButton').removeClass('disabled');
                     if(res.scanOption == '0' && timerStart == 0){
                         checkPassiveScan();
-                        passiveScanTimer = setInterval(function(){ checkPassiveScan() }, 1000);
+                        //passiveScanTimer = setInterval(function(){ checkPassiveScan() }, 1000);
                         timerStart = 1;
                     }else if(res.scanOption == '2' && timerStart == 0){
                         checkActiveScan();
-                        activeScanTimer = setInterval(function(){ checkActiveScan() }, 1000);
+                        //activeScanTimer = setInterval(function(){ checkActiveScan() }, 1000);
                         timerStart = 1;
                     }
                     console.log("SCANNING");
@@ -135,23 +135,9 @@ $(document).ready(function(){
         for (var i = 0 ; i < highestTimeoutId ; i++) {
             clearTimeout(i); 
         }
-        /*
-      var gid = setInterval(clearAllTimeouts, 0);
-      function clearAllTimeouts() {
-        var id = setTimeout(function() {}, 0);
-        while (id > 0) {
-          if (id !== gid) {
-            clearTimeout(id);
-          }
-          id--;
-        }
-      }
-       */
     };
     
     function cancelScan(){
-            //clearTimeout(passiveScanTimer);
-            //clearTimeout(activeScanTimer);  
             clearAllTimer();
             $.ajax({
                 url: '/cancelScan',
@@ -167,13 +153,6 @@ $(document).ready(function(){
             showDelay(10).then(() => {
                 showMessage('You have stopped the scan.','You can still downlaod report below','negative');
             });
-            
-
-            
-           
-            //checkAnyScan()
-            //checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000);
-   
   
     }
     function spiderstatus(){
@@ -242,35 +221,35 @@ $(document).ready(function(){
     
     function checkPassiveScan(){
         window.setTimeout(function(){
-        $.ajax({
-            url: '/pscanStatusDB',
-            type: 'GET'
-        }).done(function(response){
-            if(response.status == -1){
-                //init
-                $('#startScan').removeClass('disabled');
-                $('#cancelButton').addClass('disabled');
-                $('#scanningmessage').css('display','none');
-                $('#message').css('display','none');
-            }else if(response.status < 100){
-                showScanning('Passive scan... '+response.status+'%','It takes a few seconds to minutes to scan your website.');
-                console.log('pscanStatus '+ response.status);
-                checkPassiveScan();
-            }else if(response.status==100){
-                showScanning('Passive scan... 100%','It takes a few seconds to minutes to scan your website.');
-                pscanFinish(100).then(() => {
-                    //clearInterval(passiveScanTimer);
-                    //clearInterval(activeScanTimer); 
-                    console.log(passiveScanTimer)
-                    showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
-                  
-                });
-                    
-            }
-        }).fail(function(){
-            console.log('Ajax /pscanStatus error from checkPassiveScan');
-        });
-        
+            $.ajax({
+                url: '/pscanStatusDB',
+                type: 'GET'
+            }).done(function(response){
+                if(response.status == -1){
+                    //init
+                    $('#startScan').removeClass('disabled');
+                    $('#cancelButton').addClass('disabled');
+                    $('#scanningmessage').css('display','none');
+                    $('#message').css('display','none');
+                }else if(response.status < 100){
+                    showScanning('Passive scan... '+response.status+'%','It takes a few seconds to minutes to scan your website.');
+                    console.log('pscanStatus '+ response.status);
+                    checkPassiveScan();
+                }else if(response.status==100){
+                    showScanning('Passive scan... 100%','It takes a few seconds to minutes to scan your website.');
+                    pscanFinish(100).then(() => {
+                        //clearInterval(passiveScanTimer);
+                        //clearInterval(activeScanTimer); 
+                        console.log(passiveScanTimer)
+                        showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
+
+                    });
+
+                }
+            }).fail(function(){
+                console.log('Ajax /pscanStatus error from checkPassiveScan');
+            });
+
         },1000);
         
     }
@@ -336,34 +315,35 @@ $(document).ready(function(){
     
     
     function checkActiveScan(){
-        $.ajax({
-            url: '/fullScanStatusDB',
-            type: 'GET'
-        }).done(function(response){
-            if(response.status == -1){
-                //init
-                $('#startScan').removeClass('disabled');
-                $('#cancelButton').addClass('disabled');
-                $('#scanningmessage').css('display','none');
-                $('#message').css('display','none');
-            }else if(response.status == 100 && response.scanType=='Active scan'){
-                                
-                showScanning('Active scan... 100%','It takes a few seconds to minutes to scan your website.');
-                ascanFinish(100).then(() => {
-                    clearInterval(passiveScanTimer);
-                    clearInterval(activeScanTimer); 
-                    showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
+        window.setTimeout(function(){
+            $.ajax({
+                url: '/fullScanStatusDB',
+                type: 'GET'
+            }).done(function(response){
+                if(response.status == -1){
+                    //init
+                    $('#startScan').removeClass('disabled');
+                    $('#cancelButton').addClass('disabled');
+                    $('#scanningmessage').css('display','none');
+                    $('#message').css('display','none');
+                }else if(response.status == 100 && response.scanType=='Active scan'){
 
-                });
-            
-            }else{
-                showScanning(response.scanType+'... '+response.status+'%','It takes a few seconds to minutes to scan your website.');
-                console.log(response.scanType+' '+ response.status);
-            }
-        }).fail(function(){
-            console.log('Ajax /pscanStatus error from checkActiveScan');
-        });
-        
+                    showScanning('Active scan... 100%','It takes a few seconds to minutes to scan your website.');
+                    ascanFinish(100).then(() => {
+                        clearInterval(passiveScanTimer);
+                        clearInterval(activeScanTimer); 
+                        showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
+
+                    });
+
+                }else{
+                    showScanning(response.scanType+'... '+response.status+'%','It takes a few seconds to minutes to scan your website.');
+                    console.log(response.scanType+' '+ response.status);
+                }
+            }).fail(function(){
+                console.log('Ajax /pscanStatus error from checkActiveScan');
+            });
+        },1000);
     }
     function ascanFinish(ms) {
         $('#scanningmessage').css('display','none');
