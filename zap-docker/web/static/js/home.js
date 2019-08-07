@@ -223,7 +223,7 @@ $(document).ready(function(){
     }
     
     function checkPassiveScan(){
-        window.setTimeout(function(){}
+        window.setTimeout(function(){
         $.ajax({
             url: '/pscanStatusDB',
             type: 'GET'
@@ -253,7 +253,7 @@ $(document).ready(function(){
             console.log('Ajax /pscanStatus error from checkPassiveScan');
         });
         
-        ,1500);
+        },1500);
         
     }
     function pscanFinish(ms) {
