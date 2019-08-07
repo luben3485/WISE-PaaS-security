@@ -644,7 +644,7 @@ $(document).ready(function(){
         
     }
     function showScanning(msg,submsg){
-        $('#scanningMsg').css('display','block');
+        $('#scanningmessage').css('display','block');
         $('#scanningMsg').text(msg);
         $('#scanningSubmsg').text(submsg);
         
