@@ -131,6 +131,11 @@ $(document).ready(function(){
     
     
     function clearAllTimer() {
+        var highestTimeoutId = setTimeout(";");
+        for (var i = 0 ; i < highestTimeoutId ; i++) {
+            clearTimeout(i); 
+        }
+        /*
       var gid = setInterval(clearAllTimeouts, 0);
       function clearAllTimeouts() {
         var id = setTimeout(function() {}, 0);
@@ -141,7 +146,7 @@ $(document).ready(function(){
           id--;
         }
       }
-        clearInterval(gid);
+       */
     };
     
     function cancelScan(){
