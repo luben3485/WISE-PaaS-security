@@ -114,10 +114,10 @@ $(document).ready(function(){
                     $('#cancelButton').removeClass('disabled');
                     if(res.scanOption == '0'){
                         checkPassiveScan();
-                        passiveScanTimer = setInterval(function(){ checkPassiveScan() }, 1000);
+                        //passiveScanTimer = setInterval(function(){ checkPassiveScan() }, 1000);
                     }else if(res.scanOption == '2'){
                         checkActiveScan();
-                        activeScanTimer = setInterval(function(){ checkActiveScan() }, 1000);
+                        //activeScanTimer = setInterval(function(){ checkActiveScan() }, 1000);
                     }
                     console.log("SCANNING");
                 }
