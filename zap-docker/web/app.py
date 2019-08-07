@@ -24,6 +24,7 @@ apiURL='https://dashboard-grafana-1-3-2.arfa.wise-paas.com'
 ssoUrl = ''
 appURL = ''
 checkPassiveStatusThread = ''
+checkActiveStatusThread = ''
 try:
     app_env = json.loads(os.environ['VCAP_APPLICATION'])
     ssoUrl = 'https://portal-sso' + app_env['application_uris'][0][app_env['application_uris'][0].find('.'):]
@@ -51,11 +52,11 @@ def EIToken_verification(func):
 
 def checkPassiveStatus(scanId):
     try:
-        print("Add check passive status threading...")
+        print("Add check passive scan threading...")
+        scan_info = db.findScan(scanId)
+        pscanId = scan_info['pscanId']
+        payload = {'scanId':pscanId}
         while True:
-            scan_info = db.findScan(scanId)
-            pscanId = scan_info['pscanId']
-            payload = {'scanId':pscanId}
             r = requests.get('http://127.0.0.1:5000/JSON/spider/view/status/',params=payload)   
             if r.status_code == 200:
                 r = r.json()
@@ -76,6 +77,78 @@ def checkPassiveStatus(scanId):
     
 
 
+def checkActiveStatus(scanId,targetURL,arecurse,inScopeOnly,method,postData,cotextId,alertThreshold,attackStrength):
+    try:
+        print("Add check full scan threading...")
+        scan_info = db.findScan(scanId)
+        pscanId = scan_info['pscanId']
+        payload = {'scanId':pscanId}
+
+        # check passive scan
+        while True:
+            r = requests.get('http://127.0.0.1:5000/JSON/spider/view/status/',params=payload)   
+            if r.status_code == 200:
+                r = r.json()
+                status = r['status']
+                db.modifyExistInfo('pscanStatus',status,scanId)
+  
+            r_html = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
+            if r_html.status_code == 200:
+                db.modifyExistHtml('html',r_html.content,scanId)
+
+            #scan finish
+            if status == '100':
+                break
+            time.sleep(1)
+
+        # start active scan
+
+        scanPolicyName = 'custom'
+        remove_payload = {'scanPolicyName':scanPolicyName}
+        r_remove = requests.get('http://127.0.0.1:5000/JSON/ascan/action/removeScanPolicy/',params=remove_payload)
+        if r_remove.status_code == 200 or r_remove.status_code == 400:
+            payload = {'scanPolicyName':scanPolicyName,'alertThreshold':alertThreshold,'attackStrength':attackStrength}
+            r = requests.get('http://127.0.0.1:5000/JSON/ascan/action/addScanPolicy',params=payload)
+            if r.status_code == 200:
+
+
+                payload = {'url' : targetURL,'inScopeOnly':inScopeOnly,'recurse':arecurse,'scanPolicyName':scanPolicyName,'method':method,'postData':postData,'contextId':contextId}
+                r_ascan = requests.get('http://127.0.0.1:5000/JSON/ascan/action/scan/',params=payload)
+                if r_scan.status_code == 200:
+                    r_ascan = r_ascan.json()
+                    db.modifyExistInfo('ascanId',r_ascan['scan'],scanId)
+                    db.modifyExistInfo('status','2',scanId)
+            else:
+                print('add policy error')
+        else:
+            print('remove error')
+
+
+
+        # check active scan
+
+        scan_info = db.findScan(scanId)
+        ascanId = scan_info['ascanId']
+        payload = {'scanId':ascanId}
+        while True:
+            r = requests.get('http://127.0.0.1:5000/JSON/ascan/view/status/',params=payload)   
+            if r.status_code == 200:
+                r = r.json()
+                status = r['status']
+                db.modifyExistInfo('ascanStatus',status,scanId)
+  
+            r_html = requests.get('http://127.0.0.1:5000/OTHER/core/other/htmlreport/')
+            if r_html.status_code == 200:
+                db.modifyExistHtml('html',r_html.content,scanId)
+
+            #scan finish
+            if status == '100':
+                db.modifyExistInfo('status','3',scanId)
+                break
+            time.sleep(1)
+
+    except Exception as err:
+        print('error: {}'.format(str(err)))
 
 '''
 Newly Added Begin
@@ -330,16 +403,18 @@ def downloadHtml():
         abort(500)
 
 
-@app.route('/passiveScan',methods=['GET'])
+@app.route('/Scan',methods=['GET'])
 @EIToken_verification
-def passiveScan():
+def Scan():
     try:
         # Delete all previous datas on ZAP server
         r_delete = requests.get('http://127.0.0.1:5000/JSON/core/action/deleteAllAlerts')
         if r_delete.status_code == 200:
+            
             # Get params from user setting
+            scanOption = request.args.get('scanOption')
             targetURL = request.args.get('targetURL')
-            recurse = request.args.get('recurse')
+            precurse = request.args.get('precurse')
             subtreeOnly= request.args.get('subtreeOnly') 
             maxChildren=''
             contextName=''
@@ -354,7 +429,7 @@ def passiveScan():
                 EIToken = request.cookies.get('EIToken')
                 info_token = EIToken.split('.')[1]
                 userId = getUserIdFromToken(EIToken)
-                scanOption = request.args.get('scanOption')
+
                 
                 #call Dashboard API getting dashboardLink
                 dashboardLink = create_dashboard(scanId,EIToken)
@@ -384,9 +459,22 @@ def passiveScan():
                 db.addHtml(html_info)
                 
                 #thread
-                global checkPassiveStatusThread
-                checkPassiveStatusThread = threading.Thread(target=checkPassiveStatus,args=[scanId])
-                checkPaddiveStatusThread.start()
+                if scanOption == '0':
+                    global checkPassiveStatusThread
+                    checkPassiveStatusThread = threading.Thread(target=checkPassiveStatus,args=[scanId])
+                    checkPassiveStatusThread.start()
+                elif scanOption == '2':
+                    global checkActiveStatusThread
+                    arecurse = request.args.get('arecurse')
+                    inScopeOnly = request.args.get('inScopeOnly')
+                    method = ''
+                    postData = ''
+                    contextId = ''
+                    alertThreshold = request.args.get('alertThreshold')
+                    attackStrength = request.args.get('attackStrength')
+                    checkActiveStatusThread = threading.Thread(target=checkActiveStatus,args=[scanId,targetURL,arecurse,inScopeOnly,method,postData,cotextId,alertThreshold,attackStrength])
+                    checkActiveStatusThread.start()
+
                 
                 
                 #set scanId to cookie
@@ -447,30 +535,32 @@ def pscanStatusDB():
         print('error: {}'.format(str(err)))
         abort(500)
 
-
-@app.route('/activeScan',methods=['GET'])
+@app.route('/fullScanStatusDB',methods=['GET'])
 @EIToken_verification
-def activeScan():
+def fullScanStatusDB():
     try:
-        r_delete = requests.get('http://127.0.0.1:5000/JSON/core/action/deleteAllAlerts')
-        if r_delete.status_code == 200:
-            # Get params from user setting
-            targetURL = request.args.get('targetURL')
-            recurse = request.args.get('recurse')
-            subtreeOnly= request.args.get('subtreeOnly') 
-            maxChildren=''
-            contextName=''
-            
-            
-            
-            #blah~ blah
-
-
-
-
+        scanId = request.cookies.get('scanId')
+        if scanId:
+            scan_info = db.findScan(scanId)
+            ascanStatus = scan_info['ascanStatus']
+            pscanStatus = scan_info['pscanStatus']
+            if int(pscanStatus) <= 100 and int(ascanStatus) ==0:
+                result = {'scanType':'Passive scan','status':pscanStatus}                
+                result = {'scanType':'Active scan','status':ascanStatus}                
+                return jsonify(result)
+                return jsonify(result)
+            elif int(pscanStatus) == 100 and int(ascanStatus)<=100:
+                result = {'scanType':'ascan','status':ascanStatus}                
+                return jsonify(result)
+                
+        else:
+            result = {'status':'-1'}
+            return result
     except Exception as err:
         print('error: {}'.format(str(err)))
         abort(500)
+
+
 
 
 

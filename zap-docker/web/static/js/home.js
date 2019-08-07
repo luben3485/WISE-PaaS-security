@@ -138,14 +138,14 @@ $(document).ready(function(){
         
     }
     /*passive scan begin*/
-    function passiveScan(targetURL,recurse,subtreeOnly,scanOption){
+    function passiveScan(targetURL,precurse,subtreeOnly,scanOption){
         
         $.ajax({
-            url: '/passiveScan',
+            url: '/Scan',
             type: 'GET',
             data:{
                 'targetURL': targetURL,
-                'recurse': recurse,
+                'precurse': precurse,
                 'subtreeOnly':subtreeOnly,
                 'scanOption':scanOption
             }
@@ -170,7 +170,7 @@ $(document).ready(function(){
                 }).fail(function(){
                         console.log('/dashboardLInk fail');
                 });
-                console.log("refresh table successfully")
+                console.log("refresh table successfully");
             }).fail(function(){
                 console.log("refresh table fail") 
             });
@@ -224,25 +224,96 @@ $(document).ready(function(){
     
     
     /*active scan begin*/
-    function activeScan(targetURL,recurse,inScopeOnly,alertThreshold,attackStrength,scanOption){
+    function activeScan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly){
         $.ajax({
-            url: '/passiveScan',
+            url: '/Scan',
             type: 'GET',
             data:{
                 'targetURL': targetURL,
-                'recurse': recurse,
+                'arecurse': arecurse,
                 'inScopeOnly':inScopeOnly,
                 'scanOption':scanOption,
                 'alertThreshold':alertThreshold,
                 'attackStrength':attackStrength,
+                'precurse': precurse,
+                'subtreeOnly':subtreeOnly,
             }
         }).done(function(){
+            $('#cancelButton').removeClass('disabled');
+            $('#startScan').addClass('disabled');
+            showScanning('Passive scan... 0%','It takes a few seconds to minutes to scan your website.');
+            $('#scanningmessage').css('display','block');
+            console.log('/activeScan success');
+            //TIMER
+            checkActiveScan();
+            activeScanTimer = setInterval(function(){ checkActiveScan() }, 1000);
+            
+            refreshTable().done(function(response){
+                while (Data.length > 0) Data.pop();
+                while (response.length > 0) Data.push(response.shift());
+                $.ajax({
+                        url: '/dashboardLink',
+                        type: 'GET'
+                }).done(function(res){
+                        window.open(res);
+                }).fail(function(){
+                        console.log('/dashboardLInk fail');
+                });
+                console.log("refresh table successfully");
+            }).fail(function(){
+                console.log("refresh table fail") 
+            });
+            
+            
         
         }).fail(function(){
              console.log('active scan error')
         });
          
     }
+    
+    
+    function checkActiveScan(){
+        $.ajax({
+            url: '/fullScanStatusDB',
+            type: 'GET'
+        }).done(function(response){
+            if(response.status == -1){
+                //init
+                $('#startScan').removeClass('disabled');
+                $('#cancelButton').addClass('disabled');
+                $('#scanningmessage').css('display','none');
+                $('#message').css('display','none');
+            }else if(response.status == 100 && response.scanType=='Active scan'){
+                                
+                showScanning('Active scan... 100%','It takes a few seconds to minutes to scan your website.');
+                ascanFinish(100).then(() => {
+                    
+                    showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
+                    /*
+                    checkAnyScan();
+                    checkAnyScanTimer = setInterval(function(){ checkAnyScan() }, 5000); */  
+                });
+            
+            }else{
+                showScanning(response.scanType+'... '+response.status+'%','It takes a few seconds to minutes to scan your website.');
+                console.log(response.scanType+' '+ response.status);
+                
+        }).fail(function(){
+            console.log('Ajax /pscanStatus error from checkPassiveScan');
+        });
+        
+    }
+    function ascanFinish(ms) {
+        clearInterval(activeScanTimer);
+        $('#scanningmessage').css('display','none');
+        $('#startScan').removeClass('disabled');
+        $('#cancelButton').addClass('disabled');
+        
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    
+    
     /*active scan end*/
     
     //startScan button
@@ -255,24 +326,28 @@ $(document).ready(function(){
         
             if(scanOption == 0){
                 var subtreeOnly;
-                var recurse;
+                var precurse;
                 var targetURL;
                 $("input[name=subtreeOnly]:checked").each(function () { subtreeOnly = $(this).val()});
-                $("input[name=passiveRecurse]:checked").each(function () { recurse = $(this).val()});
+                $("input[name=passiveRecurse]:checked").each(function () { precurse = $(this).val()});
                 targetURL = $('input[name="input_url"]').val();
-                passiveScan(targetURL,recurse,subtreeOnly,scanOption);
+                passiveScan(targetURL,precurse,subtreeOnly,scanOption);
             }else if(scanOption == 2){
-                var recurse;
+                var arecurse;
                 var inScopeOnly;
                 var targetURL;
                 var alertThreshold;
                 var attackStrength;
+                var precurse;
+                var subtreeOnly;
                 $("input[name=alertThreshold]:checked").each(function () { alertThreshold = $(this).val()});
                 $("input[name=attackStrength]:checked").each(function () { attackStrength = $(this).val()});
-                $("input[name=activeRecurse]:checked").each(function () { recurse = $(this).val()});
+                $("input[name=activeRecurse]:checked").each(function () { arecurse = $(this).val()});
                 $("input[name=inScopeOnly]:checked").each(function () { inScopeOnly = $(this).val()});
                 targetURL = $('input[name="input_url"]').val();
-                activeScan(targetURL,recurse,inScopeOnly,alertThreshold,attackStrength,scanOption);
+                $("input[name=subtreeOnly]:checked").each(function () { subtreeOnly = $(this).val()});
+                $("input[name=passiveRecurse]:checked").each(function () { precurse = $(this).val()}); 
+                activeScan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly); 
             }
             
         }).fail(function(){
