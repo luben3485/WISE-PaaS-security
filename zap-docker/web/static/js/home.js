@@ -106,8 +106,8 @@ $(document).ready(function(){
                 if(res.Result == 'NOSCAN'){
                     $('#startScan').removeClass('disabled');
                     $('#cancelButton').addClass('disabled');
-                    $('#scanningmessage').css('display','none');
-                    $('#message').css('display','none');
+                    //$('#scanningmessage').css('display','none');
+                    //$('#message').css('display','none');
                     console.log("NOSCAN");
                 }else if(res.Result == 'SCANNING'){
                     $('#startScan').addClass('disabled');
@@ -123,7 +123,7 @@ $(document).ready(function(){
                 }
                 
             }).fail(function(){
-                console.log("check any scan table fail") 
+                console.log("check user scan table fail") 
             });
         
     }
