@@ -133,8 +133,8 @@ $(document).ready(function(){
     
     
     function cancelScan(){
-            clearInterval(passiveScanTimer);
-            clearInterval(activeScanTimer);          
+            clearTimeout(passiveScanTimer);
+            clearTimeout(activeScanTimer);          
             $.ajax({
                 url: '/cancelScan',
                 type: 'GET',
@@ -253,7 +253,7 @@ $(document).ready(function(){
             console.log('Ajax /pscanStatus error from checkPassiveScan');
         });
         
-        },1500);
+        },1000);
         
     }
     function pscanFinish(ms) {
