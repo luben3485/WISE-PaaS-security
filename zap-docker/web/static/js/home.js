@@ -83,6 +83,7 @@ $(document).ready(function(){
                     $('#checkScanMsg').css('display','none');
                     $('#startScan').removeClass('disabled');
                     console.log("No one scan");
+
                 }else if(res.Result == 'NO'){
                     $('#checkScanMsg').css('display','block');
                     $('#startScan').addClass('disabled');
@@ -106,7 +107,10 @@ $(document).ready(function(){
                     $('#startScan').removeClass('disabled');
                     $('#cancelButton').addClass('disabled');
                     //$('#scanningmessage').css('display','none');
-                    //$('#message').css('display','none');
+                    $('#message').css('display','none');
+                    clearAllTimer();
+                    checkUserScan();
+                    var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
                     console.log("NOSCAN");
                 }else if(res.Result == 'SCANNING'){
                     $('#startScan').addClass('disabled');
