@@ -108,9 +108,6 @@ $(document).ready(function(){
                     $('#cancelButton').addClass('disabled');
                     //$('#scanningmessage').css('display','none');
                     $('#message').css('display','none');
-                    clearAllTimer();
-                    checkUserScan();
-                    var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
                     console.log("NOSCAN");
                 }else if(res.Result == 'SCANNING'){
                     $('#startScan').addClass('disabled');
