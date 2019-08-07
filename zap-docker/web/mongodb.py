@@ -52,7 +52,7 @@ class mongoDB():
             scans.append(result)
         return scans
     def listUserNotFinishedScan(self,userId):
-        scan = self.collection.find_one({'userId':userId,'status':{ '$ne':'3' }},{"_id":0}).sort('timeStamp',pymongo.DESCENDING)
+        scan = self.collection.find_one({'userId':userId,'status':{ '$ne':'3' }},{"_id":0})
         return scan
     def deleteScan(self,scanId):
         result = self.collection.remove({'scanId': scanId})
