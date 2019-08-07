@@ -1,6 +1,5 @@
 $(document).ready(function(){
     var checkAnyScanTimer;
-    var astart = 0 ;
     var intervalNum;
     var passiveScanTimer;
     var activeScanTimer;
@@ -9,7 +8,7 @@ $(document).ready(function(){
     var hostname = window.location.hostname;
     var domainName = hostname.substr(hostname.indexOf("."));
     var ssoUrl = 'https://portal-sso' + domainName;
-    
+    var timerStart = 0
     //set cookies
     document.cookie="appUrl="+myUrl+";domain="+domainName+"; path=/";
     document.cookie="SSO_URL="+ssoUrl+";domain="+domainName+"; path=/";
@@ -112,12 +111,14 @@ $(document).ready(function(){
                 }else if(res.Result == 'SCANNING'){
                     $('#startScan').addClass('disabled');
                     $('#cancelButton').removeClass('disabled');
-                    if(res.scanOption == '0'){
+                    if(res.scanOption == '0' && timerStart = 0){
                         checkPassiveScan();
-                        //passiveScanTimer = setInterval(function(){ checkPassiveScan() }, 1000);
-                    }else if(res.scanOption == '2'){
+                        passiveScanTimer = setInterval(function(){ checkPassiveScan() }, 1000);
+                        timerStart = 1
+                    }else if(res.scanOption == '2' && timerStart = 0){
                         checkActiveScan();
-                        //activeScanTimer = setInterval(function(){ checkActiveScan() }, 1000);
+                        activeScanTimer = setInterval(function(){ checkActiveScan() }, 1000);
+                        timerStart = 1
                     }
                     console.log("SCANNING");
                 }
