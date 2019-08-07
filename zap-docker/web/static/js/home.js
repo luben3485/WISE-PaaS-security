@@ -130,12 +130,23 @@ $(document).ready(function(){
     }
     
     
-    
+    function clearAllTimer() {
+      var gid = setInterval(clearAllTimeouts, 0);
+      function clearAllTimeouts() {
+        var id = setTimeout(function() {}, 0);
+        while (id > 0) {
+          if (id !== gid) {
+            clearTimeout(id);
+          }
+          id--;
+        }
+      }
+    };
     
     function cancelScan(){
-            clearTimeout(passiveScanTimer);
-            passiveScanTimer = null;
-            clearTimeout(activeScanTimer);          
+            //clearTimeout(passiveScanTimer);
+            //clearTimeout(activeScanTimer);  
+            clearAllTimer();
             $.ajax({
                 url: '/cancelScan',
                 type: 'GET',
