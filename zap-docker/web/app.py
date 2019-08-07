@@ -1064,7 +1064,7 @@ def checkUserScan():
             scanId = scan['scanId']
             scanOption = scan['scanOption']
             result = jsonify({'Result':'SCANNING','scanOption':scanOption})
-            res_cookie.set_cookie('scanId',scanId,domain=domainName)
+            result.set_cookie('scanId',scanId,domain=domainName)
             return res_cookie
 
     except Exception as err:
