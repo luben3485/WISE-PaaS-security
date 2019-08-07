@@ -77,7 +77,7 @@ def checkPassiveStatus(scanId):
     
 
 
-def checkActiveStatus(scanId,targetURL,arecurse,inScopeOnly,method,postData,cotextId,alertThreshold,attackStrength):
+def checkActiveStatus(scanId,targetURL,arecurse,inScopeOnly,method,postData,contextId,alertThreshold,attackStrength):
     try:
         print("Add check full scan threading...")
         scan_info = db.findScan(scanId)
@@ -472,7 +472,7 @@ def Scan():
                     contextId = ''
                     alertThreshold = request.args.get('alertThreshold')
                     attackStrength = request.args.get('attackStrength')
-                    checkActiveStatusThread = threading.Thread(target=checkActiveStatus,args=[scanId,targetURL,arecurse,inScopeOnly,method,postData,cotextId,alertThreshold,attackStrength])
+                    checkActiveStatusThread = threading.Thread(target=checkActiveStatus,args=[scanId,targetURL,arecurse,inScopeOnly,method,postData,contextId,alertThreshold,attackStrength])
                     checkActiveStatusThread.start()
 
                 
