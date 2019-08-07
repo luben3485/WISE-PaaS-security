@@ -141,6 +141,7 @@ $(document).ready(function(){
           id--;
         }
       }
+        clearInterval(gid);
     };
     
     function cancelScan(){
