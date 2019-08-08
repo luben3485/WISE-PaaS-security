@@ -84,7 +84,7 @@ $(document).ready(function(){
                 if(res.Result == 'NOSCAN'){
                     $('#startScan').removeClass('disabled');
                     $('#cancelButton').addClass('disabled');
-                    //$('#scanningmessage').css('display','none');
+                    $('#scanningmessage').css('display','none');
                     $('#message').css('display','none');
                     console.log("NOSCAN");
                 }else if(res.Result == 'SCANNING'){
@@ -163,8 +163,8 @@ $(document).ready(function(){
                         }
                     });
                 
-                    //$('#scanningmessage').css('display','none');
-                     showMessage('You have stopped the scan.','you can still add scan task.');
+                    $('#scanningmessage').css('display','none');
+                     showMessage('You have stopped the scan.','you can still add scan task.','negative');
                 }
             }).fail(function(){
                 console.log('/waitScan fail on cancelScan')
