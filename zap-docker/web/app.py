@@ -518,15 +518,17 @@ def Scan():
         start = time.time()
         while True:
             check_scan = db.listScanning()
-            if check_scan['scanId'] == scanId:
+            if check_scan == None:
+                pass
+            elif check_scan['scanId'] == scanId:
                 result = jsonify({"Result":"SCANNING"})
                 break;    
+
             end = time.time()
             if end - start > 2:
                 result = jsonify({"Result":"NEEDWAITING"})
                 break;
             time.sleep(100)
-
         result.set_cookie('scanId',scanId,domain=domainName)
         return result
 
