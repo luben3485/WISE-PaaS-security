@@ -130,8 +130,8 @@ $(document).ready(function(){
     function cancelScan(){
             clearAllTimer();
             timerStart = 0;
-            checkUserScan();
-            var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
+            //checkUserScan();
+            //var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
         
             $.ajax({
                 url: '/waitScan',
