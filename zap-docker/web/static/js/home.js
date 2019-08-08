@@ -163,8 +163,8 @@ $(document).ready(function(){
                         }
                     });
                 
-                    $('#scanningmessage').css('display','none');
-                     showMessage('You have stopped the scan.','');
+                    //$('#scanningmessage').css('display','none');
+                     showMessage('You have stopped the scan.','you can still add scan task.');
                 }
             }).fail(function(){
                 console.log('/waitScan fail on cancelScan')
