@@ -102,8 +102,8 @@ $(document).ready(function(){
                     console.log("SCANNING");
                 }else if(res.Result == 'NEEDWAITING'){
                     
-                    $('#startScan').addClass('disabled');
-                    $('#cancelButton').removeClass('disabled');
+                    //$('#startScan').addClass('disabled');
+                    //$('#cancelButton').removeClass('disabled');
                      showScanning('Other scan task is running.','Your scan task will be scheduled to start later.')
                     if(timerStart == 0){
                         waitScan(res.scanOption);
