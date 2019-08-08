@@ -44,7 +44,7 @@ $(document).ready(function(){
         });
         
         checkUserScan();
-        var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 1000);
+        //var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 1000);
                 
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
@@ -130,8 +130,8 @@ $(document).ready(function(){
     function cancelScan(){
             clearAllTimer();
             timerStart = 0;
-            //checkUserScan();
-            //var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
+            checkUserScan();
+            var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
         
             $.ajax({
                 url: '/waitScan',
@@ -702,9 +702,9 @@ $(document).ready(function(){
     }
     $('#cancelButton').click(function(){
         EIToken_verification().done(function(){
-            //$('#cancelButton').addClass('disabled');
-            //$('#startScan').removeClass('disabled');
-            //$('#scanningmessage').css('display','none');
+            $('#cancelButton').addClass('disabled');
+            $('#startScan').removeClass('disabled');
+            $('#scanningmessage').css('display','none');
             cancelScan();
             
             
