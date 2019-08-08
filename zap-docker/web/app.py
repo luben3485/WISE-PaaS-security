@@ -397,99 +397,145 @@ def downloadHtml():
         print('download_file error: {}'.format(str(err)))
         abort(500)
 
+@app.route('/waitScan',methods=['GET'])
+@EIToken_verification
+def waitScan():
+    scanId = request.cookies.get('scanId')
+    scan = db.listScanning()
+    if scan['scanId'] == scanId:
+        result = jsonify({"Result":"SCANNING"})
+    else:
+        result = jsonify({"Result":"NEEDWAITING"})
+    return result
 
 @app.route('/Scan',methods=['GET'])
 @EIToken_verification
 def Scan():
     try:
-        # Delete all previous datas on ZAP server
-        r_delete = requests.get('http://127.0.0.1:5000/JSON/core/action/deleteAllAlerts')
-        if r_delete.status_code == 200:
+        #Necessary setting
+        scanOption = request.args.get('scanOption')
+        targetURL = request.args.get('targetURL')
+        scanId = str(random.randint(1000000,9999999))
+        nowtime = int(time.time())
+        EIToken = request.cookies.get('EIToken')
+        info_token = EIToken.split('.')[1]
+        userId = getUserIdFromToken(EIToken)
             
-            # Get params from user setting
-            scanOption = request.args.get('scanOption')
-            targetURL = request.args.get('targetURL')
-            precurse = request.args.get('precurse')
-            subtreeOnly= request.args.get('subtreeOnly') 
-            maxChildren=''
-            contextName=''
-
-            payload = {'url': targetURL, 'maxChildren': maxChildren,'recurse':precurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
-            r_passive = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan',params=payload)
-            if r_passive.status_code == 200:
-                r_passive = r_passive.json() 
-                pscanId = r_passive['scan']
-                scanId = str(random.randint(1000000,9999999))
-                nowtime = int(time.time())
-                EIToken = request.cookies.get('EIToken')
-                info_token = EIToken.split('.')[1]
-                userId = getUserIdFromToken(EIToken)
-
-                
-                #call Dashboard API getting dashboardLink
-                dashboardLink = create_dashboard(scanId,EIToken)
+        #Passive scan setting
+        precurse = request.args.get('precurse')
+        subtreeOnly= request.args.get('subtreeOnly') 
+        maxChildren=''
+        contextName=''
+             
+        #Call Dashboard API getting dashboardLink
+        dashboardLink = create_dashboard(scanId,EIToken)
+        
+        #Add html to db
+        html_info = {
+            "userId":userId,
+            "scanId":scanId,
+            "html":""
+        }
+        db.addHtml(html_info)
     
-                # timeStamp => int type
-                # other info  => str type
-                scandata = {
-                    "userId":userId,
-                    "scanId":scanId,
-                    "targetURL":targetURL,
-                    "dashboardLInk":dashboardLink,
-                    "timeStamp":nowtime,
-                    "ascanStatus":'0',
-                    "pscanStatus":'0',
-                    "scanOption":scanOption,
-                    "ascanId":'-1',
-                    "pscanId":pscanId,
-                    "status":'0'
+        # timeStamp => int type
+        # other info  => str type
+        
+        
+        if scanOption == '0':
+            scandata = {
+                "userId":userId,
+                "scanId":scanId,
+                "targetURL":targetURL,
+                "dashboardLInk":dashboardLink,
+                "timeStamp":nowtime,
+                "ascanStatus":'0',
+                "pscanStatus":'0',
+                "scanOption":scanOption,
+                "ascanId":'-1',
+                "pscanId":'-1',
+                "status":'0',
+                "pscanInfo":{
+                    "recurse": precurse,
+                    "subtreeOnly": subtreeOnly,
+                    "maxChildren":'',
+                    "contextName":''
+                },
+                "ascanInfo":{
+                    "recurse" : '',
+                    "inScopeOnly" : '',
+                    "method" : '',
+                    "postData" : '',
+                    "contextId" : '',
+                    "alertThreshold" : '',
+                    "attackStrength" : ''
                 }
-                db.addScan(scandata)
-    
-                html_info = {
-                    "userId":userId,
-                    "scanId":scanId,
-                    "html":""
+            }
+
+        elif scanOption == '2':
+            arecurse = request.args.get('arecurse')
+            inScopeOnly = request.args.get('inScopeOnly')
+            method = ''
+            postData = ''
+            contextId = ''
+            alertThreshold = request.args.get('alertThreshold')
+            attackStrength = request.args.get('attackStrength')
+            scandata = {
+                "userId":userId,
+                "scanId":scanId,
+                "targetURL":targetURL,
+                "dashboardLInk":dashboardLink,
+                "timeStamp":nowtime,
+                "ascanStatus":'0',
+                "pscanStatus":'0',
+                "scanOption":scanOption,
+                "ascanId":'-1',
+                "pscanId":'-1',
+                "status":'0',
+                "pscanInfo":{
+                    "recurse": precurse,
+                    "subtreeOnly": subtreeOnly,
+                    "maxChildren":'',
+                    "contextName":''
+                },
+                "ascanInfo":{
+                    "recurse" : arecurse,
+                    "inScopeOnly" : inScopeOnly,
+                    "method" : '',
+                    "postData" : '',
+                    "contextId" : '',
+                    "alertThreshold" : alertThreshold,
+                    "attackStrength" : attackStrength
                 }
-                db.addHtml(html_info)
-                
-                #thread
-                if scanOption == '0':
-                    global checkPassiveStatusThread
-                    checkPassiveStatusThread = threading.Thread(target=checkPassiveStatus,args=[scanId])
-                    checkPassiveStatusThread.start()
-                elif scanOption == '2':
-                    global checkActiveStatusThread
-                    arecurse = request.args.get('arecurse')
-                    inScopeOnly = request.args.get('inScopeOnly')
-                    method = ''
-                    postData = ''
-                    contextId = ''
-                    alertThreshold = request.args.get('alertThreshold')
-                    attackStrength = request.args.get('attackStrength')
-                    checkActiveStatusThread = threading.Thread(target=checkActiveStatus,args=[scanId,targetURL,arecurse,inScopeOnly,method,postData,contextId,alertThreshold,attackStrength])
-                    checkActiveStatusThread.start()
+            }
 
-                
-                
-                #set scanId to cookie
-                res_cookie = make_response(redirect('/'),200)
-                res_cookie.set_cookie('scanId',scanId,domain=domainName)
-                return res_cookie
-            else:
-                print('passive scan start error!')
+        db.addScan(scandata)
 
+        start = time.time()
+        while True:
+            check_scan = db.listScanning()
+            if check_scan['scanId'] == scanId:
+                result = jsonify({"Result":"SCANNING"})
+                break;    
+            end = time.time()
+            if end - start > 2:
+                result = jsonify({"Result":"NEEDWAITING"})
+                break;
+            time.sleep(100)
 
-        else:
-            print('passive scan delete error!')
+        result.set_cookie('scanId',scanId,domain=domainName)
+        return result
+
     except Exception as err:
         print('error: {}'.format(str(err)))
         abort(500)
+
+
     
 # cancel button
-@app.route('/cancelScan',methods=['GET'])
-@cross_origin()
-def cancelScan():
+@app.route('/cancelStartScan',methods=['GET'])
+@EIToken_verification
+def cancelStartScan():
     try:
         scanId = request.cookies.get('scanId')
         rp = requests.get('http://127.0.0.1:5000/JSON/spider/action/removeAllScans/')   
@@ -512,6 +558,13 @@ def cancelScan():
         print('error: {}'.format(str(err)))
         abort(500)
 
+
+@app.route('/cancelNotStartScan',methods=['GET'])
+@EIToken_verification
+def cancelNotStartScan():
+    scanId = request.cookies.get('scanId')
+    db.deleteScan(scanId)
+    return jsonify({'Result':'OK'})
 
 @app.route('/pscanStatusDB',methods=['GET'])
 @EIToken_verification
@@ -1043,12 +1096,20 @@ def checkUserScan():
         if scan == None:
             result = {'Result':'NOSCAN'}
             return jsonify(result)
-        else:
+        elif scan['status'] == '3':
             scanId = scan['scanId']
             scanOption = scan['scanOption']
             result = jsonify({'Result':'SCANNING','scanOption':scanOption})
             result.set_cookie('scanId',scanId,domain=domainName)
             return result
+        elif scan['status'] == '0':
+            scanId = scan['scanId']
+            scanOption = scan['scanOption']
+            result = jsonify({'Result':'NEEDWAITING','scanOption':scanOption})
+            result.set_cookie('scanId',scanId,domain=domainName)
+            return result
+            
+
 
     except Exception as err:
         print('error: {}'.format(str(err)))

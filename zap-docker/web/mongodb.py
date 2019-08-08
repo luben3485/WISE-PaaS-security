@@ -52,7 +52,20 @@ class mongoDB():
             scans.append(result)
         return scans
     def listUserNotFinishedScan(self,userId):
-        scan = self.collection.find_one({'userId':userId,'status':{ '$ne':'3' }},{"_id":0})
+        scan = self.collection.find_one({
+            "$and":[
+                {'userId':userId},
+                {'status':{ '$ne':'3' }}
+            ]},{"_id":0})
+        return scan
+    def listScanning(self):
+        # Not (0 or 3) => (not 0) and (not 3)
+        scan = self.collection.find_one({
+            "$and":[
+                    {"status":{"$ne":"0"}},
+                    {"status":{"$ne":"3"}}
+                    
+            ]},{"_id":0})
         return scan
     def deleteScan(self,scanId):
         result = self.collection.remove({'scanId': scanId})
@@ -67,7 +80,7 @@ class mongoDB():
 if __name__ == '__main__':
     mongodb = mongoDB()
     
-    for i in range(1):
+    for i in range(4):
         #scanId = random.randint(1000000,9999999)
         scanId = '777'
         nowtime = int(time.time())
@@ -86,7 +99,7 @@ if __name__ == '__main__':
              "scanOption":scanOption,
              "ascanId":'-1',
              "spiderId":spiderId,
-             "status":'3'
+             "status":str(i)
          }
 
         
@@ -112,7 +125,7 @@ if __name__ == '__main__':
 
 
     #print(scans)
-    mongodb.deleteAllScans()
+    #mongodb.deleteAllScans()
     #mongodb.deleteScans(['8829705','2962665'])
     #scans = mongodb.listAllScans()
     #print(len(scans))
@@ -129,3 +142,5 @@ if __name__ == '__main__':
     #scans = mongodb.listNotFinishedScans()
     #print(scans)
     
+    scan = mongodb.listScanning()
+    print(scan)

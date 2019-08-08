@@ -74,33 +74,11 @@ $(document).ready(function(){
                 });
     }
     
-    function checkAnyScan(){
-        $.ajax({
-            url: 'checkAnyScan',
-            method: 'GET'    
-            }).done(function (res){
-                if(res.Result == 'OK'){
-                    $('#checkScanMsg').css('display','none');
-                    $('#startScan').removeClass('disabled');
-                    console.log("No one scan");
-
-                }else if(res.Result == 'NO'){
-                    $('#checkScanMsg').css('display','block');
-                    $('#startScan').addClass('disabled');
-                    console.log("Someone is scanning");
-                }
-                
-            }).fail(function(){
-                //window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
-                console.log("check any scan table fail") 
-            });
-        
-    }
 
     
     function checkUserScan(){
         $.ajax({
-            url: 'checkUserScan',
+            url: '/checkUserScan',
             method: 'GET'    
             }).done(function (res){
                 if(res.Result == 'NOSCAN'){
@@ -122,6 +100,16 @@ $(document).ready(function(){
                         timerStart = 1;
                     }
                     console.log("SCANNING");
+                }else if(res.Result == 'NEEDWAITING'){
+                    
+                    $('#startScan').addClass('disabled');
+                    $('#cancelButton').removeClass('disabled');
+                    if(timerStart == 0){
+                        waitScan(res.scanOption);
+                        timerStart = 1;
+                    }
+                    console.log("NEEDWAITING");
+                    
                 }
                 
             }).fail(function(){
@@ -140,20 +128,47 @@ $(document).ready(function(){
     
     function cancelScan(){
             clearAllTimer();
+            timerStart = 0;
             checkUserScan();
             var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
+        
             $.ajax({
-                url: '/cancelScan',
-                type: 'GET',
-                error: function(xhr) {
-                    console.log('Ajax /cancelScan error');
-                },
-                success: function(response) {
-                    console.log('cancelScan '+response.Result)    
+                url: '/waitScan',
+                type: 'GET'
+            }).done(function(res){
+                if(res.Result == 'SCANNING'){
+                    $.ajax({
+                        url: '/cancelStartScan',
+                        type: 'GET',
+                        error: function(xhr) {
+                            console.log('Ajax /cancelStartScan error');
+                        },
+                        success: function(response) {
+                            console.log('cancelStartScan '+response.Result)    
+                        }
+                    });
+                    
+                }else if(res.Result == 'NEEDWAITING'){
+                    $.ajax({
+                        url: '/cancelNotStartScan',
+                        type: 'GET',
+                        error: function(xhr) {
+                            console.log('Ajax /cancelNotStartScan error');
+                        },
+                        success: function(response) {
+                            console.log('cancelNotStartScan '+response.Result)    
+                        }
+                    });
+                    
                 }
-            });
+            }).fail(function(){
+                console.log('/waitScan fail on cancelScan')
+            }); 
+        
+
+            
   
-            showDelay(10).then(() => {
+            showDelay(100).then(() => {
                 showMessage('You have stopped the scan.','You can still downlaod report below','negative');
             });
   
@@ -177,51 +192,93 @@ $(document).ready(function(){
         });
         
     }
+    function waitScan(scanOption){
+        window.setTimeout(function(){
+            $.ajax({
+                url: '/waitScan',
+                type: 'GET'
+            }).done(function(res){
+                if(res.Result == 'SCANNING'){
+                    if(scanOption == '1')
+                        checkPassiveScan();
+                    else if(scanOption == '2')
+                        checkActiveScan();
+                }else if(res.Result == 'NEEDWAITING'){
+                    waitScan();
+                }
+            });
+        },1000);
+    }
+    
+
     /*passive scan begin*/
-    function passiveScan(targetURL,precurse,subtreeOnly,scanOption){
-        
+    function Scan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly){
         $.ajax({
             url: '/Scan',
             type: 'GET',
             data:{
                 'targetURL': targetURL,
+                'scanOption':scanOption,
+                'arecurse': arecurse,
+                'inScopeOnly':inScopeOnly,
+                'alertThreshold':alertThreshold,
+                'attackStrength':attackStrength,
                 'precurse': precurse,
                 'subtreeOnly':subtreeOnly,
-                'scanOption':scanOption
+                
             }
-        }).done(function(){
-            $('#cancelButton').removeClass('disabled');
-            $('#startScan').addClass('disabled');
-            showScanning('Passive scan... 0%','It takes a few seconds to minutes to scan your website.');
-            $('#scanningmessage').css('display','block');
-            console.log('/passiveScan success');
-            //TIMER
-            checkPassiveScan();
-            //passiveScanTimer = setInterval(function(){ checkPassiveScan() }, 1000);
-
-            refreshTable().done(function(response){
-                while (Data.length > 0) Data.pop();
-                while (response.length > 0) Data.push(response.shift());
-                $.ajax({
+        }).done(function(res){
+                
+                $('#cancelButton').removeClass('disabled');
+                $('#startScan').addClass('disabled');
+                
+                refreshTable().done(function(response){
+                    while (Data.length > 0) Data.pop();
+                    while (response.length > 0) Data.push(response.shift());
+                    console.log("refresh table successfully");
+                }).fail(function(){
+                    console.log("refresh table fail") 
+                });
+            
+                if(res.Result == 'SCANNING'){
+                    if(scanOption == '0'){
+                        showScanning('Passive scan... 0%','It takes a few seconds to minutes to scan your website.');
+                        console.log('/Scan SCANNING p');
+                        
+                        //start timer
+                        checkPassiveScan();
+                    }else if(scanOption == '2'){
+                        showScanning('Active scan... 0%','It takes a few seconds to minutes to scan your website.');
+                        console.log('/Scan SCANNING a');
+                        
+                        //start timer
+                        checkActiveScan();
+                    }
+                    
+                    //open dashboard link
+                    $.ajax({
                         url: '/dashboardLink',
                         type: 'GET'
-                }).done(function(res){
+                    }).done(function(res){
                         window.open(res);
-                }).fail(function(){
+                    }).fail(function(){
                         console.log('/dashboardLInk fail');
-                });
-                console.log("refresh table successfully");
-            }).fail(function(){
-                console.log("refresh table fail") 
-            });
+                    });
+                
+                }else if(res.Result == 'NEEDWAITING'){
+                    showScanning('Other scan task is running.','Your scan task will be scheduled to start later.')
+                    //start timer
+                    waitScan(scanOption);
+                }
+                
             
         }).fail(function(){
              console.log('passsive scan error')
         });
-        
+        showScanning('Initializing...','Please wait a moment.');
         
     }
-    
+
     function checkPassiveScan(){
         window.setTimeout(function(){
             $.ajax({
@@ -256,7 +313,7 @@ $(document).ready(function(){
         
     }
     function pscanFinish(ms) {
-
+        timerStart = 0;
         $('#scanningmessage').css('display','none');
         $('#startScan').removeClass('disabled');
         $('#cancelButton').addClass('disabled');
@@ -267,55 +324,6 @@ $(document).ready(function(){
     
     
     /*active scan begin*/
-    function activeScan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly){
-        $.ajax({
-            url: '/Scan',
-            type: 'GET',
-            data:{
-                'targetURL': targetURL,
-                'arecurse': arecurse,
-                'inScopeOnly':inScopeOnly,
-                'scanOption':scanOption,
-                'alertThreshold':alertThreshold,
-                'attackStrength':attackStrength,
-                'precurse': precurse,
-                'subtreeOnly':subtreeOnly,
-            }
-        }).done(function(){
-            $('#cancelButton').removeClass('disabled');
-            $('#startScan').addClass('disabled');
-            showScanning('Passive scan... 0%','It takes a few seconds to minutes to scan your website.');
-            $('#scanningmessage').css('display','block');
-            console.log('/activeScan success');
-            //TIMER
-            checkActiveScan();
-            activeScanTimer = setInterval(function(){ checkActiveScan() }, 1000);
-            
-            refreshTable().done(function(response){
-                while (Data.length > 0) Data.pop();
-                while (response.length > 0) Data.push(response.shift());
-                $.ajax({
-                        url: '/dashboardLink',
-                        type: 'GET'
-                }).done(function(res){
-                        window.open(res);
-                }).fail(function(){
-                        console.log('/dashboardLInk fail');
-                });
-                console.log("refresh table successfully");
-            }).fail(function(){
-                console.log("refresh table fail") 
-            });
-            
-            
-        
-        }).fail(function(){
-             console.log('active scan error')
-        });
-         
-    }
-    
-    
     function checkActiveScan(){
         window.setTimeout(function(){
             $.ajax({
@@ -332,8 +340,6 @@ $(document).ready(function(){
 
                     showScanning('Active scan... 100%','It takes a few seconds to minutes to scan your website.');
                     ascanFinish(100).then(() => {
-                        clearInterval(passiveScanTimer);
-                        clearInterval(activeScanTimer); 
                         showMessage('Scan task has finished successfully.','You can downlaod report below','successful');
 
                     });
@@ -348,15 +354,15 @@ $(document).ready(function(){
         },1000);
     }
     function ascanFinish(ms) {
+        timerStart = 0;
         $('#scanningmessage').css('display','none');
         $('#startScan').removeClass('disabled');
         $('#cancelButton').addClass('disabled');
         
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-    
-    
     /*active scan end*/
+    
     
     //startScan button
     $('#startScan').click(function(){
@@ -373,7 +379,7 @@ $(document).ready(function(){
                 $("input[name=subtreeOnly]:checked").each(function () { subtreeOnly = $(this).val()});
                 $("input[name=passiveRecurse]:checked").each(function () { precurse = $(this).val()});
                 targetURL = $('input[name="input_url"]').val();
-                passiveScan(targetURL,precurse,subtreeOnly,scanOption);
+                Scan(targetURL,'','','','',scanOption,precurse,subtreeOnly);
             }else if(scanOption == 2){
                 var arecurse;
                 var inScopeOnly;
@@ -389,7 +395,7 @@ $(document).ready(function(){
                 targetURL = $('input[name="input_url"]').val();
                 $("input[name=subtreeOnly]:checked").each(function () { subtreeOnly = $(this).val()});
                 $("input[name=passiveRecurse]:checked").each(function () { precurse = $(this).val()}); 
-                activeScan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly); 
+                Scan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly); 
             }
             
         }).fail(function(){
@@ -649,10 +655,9 @@ $(document).ready(function(){
         
     }
     function showScanning(msg,submsg){
-        $('#scanningmessage').css('display','block');
         $('#scanningMsg').text(msg);
         $('#scanningSubmsg').text(submsg);
-        
+        $('#scanningmessage').css('display','block');
     }
     
     function showDelay(ms) {
