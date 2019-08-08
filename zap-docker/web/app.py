@@ -402,11 +402,15 @@ def downloadHtml():
 def waitScan():
     scanId = request.cookies.get('scanId')
     scan = db.listScanning()
-    if scan['scanId'] == scanId:
-        result = jsonify({"Result":"SCANNING"})
-    else:
+    if scan == None:
         result = jsonify({"Result":"NEEDWAITING"})
-    return result
+        return result
+    elif scan['scanId'] == scanId:
+        result = jsonify({"Result":"SCANNING"})
+        return result
+    else:
+        abort(500)
+
 
 @app.route('/Scan',methods=['GET'])
 @EIToken_verification
@@ -1075,10 +1079,9 @@ def checkAnyScan():
         scans = db.listNotFinishedScans()
         if len(scans) !=0:
             result = {'Result':'NO'}
-            return jsonify(result)
         elif len(scans) == 0:
             result = {'Result':'OK'}
-            return jsonify(result)
+        return jsonify(result)
 
     except Exception as err:
         print('error: {}'.format(str(err)))
