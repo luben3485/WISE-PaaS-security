@@ -365,8 +365,17 @@ $(document).ready(function(){
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     /*active scan end*/
-    
-    
+    function checkURL(URL){
+        var str=URL;
+        var Expression=/http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+        var objExp=new RegExp(Expression);
+        if(objExp.test(str)==true){
+            return true;
+        }else{
+            return false;
+        }
+    } 
+
     //startScan button
     $('#startScan').click(function(){
         EIToken_verification().done(function(){
@@ -382,7 +391,10 @@ $(document).ready(function(){
                 $("input[name=subtreeOnly]:checked").each(function () { subtreeOnly = $(this).val()});
                 $("input[name=passiveRecurse]:checked").each(function () { precurse = $(this).val()});
                 targetURL = $('input[name="input_url"]').val();
-                Scan(targetURL,'','','','',scanOption,precurse,subtreeOnly);
+                if(checkURL(targetURL)==true)
+                    Scan(targetURL,'','','','',scanOption,precurse,subtreeOnly);
+                else
+                    showMessage('Illegal URL format','Please input the URL once again.','negative');
             }else if(scanOption == 2){
                 var arecurse;
                 var inScopeOnly;
@@ -398,7 +410,10 @@ $(document).ready(function(){
                 targetURL = $('input[name="input_url"]').val();
                 $("input[name=subtreeOnly]:checked").each(function () { subtreeOnly = $(this).val()});
                 $("input[name=passiveRecurse]:checked").each(function () { precurse = $(this).val()}); 
-                Scan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly); 
+                if(checkURL(targetURL)==true)
+                    Scan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly);
+                else
+                    showMessage('Illegal URL format','Please input the URL once again.','negative');
             }
             
         }).fail(function(){
