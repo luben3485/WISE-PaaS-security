@@ -130,7 +130,7 @@ if __name__ == '__main__':
 
 
     #print(scans)
-    #mongodb.deleteAllScans()
+    mongodb.deleteAllScans()
     #mongodb.deleteScans(['8829705','2962665'])
     scans = mongodb.listAllScans()
     print(len(scans))
