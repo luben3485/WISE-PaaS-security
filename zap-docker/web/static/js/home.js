@@ -148,9 +148,12 @@ $(document).ready(function(){
                             console.log('cancelStartScan '+response.Result)    
                         }
                     });
-                    showDelay(100).then(() => {
+                    $('#scanningmessage').css('display','none');
+                    showMessage('You have stopped the scan.','You can still downlaod report below','negative');
+                    /*showDelay(100).then(() => {
                         showMessage('You have stopped the scan.','You can still downlaod report below','negative');
-                    });
+                    });*/
+                    
                 }else if(res.Result == 'NEEDWAITING'){
                     $.ajax({
                         url: '/cancelNotStartScan',
@@ -162,7 +165,7 @@ $(document).ready(function(){
                             console.log('cancelNotStartScan '+response.Result)    
                         }
                     });
-                
+                    
                     $('#scanningmessage').css('display','none');
                      showMessage('You have stopped the scan.','you can still add scan task.','negative');
                 }
@@ -415,7 +418,7 @@ $(document).ready(function(){
                 if(checkURL(targetURL)==true)
                     Scan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly);
                 else{
-                    showMessage('Illegal URL format','Please input the URL once again.','negative');
+                    showMessage('illegal URL format','Please input the URL once again.','negative');
                     $('#startScan').removeClass('disabled');
                 }
             }
