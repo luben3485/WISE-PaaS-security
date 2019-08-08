@@ -393,8 +393,10 @@ $(document).ready(function(){
                 targetURL = $('input[name="input_url"]').val();
                 if(checkURL(targetURL)==true)
                     Scan(targetURL,'','','','',scanOption,precurse,subtreeOnly);
-                else
+                else{
                     showMessage('Illegal URL format','Please input the URL once again.','negative');
+                    $('#startScan').removeClass('disabled');
+                }
             }else if(scanOption == 2){
                 var arecurse;
                 var inScopeOnly;
@@ -412,8 +414,10 @@ $(document).ready(function(){
                 $("input[name=passiveRecurse]:checked").each(function () { precurse = $(this).val()}); 
                 if(checkURL(targetURL)==true)
                     Scan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly);
-                else
+                else{
                     showMessage('Illegal URL format','Please input the URL once again.','negative');
+                    $('#startScan').removeClass('disabled');
+                }
             }
             
         }).fail(function(){
