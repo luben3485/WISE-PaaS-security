@@ -525,7 +525,8 @@ def Scan():
                 break;    
 
             end = time.time()
-            if end - start > 2:
+            #if end - start > 2:
+            if True:
                 result = jsonify({"Result":"NEEDWAITING"})
                 break;
             time.sleep(100)
