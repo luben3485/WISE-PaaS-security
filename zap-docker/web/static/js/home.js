@@ -44,7 +44,7 @@ $(document).ready(function(){
         });
         
         checkUserScan();
-        var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
+        var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 800);
                 
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
