@@ -43,8 +43,8 @@ $(document).ready(function(){
             console.log("refresh table fail") 
         });
         
-        //checkUserScan();
-        //var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
+        checkUserScan();
+        var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
                 
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
@@ -129,9 +129,9 @@ $(document).ready(function(){
     
     function cancelScan(){
             clearAllTimer();
-            //timerStart = 0;
-            //checkUserScan();
-            //var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
+            timerStart = 0;
+            checkUserScan();
+            var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
         
             $.ajax({
                 url: '/waitScan',
@@ -319,7 +319,7 @@ $(document).ready(function(){
         
     }
     function pscanFinish(ms) {
-        //timerStart = 0;
+        timerStart = 0;
         $('#scanningmessage').css('display','none');
         $('#startScan').removeClass('disabled');
         $('#cancelButton').addClass('disabled');
@@ -360,7 +360,7 @@ $(document).ready(function(){
         },1000);
     }
     function ascanFinish(ms) {
-        //timerStart = 0;
+        timerStart = 0;
         $('#scanningmessage').css('display','none');
         $('#startScan').removeClass('disabled');
         $('#cancelButton').addClass('disabled');
@@ -368,6 +368,8 @@ $(document).ready(function(){
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     /*active scan end*/
+    
+    //check URL
     function checkURL(URL){
         var str=URL;
         var Expression=/http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
