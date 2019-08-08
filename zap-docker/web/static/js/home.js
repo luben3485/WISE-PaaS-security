@@ -104,6 +104,7 @@ $(document).ready(function(){
                     
                     $('#startScan').addClass('disabled');
                     $('#cancelButton').removeClass('disabled');
+                     showScanning('Other scan task is running.','Your scan task will be scheduled to start later.')
                     if(timerStart == 0){
                         waitScan(res.scanOption);
                         timerStart = 1;
