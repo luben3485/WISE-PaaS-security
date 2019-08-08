@@ -1,0 +1,124 @@
+@import 'https://fonts.googleapis.com/css?family=Fjalla+One|Playfair+Display';
+
+body {
+   
+    
+    font-family: 'Playfair Display', serif;
+    margin: 0;
+}
+
+
+
+.ui.inverted.segment{
+    margin:0px;
+    border-radius:0px;
+}
+.ui.styled.accordion{
+    margin-bottom:2rem;
+}
+.ui.positive.message{
+    display:block;
+}
+#message,#checkScanMsg,#scanningmessage{
+    display:none;
+}
+#header{
+    font-size: 4rem;
+    font-family:Arial;
+    margin-top:4rem;
+}
+#app{
+    margin-top:1.5rem;
+    margin-bottom:15rem;
+}
+#msg,#scanningMsg,#checkScanTitle{
+    font-size:1.4rem;
+    
+}
+#submsg,#scanningSubmsg,#checkScanSubtitle{
+    font-size:1.1rem;
+}
+.mainbtn{
+    margin-bottom:2rem;
+}
+#app td span span{
+    text-align: center;
+    margin-top:0.45rem;
+    margin-bottom:0.45rem;
+}
+#scanblock{
+    min-height:40%;
+}
+.ui.inverted.vertical.footer.segment{
+    position: relative;
+    
+}
+#main{
+    
+}
+
+@media (min-width: 1200px) {
+    /*#dashboard{
+        font-size:1.4rem;
+
+    }
+    
+    #downloadReport{ 
+        font-size:1.4rem;
+
+    }*/
+    #startScan{ 
+        font-size:1.4rem;
+    }      
+    
+    #cancelButton{ 
+        font-size:1.4rem;
+    }   
+    
+}
+
+@media (min-width: 1000px) and (max-width: 1200px) {
+    /*
+    #dashboard{
+        font-size:1.4rem;
+
+    }
+    
+    #downloadReport{ 
+        font-size:1.4rem;
+
+    }*/
+    #startScan{ 
+        font-size:1.4rem;
+    }   
+    #cancelButton{ 
+        font-size:1.4rem;
+    } 
+    
+   
+}
+
+@media (max-width: 1000px) {
+    /*
+    #dashboard{
+        font-size:1.3rem;
+        width:100%;
+        margin-bottom:0.5rem;
+    }
+    #downloadReport{ 
+        font-size:1.3rem;
+        width:100%;
+        margin-bottom:0.5rem;
+    }*/
+    #startScan{ 
+        font-size:1.3rem;
+        width:100%;
+        margin-bottom:0.5rem;
+    }
+    #cancelButton{ 
+        font-size:1.3rem;
+        width:100%;
+        margin-bottom:0.5rem;
+    } 
+    
+}
