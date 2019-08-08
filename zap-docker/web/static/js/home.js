@@ -148,7 +148,9 @@ $(document).ready(function(){
                             console.log('cancelStartScan '+response.Result)    
                         }
                     });
-                    
+                    showDelay(100).then(() => {
+                        showMessage('You have stopped the scan.','You can still downlaod report below','negative');
+                    });
                 }else if(res.Result == 'NEEDWAITING'){
                     $.ajax({
                         url: '/cancelNotStartScan',
@@ -160,7 +162,9 @@ $(document).ready(function(){
                             console.log('cancelNotStartScan '+response.Result)    
                         }
                     });
-                    
+                
+                    $('#scanningmessage').css('display','none');
+                     showMessage('You have stopped the scan.','');
                 }
             }).fail(function(){
                 console.log('/waitScan fail on cancelScan')
@@ -169,9 +173,7 @@ $(document).ready(function(){
 
             
   
-            showDelay(100).then(() => {
-                showMessage('You have stopped the scan.','You can still downlaod report below','negative');
-            });
+            
   
     }
     function spiderstatus(){
@@ -678,6 +680,7 @@ $(document).ready(function(){
         EIToken_verification().done(function(){
             $('#cancelButton').addClass('disabled');
             $('#startScan').removeClass('disabled');
+            $('#scanningmessage').css('display','none');
             cancelScan();
             
             

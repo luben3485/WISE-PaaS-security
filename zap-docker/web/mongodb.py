@@ -34,7 +34,12 @@ class mongoDB():
         result = self.coll_html.find_one({"scanId":scanId})
         return result
     def listScans(self,userId):
-        results = self.collection.find({"userId":userId},{"_id":0}).sort('timeStamp',pymongo.DESCENDING)
+        results = self.collection.find({
+            "$and":[
+                {'userId':userId},
+                {'status':{ '$ne':'0' }}
+ 
+            ]},{"_id":0}).sort('timeStamp',pymongo.DESCENDING)
         scans = []
         for result in results:
             scans.append(result)
