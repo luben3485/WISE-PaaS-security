@@ -85,7 +85,7 @@ $(document).ready(function(){
                     $('#startScan').removeClass('disabled');
                     $('#cancelButton').addClass('disabled');
                     $('#scanningmessage').css('display','none');
-                    $('#message').css('display','none');
+                    //$('#message').css('display','none');
                     console.log("NOSCAN");
                 }else if(res.Result == 'SCANNING'){
                     $('#startScan').addClass('disabled');
