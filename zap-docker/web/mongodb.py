@@ -51,7 +51,12 @@ class mongoDB():
             scans.append(result)
         return scans
     def listNotFinishedScans(self):
-        results = self.collection.find({'status':{ '$ne':'3' }},{"_id":0}).sort('timeStamp',pymongo.DESCENDING)
+        results = self.collection.find({
+            "$and":[
+                {'userId':userId},
+                {'status':{ '$ne':'3' }},
+                {'status':{ '$ne':'4' }}
+            ]},{"_id":0}).sort(('timeStamp',pymongo.DESCENDING))
         scans = []
         for result in results:
             scans.append(result)
@@ -66,7 +71,8 @@ class mongoDB():
         scan = self.collection.find_one({
             "$and":[
                 {'userId':userId},
-                {'status':{ '$ne':'3' }}
+                {'status':{ '$ne':'3' }},
+                {'status':{ '$ne':'4' }}
             ]},{"_id":0})
         return scan
     def listScanning(self):
@@ -74,7 +80,8 @@ class mongoDB():
         scan = self.collection.find_one({
             "$and":[
                     {"status":{"$ne":"0"}},
-                    {"status":{"$ne":"3"}}
+                    {"status":{"$ne":"3"}},
+                    {"status":{"$ne":"4"}}
                     
             ]},{"_id":0})
         return scan
