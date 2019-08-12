@@ -101,12 +101,9 @@ $(document).ready(function(){
                     }
                     console.log("SCANNING");
                 }else if(res.Result == 'NEEDWAITING'){
-                    
-                    $('#startScan').addClass('disabled');
-                    $('#cancelButton').removeClass('disabled');
-                     showScanning('Other scan task is running.','Your scan task will be scheduled to start later.')
+                     showScanning('Other scan task is running.','Your scan task will be scheduled to start autoly later.')
                     if(timerStart == 0){
-                        waitScan(res.scanOption);
+                        //waitScan(res.scanOption);
                         timerStart = 1;
                     }
                     console.log("NEEDWAITING");
@@ -235,8 +232,7 @@ $(document).ready(function(){
             }
         }).done(function(res){
                 
-                $('#cancelButton').removeClass('disabled');
-                $('#startScan').addClass('disabled');
+                
                 
                 refreshTable().done(function(response){
                     while (Data.length > 0) Data.pop();
@@ -247,6 +243,8 @@ $(document).ready(function(){
                 });
             
                 if(res.Result == 'SCANNING'){
+                    $('#cancelButton').removeClass('disabled');
+                    $('#startScan').addClass('disabled');
                     if(scanOption == '0'){
                         showScanning('Passive scan... 0%','It takes a few seconds to minutes to scan your website.');
                         console.log('/Scan SCANNING p');
@@ -272,9 +270,10 @@ $(document).ready(function(){
                     });
                 
                 }else if(res.Result == 'NEEDWAITING'){
-                    showScanning('Other scan task is running.','Your scan task will be scheduled to start later.')
+
+                    showScanning('Other scan task is running.','Your scan task will be scheduled to start autoly later.')
                     //start timer
-                    waitScan(scanOption);
+                    //waitScan(scanOption);
                 }
                 
             

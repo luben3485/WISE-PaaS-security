@@ -107,7 +107,7 @@ if __name__ == '__main__':
     mongodb = mongoDB()
 
     userId = 'hello'
-    scanId = '666'
+    scanId = str(random.randint(1000000,9999999))
     targetURL = 'http://testphp.vulnweb.com'
     dashboardLink  = 'http://www.google.com'
     nowtime = int(time.time())

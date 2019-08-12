@@ -415,7 +415,9 @@ def waitScan():
 @app.route('/Scan',methods=['GET'])
 @EIToken_verification
 def Scan():
-    try:
+        
+    nowScan = db.listScanning()
+    if nowScan != None:
         #Necessary setting
         scanOption = request.args.get('scanOption')
         targetURL = request.args.get('targetURL')
@@ -515,27 +517,91 @@ def Scan():
 
         db.addScan(scandata)
 
-        start = time.time()
-        while True:
-            check_scan = db.listScanning()
-            if check_scan == None:
-                pass
-            elif check_scan['scanId'] == scanId:
-                result = jsonify({"Result":"SCANNING"})
-                break;    
-
-            end = time.time()
-            #if end - start > 2:
-            if True:
-                result = jsonify({"Result":"NEEDWAITING"})
-                break;
-            time.sleep(100)
+        result = jsonify({"Result":"NEEDWAITING"})
         result.set_cookie('scanId',scanId,domain=domainName)
         return result
+    else:
+        
+        # Delete all previous datas on ZAP server
+        r_delete = requests.get('http://127.0.0.1:5000/JSON/core/action/deleteAllAlerts')
+        if r_delete.status_code == 200:
+            
+            # Get params from user setting
+            scanOption = request.args.get('scanOption')
+            targetURL = request.args.get('targetURL')
+            precurse = request.args.get('precurse')
+            subtreeOnly= request.args.get('subtreeOnly') 
+            maxChildren=''
+            contextName=''
 
-    except Exception as err:
-        print('error: {}'.format(str(err)))
-        abort(500)
+            payload = {'url': targetURL, 'maxChildren': maxChildren,'recurse':precurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
+            r_passive = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan',params=payload)
+            if r_passive.status_code == 200:
+                r_passive = r_passive.json() 
+                pscanId = r_passive['scan']
+                scanId = str(random.randint(1000000,9999999))
+                nowtime = int(time.time())
+                EIToken = request.cookies.get('EIToken')
+                info_token = EIToken.split('.')[1]
+                userId = getUserIdFromToken(EIToken)
+
+                
+                #call Dashboard API getting dashboardLink
+                dashboardLink = create_dashboard(scanId,EIToken)
+    
+                # timeStamp => int type
+                # other info  => str type
+                scandata = {
+                    "userId":userId,
+                    "scanId":scanId,
+                    "targetURL":targetURL,
+                    "dashboardLInk":dashboardLink,
+                    "timeStamp":nowtime,
+                    "ascanStatus":'0',
+                    "pscanStatus":'0',
+                    "scanOption":scanOption,
+                    "ascanId":'-1',
+                    "pscanId":pscanId,
+                    "status":'0'
+                }
+                db.addScan(scandata)
+    
+                html_info = {
+                    "userId":userId,
+                    "scanId":scanId,
+                    "html":""
+                }
+                db.addHtml(html_info)
+                
+                #thread
+                if scanOption == '0':
+                    global checkPassiveStatusThread
+                    checkPassiveStatusThread = threading.Thread(target=checkPassiveStatus,args=[scanId])
+                    checkPassiveStatusThread.start()
+                elif scanOption == '2':
+                    global checkActiveStatusThread
+                    arecurse = request.args.get('arecurse')
+                    inScopeOnly = request.args.get('inScopeOnly')
+                    method = ''
+                    postData = ''
+                    contextId = ''
+                    alertThreshold = request.args.get('alertThreshold')
+                    attackStrength = request.args.get('attackStrength')
+                    checkActiveStatusThread = threading.Thread(target=checkActiveStatus,args=[scanId,targetURL,arecurse,inScopeOnly,method,postData,contextId,alertThreshold,attackStrength])
+                    checkActiveStatusThread.start()
+
+                
+                
+                #set scanId to cookie
+                res_cookie = make_response(redirect('/'),200)
+                res_cookie.set_cookie('scanId',scanId,domain=domainName)
+                return res_cookie
+            else:
+                print('passive scan start error!')
+
+
+        else:
+            print('passive scan delete error!')
 
 
     
@@ -1102,7 +1168,7 @@ def checkUserScan():
         if scan == None:
             result = {'Result':'NOSCAN'}
             return jsonify(result)
-        elif scan['status'] == '3':
+        elif scan['status'] == '1' or scan['status'] == '2':
             scanId = scan['scanId']
             scanOption = scan['scanOption']
             result = jsonify({'Result':'SCANNING','scanOption':scanOption})
