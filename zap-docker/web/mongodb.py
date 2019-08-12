@@ -56,6 +56,12 @@ class mongoDB():
         for result in results:
             scans.append(result)
         return scans
+    def readyScans(self):
+        results = self.collection.find({'status':'0'},{"_id":0}).sort('timeStamp',pymongo.ASCENDING)
+        scans = []
+        for result in results:
+            scans.append(result)
+        return scans
     def listUserNotFinishedScan(self,userId):
         scan = self.collection.find_one({
             "$and":[
@@ -84,34 +90,57 @@ class mongoDB():
 
 if __name__ == '__main__':
     mongodb = mongoDB()
-    
-    for i in range(4):
-        #scanId = random.randint(1000000,9999999)
-        scanId = '777'
-        nowtime = int(time.time())
-        dashboardLink = 'http://www.google.com'
-        scanOption = '0'
-        spiderId = '0'
-        targetURL = 'http://testphp.vulnweb.com'
-        scandata = {
-             "userId":'b7ea79a3-c2eb-4c79-b968-b279667f3747',
+
+    userId = 'hello'
+    scanId = '666'
+    targetURL = 'http://testphp.vulnweb.com'
+    dashboardLink  = 'http://www.google.com'
+    nowtime = int(time.time())
+    scanOption = '0'
+    precurse = 'true'
+    subtreeOnly = 'false'
+
+    html_info = {
+             "userId":userId,
              "scanId":scanId,
-             "targetURL":targetURL,
-             "dashboardLInk":dashboardLink,
-             "timeStamp":nowtime,
-             "ascanStatus":'0',
-             "pscanStatus":'0',
-             "scanOption":scanOption,
-             "ascanId":'-1',
-             "spiderId":spiderId,
-             "status":str(i)
+             "html":""
          }
+    mongodb.addHtml(html_info)
 
-        
-        #print(scanId)
-        #print(nowtime)
 
-        #mongodb.addScan(scandata)
+
+
+
+    scandata = {
+                "userId":userId,
+                "scanId":scanId,
+                "targetURL":targetURL,
+                "dashboardLInk":dashboardLink,
+                "timeStamp":nowtime,
+                "ascanStatus":'0',
+                "pscanStatus":'0',
+                "scanOption":scanOption,
+                "ascanId":'-1',
+                "pscanId":'-1',
+                "status":'0',
+                "pscanInfo":{
+                    "recurse": precurse,
+                    "subtreeOnly": subtreeOnly,
+                    "maxChildren":'',
+                    "contextName":''
+                },
+                "ascanInfo":{
+                    "recurse" : '',
+                    "inScopeOnly" : '',
+                    "method" : '',
+                    "postData" : '',
+                    "contextId" : '',
+                    "alertThreshold" : '',
+                    "attackStrength" : ''
+                }
+            }
+
+    #mongodb.addScan(scandata)
     
     
     #scans = mongodb.listScans('b7ea79a3-c2eb-4c79-b968-b279667f3747')
@@ -130,7 +159,7 @@ if __name__ == '__main__':
 
 
     #print(scans)
-    mongodb.deleteAllScans()
+    #mongodb.deleteAllScans()
     #mongodb.deleteScans(['8829705','2962665'])
     scans = mongodb.listAllScans()
     print(len(scans))
@@ -149,3 +178,7 @@ if __name__ == '__main__':
     
     #scan = mongodb.listScanning()
     #print(scan)
+
+    #scans = mongodb.readyScans()
+    #print(scans)
+    #print(len(scans))
