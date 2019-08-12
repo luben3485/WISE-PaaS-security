@@ -593,9 +593,9 @@ def Scan():
                 
                 
                 #set scanId to cookie
-                res_cookie = make_response(redirect('/'),200)
-                res_cookie.set_cookie('scanId',scanId,domain=domainName)
-                return res_cookie
+                result = jsonify({"Result":"SCANNING"})
+                result.set_cookie('scanId',scanId,domain=domainName)
+                return result
             else:
                 print('passive scan start error!')
 

@@ -37,7 +37,19 @@ class mongoDB():
         results = self.collection.find({
             "$and":[
                 {'userId':userId},
-                {'status':{ '$ne':'0' }}
+                {'status':{ '$ne':'0' }},
+                {'status':{ '$ne':'4' }}
+ 
+            ]},{"_id":0}).sort('timeStamp',pymongo.DESCENDING)
+        scans = []
+        for result in results:
+            scans.append(result)
+        return scans
+    def listFinishedScans(self,userId):
+        results = self.collection.find({
+            "$and":[
+                {'userId':userId},
+                {'status':'3'}
  
             ]},{"_id":0}).sort('timeStamp',pymongo.DESCENDING)
         scans = []

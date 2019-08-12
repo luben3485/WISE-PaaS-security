@@ -48,7 +48,7 @@ $(document).ready(function(){
                 
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
-        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+        //window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
     });        
     
     
@@ -272,6 +272,8 @@ $(document).ready(function(){
                 }else if(res.Result == 'NEEDWAITING'){
 
                     showScanning('Other scan task is running.','Your scan task will be scheduled to start autoly later.')
+                    $('#startScan').addClass('disabled');
+                    console.log('NEEDWAITING');
                     //start timer
                     //waitScan(scanOption);
                 }
@@ -280,7 +282,7 @@ $(document).ready(function(){
         }).fail(function(){
              console.log('passsive scan error')
         });
-        showScanning('Initializing...','Please wait a moment.');
+        //showScanning('Initializing...','Please wait a moment.');
         
     }
 

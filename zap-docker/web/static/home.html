@@ -297,6 +297,19 @@
         <div class="ui grid stackable container" >
             <div class="three wide column"></div>
             <div class="ten wide column">
+                <!--
+                <div id="scanningApp">
+                        <template>
+                            <div class="header">
+                            <h1 style="float:left;">Schedule</h1>
+                            <div id="tabledelete" style="margin-bottom:1rem;" class="ui right floated red button" @click="remove()">
+                               <i class="fas fa-trash-alt"></i>
+                            </div>
+                            </div>
+                            <v-table id="v-table" is-horizontal-resize style="width:100%;" :columns="columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" :select-all="selectALL" :select-change="selectChange" :select-group-change="selectGroupChange"></v-table>
+                        </template>
+                </div>
+                -->
                 <div id="app">
                         <template>
                             <div class="header">
@@ -308,6 +321,10 @@
                             <v-table id="v-table" is-horizontal-resize style="width:100%;" :columns="columns" :table-data="tableData" row-hover-color="#eee" row-click-color="#edf7ff" @on-custom-comp="customCompFunc" :select-all="selectALL" :select-change="selectChange" :select-group-change="selectGroupChange"></v-table>
                         </template>
                 </div>
+                
+
+
+                
             </div>
             <div class="three wide column"></div>
         </div>
