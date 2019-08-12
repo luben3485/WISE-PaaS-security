@@ -30,6 +30,7 @@ def checkPassiveStatus(scanId):
             time.sleep(1)
     except Exception as err:
         print('error: {}'.format(str(err)))
+        db.modifyExistInfo('status','4',scanId)
     
 
 
@@ -110,6 +111,7 @@ def checkActiveStatus(scanId,targetURL,arecurse,inScopeOnly,method,postData,cont
 
     except Exception as err:
         print('error: {}'.format(str(err)))
+        db.modifyExistInfo('status','4',scanId)
 
 
 
@@ -128,50 +130,57 @@ def scan():
                     db.modifyExistInfo('status','1',scanId)
                 elif scan['scanOption'] == '2':
                     db.modifyExistInfo('status','2',scanId)
+                
+                try:
+                    # Delete all previous datas on ZAP server                                                                                           
+                    r_delete = requests.get('http://127.0.0.1:5000/JSON/core/action/deleteAllAlerts')
+                    if r_delete.status_code == 200:
 
-                # Delete all previous datas on ZAP server                                                                                           
-                r_delete = requests.get('http://127.0.0.1:5000/JSON/core/action/deleteAllAlerts')
-                if r_delete.status_code == 200:
+                        # Get params from user setting
+                        scanOption = scan['scanOption']
+                        targetURL = scan['targetURL']
+                        precurse = scan['pscanInfo']['recurse']
+                        subtreeOnly = scan['pscanInfo']['subtreeOnly']
+                        maxChildren = scan['maxChildren']
+                        contextName = scan['contextName']
 
-                    # Get params from user setting
-                    scanOption = scan['scanOption']
-                    targetURL = scan['targetURL']
-                    precurse = scan['pscanInfo']['recurse']
-                    subtreeOnly = scan['pscanInfo']['subtreeOnly']
-                    maxChildren = scan['maxChildren']
-                    contextName = scan['contextName']
+                        payload = {'url': targetURL, 'maxChildren': maxChildren,'recurse':precurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
+                        r_passive = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan',params=payload)
+                        if r_passive.status_code == 200:
+                            r_passive = r_passive.json() 
+                            pscanId = r_passive['scan']
+                            db.modifyExistInfo('pscanId',pscanId,scanId)
 
-                    payload = {'url': targetURL, 'maxChildren': maxChildren,'recurse':precurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
-                    r_passive = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan',params=payload)
-                    if r_passive.status_code == 200:
-                        r_passive = r_passive.json() 
-                        pscanId = r_passive['scan']
-                        db.modifyExistInfo('pscanId',pscanId,scanId)
-
-                        #thread
-                        if scanOption == '0':
-                            global checkPassiveStatusThread
-                            checkPassiveStatusThread = threading.Thread(target=checkPassiveStatus,args=[scanId])
-                            checkPassiveStatusThread.start()
-                        elif scanOption == '2':
-                            global checkActiveStatusThread
-                            arecurse = scan['ascanInfo']['recurse']
-                            inScopeOnly = scan['ascanInfo']['inScopeOnly']
-                            method = scan['ascanInfo']['method']
-                            postData = scan['ascanInfo']['postData']
-                            contextId = scan['ascanInfo']['contextId']
-                            alertThreshold = scan['ascanInfo']['alertThreshold']
-                            attackStrength = scan['ascanInfo']['attackStrength']
-                            checkActiveStatusThread = threading.Thread(target=checkActiveStatus,args=[scanId,targetURL,arecurse,inScopeOnly,method,postData,contextId,alertThreshold,attackStrength])
-                            checkActiveStatusThread.start()
-                    #fail
-                    else: 
+                            #thread
+                            if scanOption == '0':
+                                global checkPassiveStatusThread
+                                checkPassiveStatusThread = threading.Thread(target=checkPassiveStatus,args=[scanId])
+                                checkPassiveStatusThread.start()
+                            elif scanOption == '2':
+                                global checkActiveStatusThread
+                                arecurse = scan['ascanInfo']['recurse']
+                                inScopeOnly = scan['ascanInfo']['inScopeOnly']
+                                method = scan['ascanInfo']['method']
+                                postData = scan['ascanInfo']['postData']
+                                contextId = scan['ascanInfo']['contextId']
+                                alertThreshold = scan['ascanInfo']['alertThreshold']
+                                attackStrength = scan['ascanInfo']['attackStrength']
+                                checkActiveStatusThread = threading.Thread(target=checkActiveStatus,args=[scanId,targetURL,arecurse,inScopeOnly,method,postData,contextId,alertThreshold,attackStrength])
+                                checkActiveStatusThread.start()
+                        #fail
+                        else: 
+                            db.modifyExistInfo('status','4',scanId)
+                    else:
                         db.modifyExistInfo('status','4',scanId)
-                else:
+                except Exception as err:
+                    print('error: {}'.format(str(err)))
                     db.modifyExistInfo('status','4',scanId)
+            
+            
             else:
                 print('someone is scanning')
-        
+                
+
     else:
         pass
 
