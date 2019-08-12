@@ -45,7 +45,7 @@ class mongoDB():
             scans.append(result)
         return scans
     def listAllScans(self):
-        results = self.collection.find({},{"_id":0}).sort('timeStamp',pymongo.DESCENDING)
+        results = self.collection.find({},{"_id":0}).sort('timeStamp',pymongo.ASCENDING)
         scans = []
         for result in results:
             scans.append(result)
@@ -92,6 +92,14 @@ class mongoDB():
         for scanId in scanIdlist:
             result = self.collection.remove({'scanId': scanId})
             result_html = self.coll_html.remove({'scanId':scanId})
+    def deleteRunningScans(self):
+        result = self.collection.remove({
+            "$and":[
+                {'status':{ '$ne':'0' }},
+                {'status':{ '$ne':'3' }},
+                {'status':{ '$ne':'4' }}
+            ]},{"_id":0})
+
     def deleteAllScans(self):
         result = self.collection.remove({})
 
@@ -171,7 +179,9 @@ if __name__ == '__main__':
     #mongodb.deleteScans(['8829705','2962665'])
     scans = mongodb.listAllScans()
     print(len(scans))
-    print(scans)
+    for scan in scans:
+        print("status: " + scan['status']+" \npscan: "+ scan['pscanStatus']+" \ntimeStamp: "+ str(scan['timeStamp']))
+    
     #print(mongodb.getCollection())
     #html = mongodb.findHtml('666')
     #print(html)

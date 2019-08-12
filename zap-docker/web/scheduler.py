@@ -180,7 +180,7 @@ def scan():
 
 if __name__ == '__main__':
     db = mongodb.mongoDB()
-    
+    db.deleteRunningScans() 
     #blocking method
     while True:
         scan()
