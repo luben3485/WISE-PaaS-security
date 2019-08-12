@@ -192,7 +192,7 @@ if __name__ == '__main__':
     scans = mongodb.listAllScans()
     print(len(scans))
     for scan in scans:
-        print("status: " + scan['status']+" \npscan: "+ scan['pscanStatus']+" \ntimeStamp: "+ str(scan['timeStamp']))
+        print("status: " + scan['status']+" \npscan: "+ scan['pscanStatus']+" \nascan: "+ scan['ascanStatus']+" \ntimeStamp: "+ str(scan['timeStamp']))
     
     #print(mongodb.getCollection())
     #html = mongodb.findHtml('666')
