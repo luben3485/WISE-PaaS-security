@@ -1,10 +1,7 @@
 import time
 import mongodb
 import requests
-import threading
 
-checkPassiveStatusThread = ''
-checkActiveStatusThread = ''
 
 def checkPassiveStatus(scanId):
     try:
@@ -153,11 +150,8 @@ def scan():
 
                             #thread
                             if scanOption == '0':
-                                global checkPassiveStatusThread
-                                checkPassiveStatusThread = threading.Thread(target=checkPassiveStatus,args=[scanId])
-                                checkPassiveStatusThread.start()
+                                checkPassiveStatus(scanId)
                             elif scanOption == '2':
-                                global checkActiveStatusThread
                                 arecurse = scan['ascanInfo']['recurse']
                                 inScopeOnly = scan['ascanInfo']['inScopeOnly']
                                 method = scan['ascanInfo']['method']
@@ -165,8 +159,7 @@ def scan():
                                 contextId = scan['ascanInfo']['contextId']
                                 alertThreshold = scan['ascanInfo']['alertThreshold']
                                 attackStrength = scan['ascanInfo']['attackStrength']
-                                checkActiveStatusThread = threading.Thread(target=checkActiveStatus,args=[scanId,targetURL,arecurse,inScopeOnly,method,postData,contextId,alertThreshold,attackStrength])
-                                checkActiveStatusThread.start()
+                                checkActiveStatus(scanId,targetURL,arecurse,inScopeOnly,method,postData,contextId,alertThreshold,attackStrength)
                         #fail
                         else: 
                             db.modifyExistInfo('status','4',scanId)
