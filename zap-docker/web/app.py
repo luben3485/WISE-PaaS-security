@@ -461,6 +461,7 @@ def Scan():
                 "ascanId":'-1',
                 "pscanId":'-1',
                 "status":'0',
+                "schedule":'1',
                 "pscanInfo":{
                     "recurse": precurse,
                     "subtreeOnly": subtreeOnly,
@@ -498,6 +499,7 @@ def Scan():
                 "ascanId":'-1',
                 "pscanId":'-1',
                 "status":'0',
+                "schedule":"1",
                 "pscanInfo":{
                     "recurse": precurse,
                     "subtreeOnly": subtreeOnly,
@@ -562,7 +564,8 @@ def Scan():
                     "scanOption":scanOption,
                     "ascanId":'-1',
                     "pscanId":pscanId,
-                    "status":'0'
+                    "status":'1',
+                    "schedule":'0'
                 }
                 db.addScan(scandata)
     
