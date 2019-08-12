@@ -126,6 +126,7 @@ $(document).ready(function(){
     
     function cancelScan(){
             clearAllTimer();
+            autoRefreshTableTimer = setInterval(function(){ autoRefreshTable() }, 10000);
             timerStart = 0;
             //checkUserScan();
             //var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 5000);
@@ -270,8 +271,9 @@ $(document).ready(function(){
                     });
                 
                 }else if(res.Result == 'NEEDWAITING'){
-
-                    showScanning('Other scan task is running.','Your scan task will be scheduled to start autoly later.')
+                    $('#scanningmessage').css('display','none');
+                    $('#startScan').removeClass('disabled');
+                    showMessage('Other scan task is running.','Your scan task will be scheduled to start autoly later.','negative')
                     $('#startScan').addClass('disabled');
                     console.log('NEEDWAITING');
                     //start timer
