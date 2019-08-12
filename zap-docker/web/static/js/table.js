@@ -323,8 +323,9 @@ new Ctor().$mount('#app')
 
 
 
-
+/*
 
 
 var scanningCtor = Vue.extend(Main)
 new scanningCtor().$mount('#scanningApp')
+*/
