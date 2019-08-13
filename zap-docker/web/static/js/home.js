@@ -44,6 +44,15 @@ $(document).ready(function(){
             console.log("refresh table fail") 
         });
         
+        
+        refreshScheduleTable().done(function(response){
+            while (schedule.length > 0) schedule.pop();
+            while (response.length > 0) schedule.push(response.shift());
+            console.log("refresh  schedule table successfully");
+        }).fail(function(){
+            console.log("refresh schedule table fail") 
+        });
+        
         checkUserScan();
         //var checkUserScanTimer = setInterval(function(){ checkUserScan() }, 1000);
                 
@@ -70,6 +79,14 @@ $(document).ready(function(){
             while (response.length > 0) Data.push(response.shift());
         }).fail(function(){
             console.log('refreshTable error')
+        });
+        
+        refreshScheduleTable().done(function(response){
+            while (schedule.length > 0) schedule.pop();
+            while (response.length > 0) schedule.push(response.shift());
+            console.log("refresh  schedule table successfully");
+        }).fail(function(){
+            console.log("refresh schedule table fail") 
         });
     }
     
@@ -253,6 +270,14 @@ $(document).ready(function(){
                     console.log("refresh table successfully");
                 }).fail(function(){
                     console.log("refresh table fail") 
+                });
+            
+                refreshScheduleTable().done(function(response){
+                    while (schedule.length > 0) schedule.pop();
+                    while (response.length > 0) schedule.push(response.shift());
+                    console.log("refresh  schedule table successfully");
+                }).fail(function(){
+                    console.log("refresh schedule table fail") 
                 });
             
                 if(res.Result == 'SCANNING'){
@@ -680,6 +705,13 @@ $(document).ready(function(){
         //Delete all scan report before
         return $.ajax({
                 url: '/refreshTable',
+                type: 'GET'
+        });  
+    }    
+    function refreshScheduleTable(){
+        //Delete all scan report before
+        return $.ajax({
+                url: '/refreshScheduleTable',
                 type: 'GET'
         });  
     }

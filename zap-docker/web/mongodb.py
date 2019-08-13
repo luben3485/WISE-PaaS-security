@@ -33,7 +33,7 @@ class mongoDB():
     def findHtml(self,scanId):
         result = self.coll_html.find_one({"scanId":scanId})
         return result
-    def listScans(self,userId):
+    def listUserScans(self,userId):
         results = self.collection.find({
             "$and":[
                 {'userId':userId},
@@ -41,6 +41,16 @@ class mongoDB():
                 {'status':{ '$ne':'4' }}
  
             ]},{"_id":0}).sort('timeStamp',pymongo.DESCENDING)
+        scans = []
+        for result in results:
+            scans.append(result)
+        return scans
+    def listUserPendingScans(self,userId):
+        results = self.collection.find({
+            "$and":[
+                {'userId':userId},
+                {'status':'0'}
+            ]},{"_id":0}).sort('timeStamp',pymongo.ASCENDING)
         scans = []
         for result in results:
             scans.append(result)

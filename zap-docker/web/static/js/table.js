@@ -1,6 +1,8 @@
 var deleted=[];
 var deletedFlag = 0;
-/*var Data =[
+var deletedSchedule = []
+var deletedScheduleFlag = 0;
+var Data =[
         {
           "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
           "scanId":1,
@@ -48,15 +50,47 @@ var deletedFlag = 0;
         },
                  
         ];
-*/
+
 var Data = [];
+/*var schedule =[
+        {
+          "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
+          "userName":'Hello Wooo',
+          "targetURL":"ahttp://testphp.aaaaaaaa.com",
+          "scanId":'5',
+          "timeStamp":24,
+          "time":87,
+          "period":"4 day"
+        },
+        {
+          "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
+          "scanId":'6',
+          "userName":'Helttt ffsa',
+          "targetURL":"ahttp://testphp.aaaaaaaa.com",
+          "timeStamp":24,
+          "time":87,
+          "period":"4 day"
+        },
+        {
+          "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
+          "userName":'trte Wooo',
+          "scanId":'7',
+          "targetURL":"ahttp://testphp.aaaaaaaa.com",
+          "timeStamp":24,
+          "time":87,
+          "period":"4 day"
+        }
+]*/
+var schedule =[];
 $(document).ready(function(){
     
-    $('#tabledelete').click(function(){
-
-
-        
-        
+    $('#tab1').click(function(){
+        $(this).addClass('active');
+        $('#tab2').removeClass('active');
+    });
+    $('#tab2').click(function(){
+        $(this).addClass('active');
+        $('#tab1').removeClass('active');
     });
     
 });
@@ -148,8 +182,10 @@ function deleteScans(scanIdArr){
 var Main ={
         data() {
             return {
+                tab:2,
                 isLoading: true,
-                tableData: Data,
+                tables1: {
+                    tableData: Data,
                     columns: [
                         {width: 50, titleAlign: 'center',columnAlign:'center',type: 'selection' 
                         },
@@ -164,6 +200,27 @@ var Main ={
                         {field: 'dashboard', title: 'Dashboard', width: 40, titleAlign: 'center',columnAlign:'center',componentName:'table-dashboard',isResize:true},
                         {field: 'custome-adv', title: 'Operation',width: 120, titleAlign: 'center',columnAlign:'center',componentName:'table-operation',isResize:true}
                     ]
+                },
+                
+                tables2: {
+                    tableData: schedule,
+                    columns: [
+                        {width: 50, titleAlign: 'center',columnAlign:'center',type: 'selection' 
+                        },
+                        {
+                            field: 'custome', title:'Number', width: 40, titleAlign: 'center', columnAlign: 'center',
+                            formatter: function (rowData,rowIndex,pagingIndex,field) {
+                                return rowIndex >=0 ? '<span style="color:#000000;font-weight: bold;">' + (rowIndex + 1) + '</span>' : rowIndex + 1
+                            }, isFrozen: true,isResize:true
+                        },
+                        {field: 'userName', title:'User name', width: 120, titleAlign: 'center',columnAlign:'center',isResize:true},
+                        {field: 'targetURL', title:'Target URL', width: 250, titleAlign: 'center',columnAlign:'center',isResize:true},
+                        {field: 'time', title: 'Time', width: 100, titleAlign: 'center',columnAlign:'center',isResize:true},
+                        {field: 'period', title: 'Period', width: 100, titleAlign: 'center',columnAlign:'center',isResize:true},
+                        {field: 'custome', title: 'Operation',width: 120, titleAlign: 'center',columnAlign:'center',componentName:'schedule-operation',isResize:true}
+                    ]
+                
+                }
 
             }
         },
@@ -189,7 +246,7 @@ var Main ={
 
             selectGroupChange(selection){
                 deletedFlag = 1;
-                //console.log('select-group-change',selection);
+                console.log('select-group-change',selection);
                 while (deleted.length > 0) deleted.pop();
                 selection.forEach(function(item, index, array){
                     for(var i=0;i<Data.length;i++){
@@ -202,14 +259,46 @@ var Main ={
                 });
                 console.log('deleted:'+deleted)
                     
+            },selectALLSchedule(selection){
+                
+                //console.log('select-aLL',selection);
+                if(selection.length !=0){
+                    deletedScheduleFlag = 1;
+                    while (deletedSchedule.length > 0) deletedSchedule.pop();
+                    selection.forEach(function(item, index, array){
+                        deletedSchedule.push(index);
+                    });
+                    console.log('deleted:'+deletedSchedule)
+                }else{
+                    deletedScheduleFlag = 0;
+                }
+            },selectGroupChangeSchedule(selection){
+                deletedScheduleFlag = 1;
+                console.log('select-group-change',selection);
+                while (deletedSchedule.length > 0) deletedSchedule.pop();
+                selection.forEach(function(item, index, array){
+                    for(var i=0;i<schedule.length;i++){
+                        if(schedule[i].scanId == item.scanId){
+                            deletedSchedule.push(i);
+                        }   
+                        
+                    }
+
+                });
+                console.log('deleted:'+deletedSchedule)
+                    
             },
             customCompFunc(params){
 
                 console.log(params);
 
-                if (params.type === 'delete'){ // do delete operation
-                    deleteScans([params.rowData['scanId']]);
-                    //this.$delete(this.tableData,params.index);
+                if (params.type === 'delete1'){ // do delete operation
+                    //deleteScans([params.rowData['scanId']]);
+                    this.$delete(this.tables1.tableData,params.index);
+
+                }else if (params.type === 'delete2'){ // do delete operation
+                    //deleteScans([params.rowData['scanId']]);
+                    this.$delete(this.tables2.tableData,params.index);
 
                 }else if (params.type === 'download'){ // do download operation
                     /*
@@ -239,16 +328,29 @@ var Main ={
                         
                     });
                     deleteScans(scanIdArr)
-                    //alert(scanIdArr);
-                    deletedFlag = 0;
-                }else{
+                    alert(scanIdArr);
                     
+                    deletedFlag = 0;
+                }else if(deletedScheduleFlag == 1){
+                    var scanIdArr = [];
+                    deletedSchedule.forEach(function(element, index){
+                        scanIdArr.push(schedule[element]['scanId']);
+                        
+                    });
+                    deleteScans(scanIdArr)
+                    alert(scanIdArr);
+                    deletedScheduleFlag = 0;
                     //alert('no');
                 }
                     
                 
                 
                 
+            },
+            tabClick(tabId){
+                 this.tab = tabId;
+                 this.$refs['table'+tabId].resize();
+
             }
         }
     }
@@ -307,12 +409,39 @@ var Main ={
 
             deleteRow(){
 
-                let params = {type:'delete',index:this.index,rowData:this.rowData};
+                let params = {type:'delete1',index:this.index,rowData:this.rowData};
                 this.$emit('on-custom-comp',params);
 
             }
         }
     })
+
+    
+    Vue.component('schedule-operation',{
+        template:`<span>
+        <a href="" @click.stop.prevent="deleteRow(rowData,index)">Delete</a>
+        </span>`,
+        props:{
+            rowData:{
+                type:Object
+            },
+            field:{
+                type:String
+            },
+            index:{
+                type:Number
+            }
+        },
+        methods:{
+            deleteRow(){
+                
+                let params = {type:'delete2',index:this.index,rowData:this.rowData};
+                this.$emit('on-custom-comp',params);
+
+            }
+        }
+    })
+
 var Ctor = Vue.extend(Main)
 new Ctor().$mount('#app')
 
@@ -322,10 +451,3 @@ new Ctor().$mount('#app')
 
 
 
-
-/*
-
-
-var scanningCtor = Vue.extend(Main)
-new scanningCtor().$mount('#scanningApp')
-*/

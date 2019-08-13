@@ -326,7 +326,7 @@ def getUserIdFromToken(EIToken):
     if lenx == 3:
         info += '='
     userId = json.loads(base64.b64decode(info))['userId']
-    userName =  json.loads(base64.b64decode(info))['userId'] +  json.loads(base64.b64decode(info))['userId']
+    userName =  json.loads(base64.b64decode(info))['firstName'] +  json.loads(base64.b64decode(info))['lastName']
     return userId,userName
 
 
@@ -339,12 +339,17 @@ def home():
 @EIToken_verification
 def deleteScans():
     EIToken = request.cookies.get('EIToken')
+    userId,userName = getUserIdFromToken(EIToken)
     scanIdArr = request.form.getlist('scanIdArr[]')
     for scanId in scanIdArr:
-        status = db.findScan(scanId)['status']
-        if status == '3':
-            db.deleteScan(scanId)
-            delete_dashboard(scanId, EIToken)
+        scan = db.findScan(scanId)
+        if scan != None:
+            status = scan['status']
+            scan_userId = scan['userId']
+            if userId == scan_userId:
+                if status == '3' or status == '0':
+                    db.deleteScan(scanId)
+                    delete_dashboard(scanId, EIToken)
     return jsonify({'Result':'OK'})
 
 
@@ -832,7 +837,20 @@ def refreshTable():
     EIToken =request.cookies.get('EIToken')
     info_token = EIToken.split('.')[1]
     userId = getUserIdFromToken(EIToken)
-    scans = db.listScans(userId)
+    scans = db.listUserScans(userId)
+    for scan in scans:
+        ts = scan['timeStamp']
+        time = datetime.fromtimestamp(ts).strftime('%Y/%m/%d %H:%M')
+        time_info = {'time' : time}
+        scan.update(time_info)
+    return jsonify(scans)
+@app.route('/refreshScheduleTable',methods=['GET'])
+@EIToken_verification
+def refreshScheduleTable():
+    EIToken =request.cookies.get('EIToken')
+    info_token = EIToken.split('.')[1]
+    userId = getUserIdFromToken(EIToken)
+    scans = db.listUserPendingScans(userId)
     for scan in scans:
         ts = scan['timeStamp']
         time = datetime.fromtimestamp(ts).strftime('%Y/%m/%d %H:%M')
