@@ -451,7 +451,8 @@ def Scan():
 
     nowScan = db.listScanning()
     if timeStamp != '0':
-        
+        print(timeStamp)
+        print(type(timeStamp))
         #Call Dashboard API getting dashboardLink
         dashboardLink = create_dashboard(scanId,EIToken)
         
