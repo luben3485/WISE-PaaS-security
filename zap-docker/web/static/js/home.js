@@ -244,7 +244,7 @@ $(document).ready(function(){
     
 
     /*passive scan begin*/
-    function Scan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly,time,period){
+    function Scan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly,timeStamp,period){
         $.ajax({
             url: '/Scan',
             type: 'GET',
@@ -257,7 +257,7 @@ $(document).ready(function(){
                 'attackStrength':attackStrength,
                 'precurse': precurse,
                 'subtreeOnly':subtreeOnly,
-                'time':time,
+                'timeStamp':timeStamp,
                 'period':period
             }
         }).done(function(res){
