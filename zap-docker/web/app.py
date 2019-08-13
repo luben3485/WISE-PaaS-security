@@ -868,7 +868,7 @@ def refreshScheduleTable():
         if per ==  0:
             period_info = {'period': 'Only Once'}
         else:
-            period_info = {'period': str(per/day) + 'day'}
+            period_info = {'period': str(int(per/day)) + ' day'}
         scan.update(time_info)
         scan.update(period_info)
     return jsonify(scans)
