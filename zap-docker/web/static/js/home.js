@@ -75,8 +75,10 @@ $(document).ready(function(){
         console.log(isValidDate(date));
         */
         refreshTable().done(function(response){
+            console.log(response.length)
             while (Data.length > 0) Data.pop();
             while (response.length > 0) Data.push(response.shift());
+            console.log("refresh table successfully");
         }).fail(function(){
             console.log('refreshTable error')
         });
