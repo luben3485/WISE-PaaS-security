@@ -439,7 +439,7 @@ $(document).ready(function(){
              time = $('input[name="date"]').val()
             var date = new Date(time);
             var day =$("#period").val();
-            var period = day*24*60*60;
+            var period = day*60;
             
                 if(scanOption == 0){
                     var subtreeOnly;
