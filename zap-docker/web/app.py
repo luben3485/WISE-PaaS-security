@@ -837,8 +837,9 @@ def addScan():
 def refreshTable():
     EIToken =request.cookies.get('EIToken')
     info_token = EIToken.split('.')[1]
-    userId = getUserIdFromToken(EIToken)
+    userId,userName = getUserIdFromToken(EIToken)
     scans = db.listUserScans(userId)
+    print(userId)
     print(scans)
     for scan in scans:
         ts = scan['timeStamp']
@@ -851,7 +852,7 @@ def refreshTable():
 def refreshScheduleTable():
     EIToken =request.cookies.get('EIToken')
     info_token = EIToken.split('.')[1]
-    userId = getUserIdFromToken(EIToken)
+    userId,userName = getUserIdFromToken(EIToken)
     scans = db.listUserPendingScans(userId)
     for scan in scans:
         ts = scan['timeStamp']

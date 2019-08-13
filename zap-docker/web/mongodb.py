@@ -199,10 +199,12 @@ if __name__ == '__main__':
     #mongodb.deleteAllScans()
     #mongodb.addScan(scandata)
     #mongodb.deleteScans(['8829705','2962665'])
-    scans = mongodb.listAllScans()
+    #scans = mongodb.listAllScans()
+    scans = mongodb.listUserScans('b7ea79a3-c2eb-4c79-b968-b279667f3747')
     print(len(scans))
+    
     for scan in scans:
-        print("status: " + scan['status']+" \npscan: "+ scan['pscanStatus']+" \nascan: "+ scan['ascanStatus']+" \ntimeStamp: "+ str(scan['timeStamp']))
+        print("status: " + scan['status']+" \npscan: "+ scan['pscanStatus']+" \nascan: "+ scan['ascanStatus']+" \ntimeStamp: "+ str(scan['timeStamp'])+" \nuserId: "+ str(scan['userId']))
     
     #print(mongodb.getCollection())
     #html = mongodb.findHtml('666')
