@@ -533,6 +533,10 @@ def Scan():
 
         db.addScan(scandata)
         
+        result = jsonify({"Result":"SCHEDULE"})
+        result.set_cookie('scanId',scanId,domain=domainName)
+        return result
+        
 
     elif nowScan != None:
 
@@ -858,7 +862,15 @@ def refreshScheduleTable():
         ts = scan['timeStamp']
         time = datetime.fromtimestamp(ts).strftime('%Y/%m/%d %H:%M')
         time_info = {'time' : time}
+
+        per = scan['period']
+        day = 86400
+        if per ==  0:
+            period_info = {'period': 'Only Once'}
+        else:
+            period_info = {'period': str(per/day) + 'day'}
         scan.update(time_info)
+        scan.update(period_info)
     return jsonify(scans)
 '''
 @app.route('/setSSOurl')

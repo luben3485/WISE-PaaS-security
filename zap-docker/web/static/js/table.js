@@ -169,6 +169,18 @@ function deleteScans(scanIdArr){
         }).fail(function(){
             console.log("refresh table fail") 
         });
+        $.ajax({
+                url: '/refreshScheduleTable',
+                type: 'GET'
+        }).done(function(response){
+            while (schedule.length > 0) schedule.pop();
+            while (response.length > 0) schedule.push(response.shift());
+            console.log("refresh schedule table successfully")
+        }).fail(function(){
+            console.log("refresh schedule table fail") 
+        });
+        
+        
         
     }).fail(function(){
         
@@ -213,11 +225,11 @@ var Main ={
                                 return rowIndex >=0 ? '<span style="color:#000000;font-weight: bold;">' + (rowIndex + 1) + '</span>' : rowIndex + 1
                             }, isFrozen: true,isResize:true
                         },
-                        {field: 'userName', title:'User name', width: 120, titleAlign: 'center',columnAlign:'center',isResize:true},
+                        {field: 'userName', title:'User name', width: 90, titleAlign: 'center',columnAlign:'center',isResize:true},
                         {field: 'targetURL', title:'Target URL', width: 250, titleAlign: 'center',columnAlign:'center',isResize:true},
-                        {field: 'time', title: 'Time', width: 100, titleAlign: 'center',columnAlign:'center',isResize:true},
-                        {field: 'period', title: 'Period', width: 100, titleAlign: 'center',columnAlign:'center',isResize:true},
-                        {field: 'custome', title: 'Operation',width: 120, titleAlign: 'center',columnAlign:'center',componentName:'schedule-operation',isResize:true}
+                        {field: 'time', title: 'Time', width: 150, titleAlign: 'center',columnAlign:'center',isResize:true},
+                        {field: 'period', title: 'Period', width: 50, titleAlign: 'center',columnAlign:'center',isResize:true},
+                        {field: 'custome', title: 'Operation',width: 100, titleAlign: 'center',columnAlign:'center',componentName:'schedule-operation',isResize:true}
                     ]
                 
                 }
@@ -293,13 +305,13 @@ var Main ={
                 console.log(params);
 
                 if (params.type === 'delete1'){ // do delete operation
-                    //deleteScans([params.rowData['scanId']]);
-                    this.$delete(this.tables1.tableData,params.index);
+                    deleteScans([params.rowData['scanId']]);
+                    //this.$delete(this.tables1.tableData,params.index);
 
                 }else if (params.type === 'delete2'){ // do delete operation
-                    //deleteScans([params.rowData['scanId']]);
-                    this.$delete(this.tables2.tableData,params.index);
-
+                    deleteScans([params.rowData['scanId']]);
+                    //this.$delete(this.tables2.tableData,params.index);
+                    
                 }else if (params.type === 'download'){ // do download operation
                     /*
                     alert(`Number：${params.index} Target URL：${params.rowData['targetURL']}  time：${params.rowData['time']}  scanId：${params.rowData['scanId']}`)
@@ -328,7 +340,7 @@ var Main ={
                         
                     });
                     deleteScans(scanIdArr)
-                    alert(scanIdArr);
+                    //alert(scanIdArr);
                     
                     deletedFlag = 0;
                 }else if(deletedScheduleFlag == 1){
@@ -338,7 +350,7 @@ var Main ={
                         
                     });
                     deleteScans(scanIdArr)
-                    alert(scanIdArr);
+                    //alert(scanIdArr);
                     deletedScheduleFlag = 0;
                     //alert('no');
                 }
