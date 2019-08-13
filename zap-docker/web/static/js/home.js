@@ -12,6 +12,7 @@ $(document).ready(function(){
     //set cookies
     document.cookie="appUrl="+myUrl+";domain="+domainName+"; path=/";
     document.cookie="SSO_URL="+ssoUrl+";domain="+domainName+"; path=/";
+    $('#timepicker').calendar();
     
     //animation setting
     $('.menu .item').tab();
@@ -48,12 +49,22 @@ $(document).ready(function(){
                 
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
-        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+        //window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
     });        
     
-    
+    function isValidDate(date) {
+        return date instanceof Date && !isNaN(date.getTime())
+    }
     autoRefreshTableTimer = setInterval(function(){ autoRefreshTable() }, 10000);
     function autoRefreshTable(){
+        /*
+        console.log($('input[name="date"]').val());
+        time = 'August 5, 2019 5:22 PM'
+        var date = new Date(time);
+        console.log(date)
+        console.log(Math.floor(date.getTime()/1000));
+        console.log(isValidDate(date));
+        */
         refreshTable().done(function(response){
             while (Data.length > 0) Data.pop();
             while (response.length > 0) Data.push(response.shift());
@@ -101,7 +112,7 @@ $(document).ready(function(){
                     }
                     console.log("SCANNING");
                 }else if(res.Result == 'NEEDWAITING'){
-                     showScanning('Other scan task is running.','Your scan task will be scheduled to start autoly later.')
+                     //showScanning('Other scan task is running.','Your scan task will be scheduled to start autoly later.')
                     if(timerStart == 0){
                         //waitScan(res.scanOption);
                         timerStart = 1;
@@ -216,7 +227,7 @@ $(document).ready(function(){
     
 
     /*passive scan begin*/
-    function Scan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly){
+    function Scan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly,time,period){
         $.ajax({
             url: '/Scan',
             type: 'GET',
@@ -229,7 +240,8 @@ $(document).ready(function(){
                 'attackStrength':attackStrength,
                 'precurse': precurse,
                 'subtreeOnly':subtreeOnly,
-                
+                'time':time,
+                'period':period
             }
         }).done(function(res){
                 
@@ -271,15 +283,19 @@ $(document).ready(function(){
                     });
                 
                 }else if(res.Result == 'NEEDWAITING'){
-                    $('#scanningmessage').css('display','none');
                     $('#startScan').removeClass('disabled');
+                    $('#scanningmessage').css('display','none');
                     showMessage('Other scan task is running.','Your scan task will be scheduled to start autoly later.','negative')
                     $('#startScan').addClass('disabled');
                     console.log('NEEDWAITING');
                     //start timer
                     //waitScan(scanOption);
                 }
-                
+                else if(res.Result == 'SCHEDULE'){
+                    $('#startScan').removeClass('disabled');
+                    $('#scanningmessage').css('display','none');
+                    showMessage('Add scan to schedule successfully!','Scan will run autoly depending on your setting.','successful');
+                }
             
         }).fail(function(){
              console.log('passsive scan error')
@@ -392,42 +408,61 @@ $(document).ready(function(){
             $('#startScan').addClass('disabled');
             var scanOption=$("#scanOption").val();
             $('#message').css('display','none');
-        
-            if(scanOption == 0){
-                var subtreeOnly;
-                var precurse;
-                var targetURL;
-                $("input[name=subtreeOnly]:checked").each(function () { subtreeOnly = $(this).val()});
-                $("input[name=passiveRecurse]:checked").each(function () { precurse = $(this).val()});
-                targetURL = $('input[name="input_url"]').val();
-                if(checkURL(targetURL)==true)
-                    Scan(targetURL,'','','','',scanOption,precurse,subtreeOnly);
-                else{
-                    showMessage('Illegal URL format','Please input the URL once again.','negative');
-                    $('#startScan').removeClass('disabled');
+            
+             time = $('input[name="date"]').val()
+            var date = new Date(time);
+            var day =$("#period").val();
+            var period = day*24*60*60;
+            
+                if(scanOption == 0){
+                    var subtreeOnly;
+                    var precurse;
+                    var targetURL;
+                    $("input[name=subtreeOnly]:checked").each(function () { subtreeOnly = $(this).val()});
+                    $("input[name=passiveRecurse]:checked").each(function () { precurse = $(this).val()});
+                    targetURL = $('input[name="input_url"]').val();
+                    if(checkURL(targetURL)==true){
+                        if(isValidDate(date)){
+                            timeStamp = Math.floor(date.getTime()/1000);
+                            Scan(targetURL,'','','','',scanOption,precurse,subtreeOnly,timeStamp,period);
+                            $('#startScan').removeClass('disabled');
+                            showMessage('Add scan to schedule successfully!','scan will run autoly depending on your setting.','successful');
+                        }
+                        else{
+                            Scan(targetURL,'','','','',scanOption,precurse,subtreeOnly,'0','0');
+                        }
+                    }
+                    else{
+                        showMessage('Illegal URL format','Please input the URL once again.','negative');
+                        $('#startScan').removeClass('disabled');
+                    }
+                }else if(scanOption == 2){
+                    var arecurse;
+                    var inScopeOnly;
+                    var targetURL;
+                    var alertThreshold;
+                    var attackStrength;
+                    var precurse;
+                    var subtreeOnly;
+                    $("input[name=alertThreshold]:checked").each(function () { alertThreshold = $(this).val()});
+                    $("input[name=attackStrength]:checked").each(function () { attackStrength = $(this).val()});
+                    $("input[name=activeRecurse]:checked").each(function () { arecurse = $(this).val()});
+                    $("input[name=inScopeOnly]:checked").each(function () { inScopeOnly = $(this).val()});
+                    targetURL = $('input[name="input_url"]').val();
+                    $("input[name=subtreeOnly]:checked").each(function () { subtreeOnly = $(this).val()});
+                    $("input[name=passiveRecurse]:checked").each(function () { precurse = $(this).val()}); 
+                    if(checkURL(targetURL)==true){
+                        if(isValidDate(date)){
+                            timeStamp = Math.floor(date.getTime()/1000);
+                            Scan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly,timeStamp,period);
+                        }else{
+                            Scan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly,'0','0');
+                        }
+                    }else{
+                        showMessage('illegal URL format','Please input the URL once again.','negative');
+                        $('#startScan').removeClass('disabled');
+                    }
                 }
-            }else if(scanOption == 2){
-                var arecurse;
-                var inScopeOnly;
-                var targetURL;
-                var alertThreshold;
-                var attackStrength;
-                var precurse;
-                var subtreeOnly;
-                $("input[name=alertThreshold]:checked").each(function () { alertThreshold = $(this).val()});
-                $("input[name=attackStrength]:checked").each(function () { attackStrength = $(this).val()});
-                $("input[name=activeRecurse]:checked").each(function () { arecurse = $(this).val()});
-                $("input[name=inScopeOnly]:checked").each(function () { inScopeOnly = $(this).val()});
-                targetURL = $('input[name="input_url"]').val();
-                $("input[name=subtreeOnly]:checked").each(function () { subtreeOnly = $(this).val()});
-                $("input[name=passiveRecurse]:checked").each(function () { precurse = $(this).val()}); 
-                if(checkURL(targetURL)==true)
-                    Scan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly);
-                else{
-                    showMessage('illegal URL format','Please input the URL once again.','negative');
-                    $('#startScan').removeClass('disabled');
-                }
-            }
             
         }).fail(function(){
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl; 

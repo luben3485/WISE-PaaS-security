@@ -8,6 +8,7 @@
         <link href="css/font-awesome-all.css" rel="stylesheet" type="text/css" >
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/>
         <link rel="stylesheet" href="https://unpkg.com/vue-easytable/umd/css/index.css">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
         
     </head>
     <body>
@@ -62,7 +63,7 @@
                                 </div>
                             </div>
 
-                            <div class="ui styled accordion" style="width:auto;">
+                            <div id="advanced-option" class="ui styled accordion" style="width:auto;">
                                 <div class="title">
                                     <i class="dropdown icon"></i>
                                     Advanced Options
@@ -230,6 +231,41 @@
                                 </div>
 
                             </div>
+                            <div id="schedule" class="ui styled accordion" style="width:auto;">
+                                <div class="title">
+                                    <i class="dropdown icon"></i>
+                                    Schedule
+                                </div>
+                                <div class="content">
+
+                                    <label><b>Date & Time</b></label>
+                                      <div class="ui calendar" id="timepicker">
+                                        <div class="ui input left icon">
+                                          <i class="calendar icon"></i>
+                                          <input name="date" type="text" placeholder="Date" value="">
+                                        </div>
+                                      </div>
+                                    <br>
+                                    <label><b>Period</b></label>
+                                     <select id="period" class="ui fluid dropdown">
+                                                <option value="0">Only once</option>
+                                                <option value="1">1 day</option>
+                                                <option value="2">2 day</option>
+                                                <option value="3">3 day</option>
+                                                <option value="4">4 day</option>
+                                                <option value="5">5 day</option>
+                                                <option value="6">6 day</option>
+                                                <option value="7">1 week</option>
+                                                <option value="14">2 week</option>
+                                                <option value="21">3 week</option>
+                                                <option value="30">1 month</option>
+                                                <option value="60">2 month</option>
+                                                <option value="120">4 month</option>
+                                         
+                                    </select>
+                                    
+                                </div>
+                            </div>
 
 
 
@@ -394,15 +430,19 @@
             </div>
         </div>
         <!-- footer-->
-        
+
         
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script type="text/javascript" src="js/easy-table.js"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <!--<script src="https://code.jquery.com/jquery-2.1.4.js"></script>-->
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/table.js"></script>
         <script type="text/javascript" src="js/home.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>
+        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>-->
+        <script src="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.js"></script>
+        
+        
 
     </body>
 </html>

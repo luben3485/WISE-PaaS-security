@@ -1,7 +1,7 @@
 import time
 import mongodb
 import requests
-
+import copy
 
 def checkPassiveStatus(scanId):
     try:
@@ -127,7 +127,23 @@ def scan():
                     db.modifyExistInfo('status','1',scanId)
                 elif scan['scanOption'] == '2':
                     db.modifyExistInfo('status','2',scanId)
-                
+
+                if scan['period'] != 0:
+                    newScan = copy.deepcopy(scan)    
+                    userId_new = newScan['userId']
+                    scanId_new = str(random.randint(1000000,9999999))
+                    newScan['timeStamp'] = newScan['timeStamp'] + newScan['period']
+                    newScan['scanId'] = scanId_new
+                    db.addScan(newScan)
+
+                    html_info = {
+                        "userId":userId_new,
+                        "scanId":scanId_new,
+                        "html":""
+                    }
+                    db.addHtml(html_info)
+
+
                 try:
                     # Delete all previous datas on ZAP server                                                                                           
                     r_delete = requests.get('http://127.0.0.1:5000/JSON/core/action/deleteAllAlerts')

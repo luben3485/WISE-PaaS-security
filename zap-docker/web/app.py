@@ -326,7 +326,8 @@ def getUserIdFromToken(EIToken):
     if lenx == 3:
         info += '='
     userId = json.loads(base64.b64decode(info))['userId']
-    return userId
+    userName =  json.loads(base64.b64decode(info))['userId'] +  json.loads(base64.b64decode(info))['userId']
+    return userId,userName
 
 
 
@@ -415,23 +416,120 @@ def waitScan():
 @app.route('/Scan',methods=['GET'])
 @EIToken_verification
 def Scan():
-        
+    
+    #Necessary setting
+    scanOption = request.args.get('scanOption')
+    targetURL = request.args.get('targetURL')
+    scanId = str(random.randint(1000000,9999999))
+    nowtime = int(time.time())
+    EIToken = request.cookies.get('EIToken')
+    info_token = EIToken.split('.')[1]
+    userId,userName = getUserIdFromToken(EIToken)
+
+    timeStamp = request.args.get('timeStamp')
+    period = request.args.get('period')
+
+    #Passive scan setting
+    precurse = request.args.get('precurse')
+    subtreeOnly= request.args.get('subtreeOnly') 
+    maxChildren=''
+    contextName=''
+
+    #Active scan setting
+    arecurse = request.args.get('arecurse')
+    inScopeOnly = request.args.get('inScopeOnly')
+    method = ''
+    postData = ''
+    contextId = ''
+    alertThreshold = request.args.get('alertThreshold')
+    attackStrength = request.args.get('attackStrength')
+
     nowScan = db.listScanning()
-    if nowScan != None:
-        #Necessary setting
-        scanOption = request.args.get('scanOption')
-        targetURL = request.args.get('targetURL')
-        scanId = str(random.randint(1000000,9999999))
-        nowtime = int(time.time())
-        EIToken = request.cookies.get('EIToken')
-        info_token = EIToken.split('.')[1]
-        userId = getUserIdFromToken(EIToken)
-            
-        #Passive scan setting
-        precurse = request.args.get('precurse')
-        subtreeOnly= request.args.get('subtreeOnly') 
-        maxChildren=''
-        contextName=''
+    if timeStamp != '0':
+        
+        #Call Dashboard API getting dashboardLink
+        dashboardLink = create_dashboard(scanId,EIToken)
+        
+        #Add html to db
+        html_info = {
+            "userId":userId,
+            "scanId":scanId,
+            "html":""
+        }
+        db.addHtml(html_info)
+        
+        if scanOption == '0':
+            scandata = {
+                "userId":userId,
+                "userName":userName,
+                "scanId":scanId,
+                "targetURL":targetURL,
+                "dashboardLInk":dashboardLink,
+                "timeStamp":int(timeStamp),
+                "ascanStatus":'0',
+                "pscanStatus":'0',
+                "scanOption":scanOption,
+                "ascanId":'-1',
+                "pscanId":'-1',
+                "status":'0',
+                "schedule":'1',
+                "period":int(period),
+                "pscanInfo":{
+                    "recurse": precurse,
+                    "subtreeOnly": subtreeOnly,
+                    "maxChildren":'',
+                    "contextName":''
+                },
+                "ascanInfo":{
+                    "recurse" : '',
+                    "inScopeOnly" : '',
+                    "method" : '',
+                    "postData" : '',
+                    "contextId" : '',
+                    "alertThreshold" : '',
+                    "attackStrength" : ''
+                }
+            }
+
+        elif scanOption == '2':
+
+            scandata = {
+                "userId":userId,
+                "userName":userName,
+                "scanId":scanId,
+                "targetURL":targetURL,
+                "dashboardLInk":dashboardLink,
+                "timeStamp":int(timeStamp),
+                "ascanStatus":'0',
+                "pscanStatus":'0',
+                "scanOption":scanOption,
+                "ascanId":'-1',
+                "pscanId":'-1',
+                "status":'0',
+                "schedule":"1",
+                "period":int(period),
+                "pscanInfo":{
+                    "recurse": precurse,
+                    "subtreeOnly": subtreeOnly,
+                    "maxChildren":'',
+                    "contextName":''
+                },
+                "ascanInfo":{
+                    "recurse" : arecurse,
+                    "inScopeOnly" : inScopeOnly,
+                    "method" : '',
+                    "postData" : '',
+                    "contextId" : '',
+                    "alertThreshold" : alertThreshold,
+                    "attackStrength" : attackStrength
+                }
+            }
+
+        db.addScan(scandata)
+        
+
+    elif nowScan != None:
+
              
         #Call Dashboard API getting dashboardLink
         dashboardLink = create_dashboard(scanId,EIToken)
@@ -451,6 +549,7 @@ def Scan():
         if scanOption == '0':
             scandata = {
                 "userId":userId,
+                "userName":userName,
                 "scanId":scanId,
                 "targetURL":targetURL,
                 "dashboardLInk":dashboardLink,
@@ -462,6 +561,7 @@ def Scan():
                 "pscanId":'-1',
                 "status":'0',
                 "schedule":'1',
+                "period":int(period),
                 "pscanInfo":{
                     "recurse": precurse,
                     "subtreeOnly": subtreeOnly,
@@ -480,15 +580,10 @@ def Scan():
             }
 
         elif scanOption == '2':
-            arecurse = request.args.get('arecurse')
-            inScopeOnly = request.args.get('inScopeOnly')
-            method = ''
-            postData = ''
-            contextId = ''
-            alertThreshold = request.args.get('alertThreshold')
-            attackStrength = request.args.get('attackStrength')
+
             scandata = {
                 "userId":userId,
+                "userName":userName,
                 "scanId":scanId,
                 "targetURL":targetURL,
                 "dashboardLInk":dashboardLink,
@@ -500,6 +595,7 @@ def Scan():
                 "pscanId":'-1',
                 "status":'0',
                 "schedule":"1",
+                "period":int(period),
                 "pscanInfo":{
                     "recurse": precurse,
                     "subtreeOnly": subtreeOnly,
@@ -529,23 +625,23 @@ def Scan():
         if r_delete.status_code == 200:
             
             # Get params from user setting
-            scanOption = request.args.get('scanOption')
-            targetURL = request.args.get('targetURL')
-            precurse = request.args.get('precurse')
-            subtreeOnly= request.args.get('subtreeOnly') 
-            maxChildren=''
-            contextName=''
+            #scanOption = request.args.get('scanOption')
+            #targetURL = request.args.get('targetURL')
+            #precurse = request.args.get('precurse')
+            #subtreeOnly= request.args.get('subtreeOnly') 
+            #maxChildren=''
+            #contextName=''
 
             payload = {'url': targetURL, 'maxChildren': maxChildren,'recurse':precurse,'contextName':contextName ,'subtreeOnly':subtreeOnly}
             r_passive = requests.get('http://127.0.0.1:5000/JSON/spider/action/scan',params=payload)
             if r_passive.status_code == 200:
                 r_passive = r_passive.json() 
                 pscanId = r_passive['scan']
-                scanId = str(random.randint(1000000,9999999))
-                nowtime = int(time.time())
-                EIToken = request.cookies.get('EIToken')
-                info_token = EIToken.split('.')[1]
-                userId = getUserIdFromToken(EIToken)
+                #scanId = str(random.randint(1000000,9999999))
+                #nowtime = int(time.time())
+                #EIToken = request.cookies.get('EIToken')
+                #info_token = EIToken.split('.')[1]
+                #userId = getUserIdFromToken(EIToken)
 
                 
                 #call Dashboard API getting dashboardLink
@@ -555,6 +651,7 @@ def Scan():
                 # other info  => str type
                 scandata = {
                     "userId":userId,
+                    "userName":userName,
                     "scanId":scanId,
                     "targetURL":targetURL,
                     "dashboardLInk":dashboardLink,
@@ -565,7 +662,8 @@ def Scan():
                     "ascanId":'-1',
                     "pscanId":pscanId,
                     "status":'1',
-                    "schedule":'0'
+                    "schedule":'0',
+                    "period":0
                 }
                 db.addScan(scandata)
     
@@ -583,13 +681,13 @@ def Scan():
                     checkPassiveStatusThread.start()
                 elif scanOption == '2':
                     global checkActiveStatusThread
-                    arecurse = request.args.get('arecurse')
-                    inScopeOnly = request.args.get('inScopeOnly')
-                    method = ''
-                    postData = ''
-                    contextId = ''
-                    alertThreshold = request.args.get('alertThreshold')
-                    attackStrength = request.args.get('attackStrength')
+                    #arecurse = request.args.get('arecurse')
+                    #inScopeOnly = request.args.get('inScopeOnly')
+                    #method = ''
+                    #postData = ''
+                    #contextId = ''
+                    #alertThreshold = request.args.get('alertThreshold')
+                    #attackStrength = request.args.get('attackStrength')
                     checkActiveStatusThread = threading.Thread(target=checkActiveStatus,args=[scanId,targetURL,arecurse,inScopeOnly,method,postData,contextId,alertThreshold,attackStrength])
                     checkActiveStatusThread.start()
 
