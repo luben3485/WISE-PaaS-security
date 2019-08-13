@@ -2,6 +2,7 @@ import time
 import mongodb
 import requests
 import copy
+import random
 
 def checkPassiveStatus(scanId):
     try:
