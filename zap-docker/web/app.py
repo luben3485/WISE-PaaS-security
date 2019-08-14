@@ -901,12 +901,6 @@ def updateDashboardUrl():
     db.updateDashbardUrl(url)
     return jsonify({'Result':'OK'})
 
-@app.route('/setDashboardUrl')
-@EIToken_verification
-def setDashboardUrl():
-    url = request.args.get('dashboardUrl')
-    db.setDashbardUrl(url)
-    return jsonify({'Result':'OK'})
 '''
 SPIDER + PASSIVE SCAN
 '''

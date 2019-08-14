@@ -518,7 +518,7 @@ $(document).ready(function(){
                         if(checkURL(url)){
                             $('#dashMsg').css('display','none');
                             $.ajax({
-                                url:'/setDashboardUrl',
+                                url:'/updateDashboardUrl',
                                 method: 'GET',
                                 Data:{
                                     'dashboardUrl':url
@@ -526,7 +526,7 @@ $(document).ready(function(){
                             }).done(function (res) {
 
                             }).fail(function(){
-                                console.log("/set dashboard url failed!")
+                                console.log("/update dashboard url failed!")
                             })
 
                         }else{
