@@ -64,13 +64,13 @@ $(document).ready(function(){
         //window.alert('Approved!');
                 
         url = $('input[name="dashboardUrl"]').val();
-        alert(url);
+        //alert(url);
         if(checkURL(url)){
             $('#dashMsg').css('display','none');
             $.ajax({
                 url:'/updateDashboardUrl',
                 method: 'GET',
-                Data:{
+                data:{
                     'dashboardUrl':url
                  }
             }).done(function (res) {
