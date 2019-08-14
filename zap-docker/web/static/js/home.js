@@ -64,6 +64,7 @@ $(document).ready(function(){
         //window.alert('Approved!');
                 
         url = $('input[name="dashboardUrl"]').val();
+        alert(url);
         if(checkURL(url)){
             $('#dashMsg').css('display','none');
             $.ajax({

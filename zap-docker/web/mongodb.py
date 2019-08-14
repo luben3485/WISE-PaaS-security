@@ -32,6 +32,12 @@ class mongoDB():
             return result['dashboardUrl']
         else:
             return None;
+    def getAllDashboardUrl(self):
+        results = self.coll_initInfo.find({},{"_id":0})
+        scans = []
+        for result in results:
+            scans.append(result)
+        return scans
     def showInitInfo(self):
         result = self.coll_initInfo.find({'num':'1'})
         print(result)
@@ -130,6 +136,8 @@ class mongoDB():
     def deleteScan(self,scanId):
         result = self.collection.remove({'scanId': scanId})
         result_html = self.coll_html.remove({'scanId':scanId})
+    def deleteDashboardUrl(self):
+        result = self.coll_initInfo.remove({'num':'1'})
     def deleteScans(self,scanIdlist):
         for scanId in scanIdlist:
             result = self.collection.remove({'scanId': scanId})
@@ -219,14 +227,17 @@ if __name__ == '__main__':
     #mongodb.deleteAllScans()
     #mongodb.addScan(scandata)
     #mongodb.deleteScans(['8829705','2962665'])
-    scans = mongodb.listAllScans()
+    #scans = mongodb.listAllScans()
+    #print(scans)
     #scans = mongodb.listUserScans('b7ea79a3-c2eb-4c79-b968-b279667f3747')
-    print(len(scans))
+    #print(len(scans))
     '''
     for scan in scans:
         print("status: " + scan['status']+" \npscan: "+ scan['pscanStatus']+" \nascan: "+ scan['ascanStatus']+" \ntimeStamp: "+ str(scan['timeStamp'])+" \nuserId: "+ str(scan['userId']))
     '''
-    print(mongodb.getDashboardUrl())
+    scans = mongodb.getAllDashboardUrl()
+    print(scans)
+    #mongodb.deleteDashboardUrl()
     #print(mongodb.getCollection())
     #html = mongodb.findHtml('666')
     #print(html)
