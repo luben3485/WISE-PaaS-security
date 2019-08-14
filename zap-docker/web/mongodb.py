@@ -19,7 +19,7 @@ class mongoDB():
         print("connect to mongoDB!")    
     #init info
     def updateDashbardUrl(self,url):
-        self.coll_initInfo.update({'num':'1'},{'$set':{'dashboardUrl':url}},true)
+        self.coll_initInfo.update({'num':'1'},{'$set':{'dashboardUrl':url}},True)
     def setDashbardUrl(self,url):
         data = {
             'num':1,
