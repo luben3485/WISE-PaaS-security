@@ -17,9 +17,21 @@ body {
 
     
 }
-
-
-
+#img{
+    position:absolute;
+    top:1.4rem;
+    left:7rem;
+}
+.ui.large.inverted.secondary.menu{
+    
+}
+#bar{
+    box-shadow:3px 3px 12px gray;
+}
+#bar ,#sidebarhead{
+    height:5.5rem;
+    
+}
 .ui.inverted.segment{
     margin:0px;
     border-radius:0px;

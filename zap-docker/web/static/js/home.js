@@ -42,8 +42,48 @@ $(document).ready(function(){
           
         
     });
-    
-    
+    $('#updateDashboard').click(function(){
+        $('#dashMsg').css('display','none');
+        $('.ui.modal')
+        .modal({
+		  closable: false
+        })
+        .modal({
+            onDeny    : function(){
+              //window.alert('Wait not yet!');
+              //return false;
+            },
+            onApprove : function() {
+              //window.alert('Approved!');
+                
+                url = $('input[name="dashboardUrl"]').val();
+                if(checkURL(url)){
+                     $('#dashMsg').css('display','none');
+                    $.ajax({
+                        url:'/updateDashboardUrl',
+                        method: 'GET',
+                        Data:{
+                            'dashboardUrl':url
+                        }
+                    }).done(function (res) {
+                            
+                    }).fail(function(){
+                        console.log("/set dashboard url failed!")
+                    })
+
+                }else{
+                    $('#dashMsg').css('display','block');
+                    return false;
+                }
+        
+            }
+        })
+        .modal('setting', 'transition', 'Vertical Flip')
+
+        .modal('show')
+        ;          
+    });
+
     
     //initial
     $.ajax({
@@ -53,6 +93,16 @@ $(document).ready(function(){
             withCredentials: true
         }
     }).done(function (user) {
+        $.ajax({
+            url:'/checkDashboardUrl',
+            method: 'GET',
+        }).done(function (res) {
+                            
+        }).fail(function(){
+            console.log("/check dashboard url failed!")
+         })
+        
+        
         
         //refresh table
         refreshTable().done(function(response){
@@ -77,7 +127,7 @@ $(document).ready(function(){
                 
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
-        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+        //window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
     });        
     
     function isValidDate(date) {

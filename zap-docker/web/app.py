@@ -880,6 +880,18 @@ def setSSOurl():
     return res_cookie
 '''
 
+@app.route('/setDashboardUrl')
+def setDashboardUrl():
+    url = request.args.get('dashboardUrl')
+    db.setDashbardUrl(url)
+    return jsonify({Result:'OK'})
+
+@app.route('/updateDashboardUrl')
+def updateDashboardUrl():
+    url = request.args.get('dashboardUrl')
+    db.updateDashbardUrl(url)
+    return jsonify({Result:'OK'})
+
 '''
 SPIDER + PASSIVE SCAN
 '''

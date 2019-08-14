@@ -15,7 +15,15 @@ class mongoDB():
         self.db = self.client[self.dbname]
         self.collection = self.db.scans
         self.coll_html = self.db.htmls
+        self.coll_initInfo = self.db.initInfo
         print("connect to mongoDB!")    
+    #init info
+    def updateDashbardUrl(self,url):
+        self.coll_initInfo.update({'num':'1'},{'$set':{'dashboardUrl':url}})
+    def showInitInfo(self):
+        result = self.coll_initInfo.find({'num':'1'})
+        print(result)
+
     def getCollection(self):
         coll_name = self.db.collection_names(session=None)
         return coll_name
