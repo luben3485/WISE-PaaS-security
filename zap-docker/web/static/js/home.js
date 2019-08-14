@@ -512,29 +512,7 @@ $(document).ready(function(){
                       //window.alert('Wait not yet!');
                       //return false;
                     },
-                    onApprove : function(){
-                        
-                         url = $('input[name="dashboardUrl"]').val();
-                        if(checkURL(url)){
-                            $('#dashMsg').css('display','none');
-                            $.ajax({
-                                url:'/updateDashboardUrl',
-                                method: 'GET',
-                                Data:{
-                                    'dashboardUrl':url
-                                 }
-                            }).done(function (res) {
-
-                            }).fail(function(){
-                                console.log("/update dashboard url failed!")
-                            })
-
-                        }else{
-                            $('#dashMsg').css('display','block');
-                            return false;
-                        }             
-                        
-                    }
+                    onApprove : dashboardUrlApprove
                 })
                 .modal('setting', 'transition', 'Vertical Flip')
                 .modal('show')
