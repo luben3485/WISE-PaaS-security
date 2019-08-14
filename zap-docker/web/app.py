@@ -20,7 +20,8 @@ db = mongodb.mongoDB()
 
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 
-apiURL='https://dashboard-grafana-1-3-2.arfa.wise-paas.com'
+#apiURL='https://dashboard-grafana-1-3-2.arfa.wise-paas.com'
+apiURL=''
 ssoUrl = ''
 appURL = ''
 checkPassiveStatusThread = ''
@@ -880,18 +881,32 @@ def setSSOurl():
     return res_cookie
 '''
 
-@app.route('/setDashboardUrl')
-def setDashboardUrl():
-    url = request.args.get('dashboardUrl')
-    db.setDashbardUrl(url)
-    return jsonify({Result:'OK'})
+@app.route('/checkDashboardUrl')
+@EIToken_verification
+def checkDashboardUrl():
+    global apiURL
+    url = db.getDashbardUrl()
+    if url == None:
+        return jsonify({Result:'None'})
+    else:
+        apiURL = url
+        return jsonify({Result:'OK'})
+
+
 
 @app.route('/updateDashboardUrl')
+@EIToken_verification
 def updateDashboardUrl():
     url = request.args.get('dashboardUrl')
     db.updateDashbardUrl(url)
     return jsonify({Result:'OK'})
 
+@app.route('/setDashboardUrl')
+@EIToken_verification
+def setDashboardUrl():
+    url = request.args.get('dashboardUrl')
+    db.setDashbardUrl(url)
+    return jsonify({Result:'OK'})
 '''
 SPIDER + PASSIVE SCAN
 '''

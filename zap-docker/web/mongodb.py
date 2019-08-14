@@ -19,7 +19,19 @@ class mongoDB():
         print("connect to mongoDB!")    
     #init info
     def updateDashbardUrl(self,url):
-        self.coll_initInfo.update({'num':'1'},{'$set':{'dashboardUrl':url}})
+        self.coll_initInfo.update({'num':'1'},{'$set':{'dashboardUrl':url}},true)
+    def setDashbardUrl(self,url):
+        data = {
+            'num':1,
+            'dashboardUrl':url
+        }
+        self.coll_initInfo.insert_one(data)
+    def getDashboardUrl(self):
+        result = self.coll_initInfo.find_one({"num":'1'})
+        if result:
+            return result['dashboardUrl']
+        else:
+            return None;
     def showInitInfo(self):
         result = self.coll_initInfo.find({'num':'1'})
         print(result)
@@ -210,10 +222,11 @@ if __name__ == '__main__':
     scans = mongodb.listAllScans()
     #scans = mongodb.listUserScans('b7ea79a3-c2eb-4c79-b968-b279667f3747')
     print(len(scans))
-    
+    '''
     for scan in scans:
         print("status: " + scan['status']+" \npscan: "+ scan['pscanStatus']+" \nascan: "+ scan['ascanStatus']+" \ntimeStamp: "+ str(scan['timeStamp'])+" \nuserId: "+ str(scan['userId']))
-    
+    '''
+    print(mongodb.getDashboardUrl())
     #print(mongodb.getCollection())
     #html = mongodb.findHtml('666')
     #print(html)

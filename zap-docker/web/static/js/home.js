@@ -53,37 +53,38 @@ $(document).ready(function(){
               //window.alert('Wait not yet!');
               //return false;
             },
-            onApprove : function() {
-              //window.alert('Approved!');
-                
-                url = $('input[name="dashboardUrl"]').val();
-                if(checkURL(url)){
-                     $('#dashMsg').css('display','none');
-                    $.ajax({
-                        url:'/updateDashboardUrl',
-                        method: 'GET',
-                        Data:{
-                            'dashboardUrl':url
-                        }
-                    }).done(function (res) {
-                            
-                    }).fail(function(){
-                        console.log("/set dashboard url failed!")
-                    })
-
-                }else{
-                    $('#dashMsg').css('display','block');
-                    return false;
-                }
-        
-            }
+            onApprove : dashboardUrlApprove
         })
         .modal('setting', 'transition', 'Vertical Flip')
-
         .modal('show')
         ;          
     });
 
+    function dashboardUrlApprove(){
+        //window.alert('Approved!');
+                
+        url = $('input[name="dashboardUrl"]').val();
+        if(checkURL(url)){
+            $('#dashMsg').css('display','none');
+            $.ajax({
+                url:'/updateDashboardUrl',
+                method: 'GET',
+                Data:{
+                    'dashboardUrl':url
+                 }
+            }).done(function (res) {
+                            
+            }).fail(function(){
+                console.log("/update dashboard url failed!")
+            })
+
+        }else{
+            $('#dashMsg').css('display','block');
+            return false;
+        }
+        
+        
+    }
     
     //initial
     $.ajax({
@@ -93,14 +94,6 @@ $(document).ready(function(){
             withCredentials: true
         }
     }).done(function (user) {
-        $.ajax({
-            url:'/checkDashboardUrl',
-            method: 'GET',
-        }).done(function (res) {
-                            
-        }).fail(function(){
-            console.log("/check dashboard url failed!")
-         })
         
         
         
@@ -501,6 +494,54 @@ $(document).ready(function(){
     $('#startScan').click(function(){
         EIToken_verification().done(function(){
             //clearInterval(checkAnyScanTimer);
+            
+        $.ajax({
+            url:'/checkDashboardUrl',
+            method: 'GET',
+        //checkDashboardUrl
+        }).done(function (res) {
+            if(res.Result == 'None'){
+                $('#dashMsg').css('display','none');
+                $('.ui.modal')
+                .modal({
+                  closable: false
+                })
+                .modal({
+                    onDeny    : function(){
+                      //window.alert('Wait not yet!');
+                      //return false;
+                    },
+                    onApprove : function(){
+                        
+                         url = $('input[name="dashboardUrl"]').val();
+                        if(checkURL(url)){
+                            $('#dashMsg').css('display','none');
+                            $.ajax({
+                                url:'/setDashboardUrl',
+                                method: 'GET',
+                                Data:{
+                                    'dashboardUrl':url
+                                 }
+                            }).done(function (res) {
+
+                            }).fail(function(){
+                                console.log("/set dashboard url failed!")
+                            })
+
+                        }else{
+                            $('#dashMsg').css('display','block');
+                            return false;
+                        }             
+                        
+                    }
+                })
+                .modal('setting', 'transition', 'Vertical Flip')
+                .modal('show')
+                ;  
+                
+            }else if(res.Result == 'OK'){
+
+            
             $('#startScan').addClass('disabled');
             var scanOption=$("#scanOption").val();
             $('#message').css('display','none');
@@ -559,7 +600,14 @@ $(document).ready(function(){
                         $('#startScan').removeClass('disabled');
                     }
                 }
+            }//Result:OK
+        //checkDashboardUrl
+        }).fail(function(){
+            console.log("/check dashboard url failed!")
+        })
             
+            
+        //EIToken  
         }).fail(function(){
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl; 
         });
