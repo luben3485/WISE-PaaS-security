@@ -25,6 +25,25 @@ $(document).ready(function(){
           .transition('fade')
         ;
       });
+        
+    
+    //sidebar
+    /*
+    $('.ui.sidebar')
+        .sidebar('setting', { transition: 'overlay' })
+
+          .sidebar('show')
+    */
+    $('#list').click(function(){
+        $('.ui.sidebar')
+        .sidebar('setting', { transition: 'overlay' })
+
+          .sidebar('show')
+          
+        
+    });
+    
+    
     
     //initial
     $.ajax({
