@@ -887,10 +887,10 @@ def checkDashboardUrl():
     global apiURL
     url = db.getDashbardUrl()
     if url == None:
-        return jsonify({Result:'None'})
+        return jsonify({'Result':'None'})
     else:
         apiURL = url
-        return jsonify({Result:'OK'})
+        return jsonify({'Result':'OK'})
 
 
 
@@ -899,14 +899,14 @@ def checkDashboardUrl():
 def updateDashboardUrl():
     url = request.args.get('dashboardUrl')
     db.updateDashbardUrl(url)
-    return jsonify({Result:'OK'})
+    return jsonify({'Result':'OK'})
 
 @app.route('/setDashboardUrl')
 @EIToken_verification
 def setDashboardUrl():
     url = request.args.get('dashboardUrl')
     db.setDashbardUrl(url)
-    return jsonify({Result:'OK'})
+    return jsonify({'Result':'OK'})
 '''
 SPIDER + PASSIVE SCAN
 '''
