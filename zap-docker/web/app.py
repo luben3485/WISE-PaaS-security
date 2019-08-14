@@ -885,7 +885,7 @@ def setSSOurl():
 @EIToken_verification
 def checkDashboardUrl():
     global apiURL
-    url = db.getDashbardUrl()
+    url = db.getDashboardUrl()
     if url == None:
         return jsonify({'Result':'None'})
     else:
