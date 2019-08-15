@@ -17,7 +17,24 @@ class mongoDB():
         self.collection = self.db.scans
         self.coll_html = self.db.htmls
         self.coll_initInfo = self.db.initInfo
+        self.coll_emailService = self.db.emailService
         print("connect to mongoDB!")    
+    
+    #emailService
+    def updateEmailService(self,userId,data):
+        self.coll_emailService.update({'userId':userId},data)
+    
+    def checkEmailService(self,userId):
+        result = self.coll_emailService.find_one({'userId':userId})
+        return result
+    def addEmailService(self,data):
+        self.coll_initInfo.insert_one(data)
+    def findAllEmailService(self):
+        result = self.coll_emailService.find({})
+        print(result)
+    def deleteAllEmailService(self):
+        result = self.coll_emailService.remove({})
+
     #init info
     def updateDashbardUrl(self,url):
         self.coll_initInfo.update({'num':'1'},{'$set':{'dashboardUrl':url}},True)
@@ -228,7 +245,7 @@ if __name__ == '__main__':
     #mongodb.deleteAllScans()
     #mongodb.addScan(scandata)
     #mongodb.deleteScans(['8829705','2962665'])
-    scans = mongodb.listAllScans()
+    #scans = mongodb.listAllScans()
     #print(scans)
     #scans = mongodb.listUserScans('b7ea79a3-c2eb-4c79-b968-b279667f3747')
     #print(len(scans))
@@ -236,8 +253,8 @@ if __name__ == '__main__':
     for scan in scans:
         print("status: " + scan['status']+" \npscan: "+ scan['pscanStatus']+" \nascan: "+ scan['ascanStatus']+" \ntimeStamp: "+ str(scan['timeStamp'])+" \nuserId: "+ str(scan['userId']))
     '''
-    scans = mongodb.getAllDashboardUrl()
-    print(scans)
+    #scans = mongodb.getAllDashboardUrl()
+    #print(scans)
     #mongodb.deleteDashboardUrl()
     #print(mongodb.getCollection())
     #html = mongodb.findHtml('666')
@@ -257,3 +274,7 @@ if __name__ == '__main__':
     #scans = mongodb.readyScans()
     #print(scans)
     #print(len(scans))
+
+
+    scan = mongodb.findAllEmailService()
+    print(scan)

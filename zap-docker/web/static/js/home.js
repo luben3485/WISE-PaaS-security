@@ -31,12 +31,13 @@ $(document).ready(function(){
       .checkbox()
       .first().checkbox({
         onChecked: function() {
-            
-            console.log('onChecked called<br>');
+            $('#securemethodfield').css('display','block');
+            //console.log('onChecked called<br>');
             
         },
         onUnchecked: function() {
-          console.log('onUnchecked called<br>');
+            $('#securemethodfield').css('display','none');
+            //console.log('onUnchecked called<br>');
         }
       })
     ;
@@ -75,6 +76,21 @@ $(document).ready(function(){
         ;          
     });
     $('#notification').click(function(){
+        $('#emailerror').css('display','none');
+        $.ajax({
+            url:'/emailServiceInfo',
+            method: 'GET',
+            }).done(function (res) {
+                if(res == 'None'){
+                    consolo.log('no setting');
+                }else{
+                    consolo.log(res)
+                }
+            }).fail(function(){
+                console.log("/emailServiceSetting fail!")
+            })
+        
+        
         $('.ui.modal.notification')
         .modal({
 		  closable: false
@@ -85,10 +101,7 @@ $(document).ready(function(){
               //window.alert('Wait not yet!');
               //return false;
             },
-            onApprove :function(){
-                
-                
-            }
+            onApprove : notoficationApprove
         })
         .modal('setting', 'transition', 'Vertical Flip')
         .modal('show')
@@ -96,7 +109,8 @@ $(document).ready(function(){
     });
     
     
-        /*
+        /*test*/
+        
         $('.ui.modal.notification')
         .modal({
 		  closable: false
@@ -107,13 +121,71 @@ $(document).ready(function(){
               //window.alert('Wait not yet!');
               //return false;
             },
-            onApprove : dashboardUrlApprove
+            onApprove : notoficationApprove
         })
         .modal('setting', 'transition', 'Vertical Flip')
         .modal('show')
         ;
-        */
+        
     
+    function notoficationApprove(){
+        
+        var notificationurl = $('input[name="notificationurl"]').val();
+        var smtpserver = $('input[name="smtpserver"]').val();
+        var smtpport = $('input[name="smtpport"]').val();
+        var smtpaccount = $('input[name="smtpaccount"]').val();
+        var smtppassword = $('input[name="smtppassword"]').val();
+        var senderemail = $('input[name="senderemail"]').val();
+        //var emailsubject = $('input[name="emailsubject"]').val();
+        var ssoaccount = $('input[name="ssoaccount"]').val();
+        var ssopassword = $('input[name="ssopassword"]').val();
+        var securemethod=$("#securemethod").val();
+        var secure = $('input:checkbox').is(":checked");  //true or false
+        if(notificationurl ==''|| smtpserver=='' || smtpport=='' ||  smtpaccount=='' || smtppassword=='' || senderemail=='' ||  ssoaccount=='' || ssopassword==''  ){
+           $('#emailerror').css('display','block');
+           return false;
+           
+        }else{
+            console.log(secure);
+            console.log(smtpserver);
+            console.log(smtpport);
+            console.log(smtpaccount);
+            console.log(smtppassword);
+            console.log(senderemail);
+            console.log(emailsubject);
+            console.log(ssoaccount);
+            console.log(ssopassword);
+
+            console.log(securemethod);
+
+            $.ajax({
+                url:'/emailServiceSetting',
+                method: 'GET',
+                data:{
+                    'notificationURL':notificationurl,
+                    'SMTPServerURL':smtpserver,
+                    'serverPort':smtpport,
+                    'SMTPUsername':smtpaccount,
+                    'SMTPPassword':smtppassword,
+                    'SMTPSender':senderemail,
+                    'secure':secure,
+                    'secureMethod':securemethod,
+                    'SSOAccount':ssoaccount,
+                    'SSOPassword':ssopassword
+                }
+                }).done(function (res) {
+
+                }).fail(function(){
+                    console.log("/emailServiceSetting fail!")
+                })
+           
+           
+        }
+        
+        
+        
+        
+    }
     
     
     function dashboardUrlApprove(){
@@ -177,7 +249,7 @@ $(document).ready(function(){
                 
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
-        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+        //window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
     });        
     
     function isValidDate(date) {

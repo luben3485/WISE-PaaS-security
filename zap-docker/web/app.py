@@ -926,6 +926,57 @@ def updateDashboardUrl():
     db.updateDashbardUrl(url)
     return jsonify({'Result':'OK'})
 
+@app.route('/emailServiceInfo')
+@EIToken_verification
+def emailServiceInfo():
+    EIToken = request.cookies.get('EIToken')
+    userId,userName = getUserIdFromToken(EIToken)
+    info = db.checkEmailService(userId)
+    if  info != None :
+        return jsonify(info)
+    else:
+        return 'None'
+     
+
+
+@app.route('/emailServiceSetting')
+@EIToken_verification
+def emailServiceSetting():
+    EIToken = request.cookies.get('EIToken')
+    userId,userName = getUserIdFromToken(EIToken)
+    notificationURL = request.args.get('notificationURL')
+    SMTPServerURL = request.args.get('SMTPServerURL')
+    serverPort= request.args.get('serverPort')
+    SMTPUsername = request.args.get('SMTPUsername')
+    SMTPPassword = request.args.get('SMTPPassword')
+    SMTPSender = request.args.get('SMTPSender')
+    secure = request.args.get('secure')
+    secureMethod = request.args.get('secureMethod')
+    SSOAccount = request.args.get('SSOAccount')
+    SSOPassword = request.args.get('SSOPassword')
+    
+    if secure == 'true':
+        secure = True
+    else: 
+        secure = False
+    data = {
+       "userId":userId,  
+       "notificationURL":notificationURL,
+       "SMTPServerURL":SMTPServerURL,
+       "serverPort":int(serverPort),
+       "SMTPUsername":SMTPUsername,
+       "SMTPPassword":SMTPPassword,
+       "SMTPSender":SMTPSender,
+       "secure":secure,
+       "secureMethod":secureMethod,
+       "SSOAccount":SSOAccount,
+       "SSOPassword":SSOPassword
+    }
+    if db.checkEmailService(userId) != None :
+        db.updateEmailService(userId,data)
+    else:
+        db.addEmailService(data)
+    return jsonify({'Result':'OK'})
 '''
 SPIDER + PASSIVE SCAN
 '''
