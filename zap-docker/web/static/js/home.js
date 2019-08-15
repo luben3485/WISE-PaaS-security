@@ -375,6 +375,7 @@ $(document).ready(function(){
                     }).done(function(res){
                         window.open(res);
                     }).fail(function(){
+                         
                         console.log('/dashboardLInk fail');
                     });
                 
@@ -396,6 +397,7 @@ $(document).ready(function(){
         }).fail(function(xhr, ajaxOptions, thrownError){
             switch (xhr.status) {
                 case 400:
+                    $('#startScan').removeClass('disabled');
                     $('#scanningmessage').css('display','none');
                     showMessage('Wrong Dashboard Url','Please set dashboard url again!','negative');
             }
