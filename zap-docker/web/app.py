@@ -916,8 +916,8 @@ def updateDashboardUrl():
     global apiURL
     global appURL
     apiURL = url
-    create_datasource.create_datasource(apiURL, appURL, "ZAP-Summary","/summary/", EItoken)       
-    create_datasource.create_datasource(apiURL, appURL, "ZAP-Progress","/progress/", EItoken)
+    create_datasource.create_datasource(apiURL, appURL, "ZAP-Summary","/summary/", EIToken)       
+    create_datasource.create_datasource(apiURL, appURL, "ZAP-Progress","/progress/", EIToken)
 
     db.updateDashbardUrl(url)
     return jsonify({'Result':'OK'})
