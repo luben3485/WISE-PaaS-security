@@ -455,8 +455,10 @@ def Scan():
         print(timeStamp)
         print(type(timeStamp))
         #Call Dashboard API getting dashboardLink
-        dashboardLink = create_dashboard(scanId,EIToken)
-        
+        try:
+            dashboardLink = create_dashboard(scanId,EIToken)
+        except Exception as err:
+            abort(400)
         #Add html to db
         html_info = {
             "userId":userId,
@@ -543,7 +545,10 @@ def Scan():
 
              
         #Call Dashboard API getting dashboardLink
-        dashboardLink = create_dashboard(scanId,EIToken)
+        try:
+            dashboardLink = create_dashboard(scanId,EIToken)
+        except Exception as err:
+            abort(400)
         
         #Add html to db
         html_info = {
@@ -656,7 +661,10 @@ def Scan():
 
                 
                 #call Dashboard API getting dashboardLink
-                dashboardLink = create_dashboard(scanId,EIToken)
+                try:
+                    dashboardLink = create_dashboard(scanId,EIToken)
+                except Exception as err:
+                    abort(400)
     
                 # timeStamp => int type
                 # other info  => str type

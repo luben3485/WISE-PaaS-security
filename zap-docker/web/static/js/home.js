@@ -393,8 +393,15 @@ $(document).ready(function(){
                     showMessage('Add scan to schedule successfully!','Scan will run autoly depending on your setting.','successful');
                 }
             
-        }).fail(function(){
-             console.log('passsive scan error')
+        }).fail(function(xhr, ajaxOptions, thrownError){
+            switch (xhr.status) {
+                case 400:
+                    $('#scanningmessage').css('display','none');
+                    showMessage('Wrong Dashboard Url','Please set dashboard url again!','negative');
+            }
+            console.log('scan error')
+            
+            
         });
         //showScanning('Initializing...','Please wait a moment.');
         
