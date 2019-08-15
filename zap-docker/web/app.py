@@ -20,6 +20,9 @@ db = mongodb.mongoDB()
 
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 
+
+import create_datasource
+
 #apiURL='https://dashboard-grafana-1-3-2.arfa.wise-paas.com'
 apiURL=''
 ssoUrl = ''
@@ -908,7 +911,14 @@ def checkDashboardUrl():
 @app.route('/updateDashboardUrl')
 @EIToken_verification
 def updateDashboardUrl():
+    EIToken = request.cookies.get('EIToken')
     url = request.args.get('dashboardUrl')
+    global apiURL
+    global appURL
+    apiURL = url
+    create_datasource.create_datasource(apiURL, appURL, "ZAP-Summary","/summary/", EItoken)       
+    create_datasource.create_datasource(apiURL, appURL, "ZAP-Progress","/progress/", EItoken)
+
     db.updateDashbardUrl(url)
     return jsonify({'Result':'OK'})
 

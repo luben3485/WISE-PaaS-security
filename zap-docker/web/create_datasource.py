@@ -5,8 +5,8 @@ import random
 from flask import Flask,request,redirect
 from flask import jsonify,abort,Response, make_response
 
-appURL = 'https://zap-security-web-v4.arfa.wise-paas.com' #Should be got from env
-EItoken = '' #Should be got from user's browser
+#appURL = 'https://zap-security-web-v4.arfa.wise-paas.com' #Should be got from env
+#EItoken = '' #Should be got from user's browser
 
 def create_datasource(dashboardURL, appURL, name, route, token):
   my_headers = {'Content-Type':'application/json',
@@ -28,5 +28,3 @@ def create_datasource(dashboardURL, appURL, name, route, token):
       print("New Datasource Updated")
       print(res.text)
       
-create_datasource("https://dashboard-grafana-1-3-2.arfa.wise-paas.com", appURL, "ZAP-Summary","/summary/", EItoken)
-create_datasource("https://dashboard-grafana-1-3-2.arfa.wise-paas.com", appURL, "ZAP-Progress","/progress/", EItoken)
