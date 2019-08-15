@@ -155,7 +155,8 @@ $(document).ready(function(){
         var ssoaccount = $('input[name="ssoaccount"]').val();
         var ssopassword = $('input[name="ssopassword"]').val();
         var securemethod=$("#securemethod").val();
-        var secure = $('input:checkbox').is(":checked");  //true or false
+        //var secure = $('input:checkbox').is(":checked");  //true or false
+        var secure = $('input:checkbox').prop("checked");
         if(notificationurl ==''|| smtpserver=='' || smtpport=='' ||  smtpaccount=='' || smtppassword=='' || senderemail=='' ||  ssoaccount=='' || ssopassword==''  ){
            $('#emailerror').css('display','block');
            return false;
