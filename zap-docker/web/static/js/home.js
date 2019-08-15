@@ -85,6 +85,19 @@ $(document).ready(function(){
                     console.log('no setting');
                 }else{
                     console.log(res);
+                    $('input[name="notificationurl"]').val(res.notificationURL);
+                    $('input[name="smtpserver"]').val(res.SMTPServerURL);
+                    $('input[name="smtpport"]').val(res.serverPort);
+                    $('input[name="smtpaccount"]').val(res.SMTPUsername);
+                    $('input[name="smtppassword"]').val(res.SMTPPassword);
+                    $('input[name="senderemail"]').val(res.SMTPSender);
+                    $('input[name="ssoaccount"]').val(res.SSOAccount);
+                    $('input[name="ssopassword"]').val(res.SSOPassword);
+                    $("#securemethod").val(res.secureMethod);
+                    $('input:checkbox')[0].checked = res.secure;  
+                    
+                    
+                    
                 }
             }).fail(function(){
                 console.log("/emailServiceInfo fail!")
