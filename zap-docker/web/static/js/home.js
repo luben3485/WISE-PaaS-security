@@ -611,7 +611,7 @@ $(document).ready(function(){
          /*ui moadl*/
             }
         })
-        .modal('setting', 'transition', 'Vertical Flip')
+        //.modal('setting', 'transition', 'Vertical Flip')
         .modal('show')
         ;      
         /*ui moadl*/

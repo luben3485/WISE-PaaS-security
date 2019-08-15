@@ -1,3 +1,4 @@
+#-*-coding:utf-8 -*- 
 import pymongo
 import json
 import os
@@ -227,7 +228,7 @@ if __name__ == '__main__':
     #mongodb.deleteAllScans()
     #mongodb.addScan(scandata)
     #mongodb.deleteScans(['8829705','2962665'])
-    #scans = mongodb.listAllScans()
+    scans = mongodb.listAllScans()
     #print(scans)
     #scans = mongodb.listUserScans('b7ea79a3-c2eb-4c79-b968-b279667f3747')
     #print(len(scans))
