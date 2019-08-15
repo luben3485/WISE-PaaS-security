@@ -279,5 +279,5 @@ if __name__ == '__main__':
     #print(len(scans))
 
 
-    info = mongodb.findAllEmailService()
-    print(info)
+    mongodb.deleteAllEmailService()
+    #print(info)
