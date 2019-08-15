@@ -26,7 +26,21 @@ $(document).ready(function(){
         ;
       });
         
-    
+    /*checkbox*/
+    $('.checkbox')
+      .checkbox()
+      .first().checkbox({
+        onChecked: function() {
+            
+            console.log('onChecked called<br>');
+            
+        },
+        onUnchecked: function() {
+          console.log('onUnchecked called<br>');
+        }
+      })
+    ;
+    /*checkbox*/
     //sidebar
     /*
     $('.ui.sidebar')
@@ -60,9 +74,45 @@ $(document).ready(function(){
         .modal('show')
         ;          
     });
+    $('#notification').click(function(){
+        $('.ui.modal.notification')
+        .modal({
+		  closable: false
+        })
+        
+        .modal({
+            onDeny    : function(){
+              //window.alert('Wait not yet!');
+              //return false;
+            },
+            onApprove :function(){
+                
+                
+            }
+        })
+        .modal('setting', 'transition', 'Vertical Flip')
+        .modal('show')
+        ;
+    });
     
     
-    
+        /*
+        $('.ui.modal.notification')
+        .modal({
+		  closable: false
+        })
+        
+        .modal({
+            onDeny    : function(){
+              //window.alert('Wait not yet!');
+              //return false;
+            },
+            onApprove : dashboardUrlApprove
+        })
+        .modal('setting', 'transition', 'Vertical Flip')
+        .modal('show')
+        ;
+        */
     
     
     
@@ -127,7 +177,7 @@ $(document).ready(function(){
                 
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
-        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+        //window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
     });        
     
     function isValidDate(date) {

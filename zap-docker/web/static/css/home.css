@@ -17,15 +17,20 @@ body {
 
     
 }
-.ui.modal > .warningheader{
-  background-color: #ffffff !important;
-  font-size:2rem;
-  padding:1.2rem;
+
+.ui.toggle.checkbox{
+    margin: 1.6rem 0rem;
 }
-.ui.modal > .dashboardheader{
+
+.ui.toggle.checkbox input:checked ~ .box:before,
+.ui.toggle.checkbox input:checked ~ .coloring.red:before {
+background: #F25F5C !important;
+}
+
+.ui.modal > .modalheader{
   background-color: #ffffff !important;
   font-size:2rem;
-  padding:1.2rem;
+  padding:1rem;
 }
 
 #img{
@@ -33,7 +38,7 @@ body {
     top:1.4rem;
     left:7rem;
 }
-.ui.large.inverted.secondary.menu{
+.ui.large.invesrted.secondary.menu{
     
 }
 #bar{

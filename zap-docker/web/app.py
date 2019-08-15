@@ -898,12 +898,16 @@ def setSSOurl():
 @app.route('/checkDashboardUrl')
 @EIToken_verification
 def checkDashboardUrl():
+    EIToken = request.cookies.get('EIToken')
     global apiURL
+    global appURL
     url = db.getDashboardUrl()
     if url == None:
         return jsonify({'Result':'None'})
     else:
         apiURL = url
+        create_datasource.create_datasource(apiURL, appURL, "ZAP-Summary","/summary/", EIToken)       
+        create_datasource.create_datasource(apiURL, appURL, "ZAP-Progress","/progress/", EIToken)
         return jsonify({'Result':'OK'})
 
 
