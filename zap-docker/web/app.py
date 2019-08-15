@@ -152,7 +152,6 @@ def checkActiveStatus(scanId,targetURL,arecurse,inScopeOnly,method,postData,cont
         print('error: {}'.format(str(err)))
 
 
-
 '''
 Newly Added Begin
 '''
@@ -304,8 +303,8 @@ def create_dashboard(scanId, EIToken):
         dashboardLink = apiURL +res.json()["url"]
         datasource_init(scanId)
         return dashboardLink
-    except Exception as err:
-        print('error: {}'.format(str(err)))
+    except Exception:
+        raise
 def delete_dashboard(scanId, EIToken):
     my_headers = {'Content-Type':'application/json',
                'Authorization': 'Bearer {}'.format(EIToken)}
@@ -316,6 +315,7 @@ def delete_dashboard(scanId, EIToken):
 '''
 Newly Added End
 '''
+
 
 def getUserIdFromToken(EIToken):
     info = EIToken.split('.')[1]
@@ -360,7 +360,10 @@ def dashboardLInk():
     scanId =request.cookies.get('scanId')
     scan = db.findScan(scanId)
     url = scan['dashboardLInk']
-    return url
+    if url == None:
+        abort(500)
+    else:
+        return url
 
 
 
@@ -1232,7 +1235,7 @@ def query_p():
     try:
         Passive_Scan_Progress[target_id] = int (db.findScan(target_id)["pscanStatus"])
         Active_Scan_Progress[target_id] = int (db.findScan(target_id)["ascanStatus"])
-        print ("spiderId is {}, and ascanId is {} (from DB)(target_id={})".format(pscanid, ascanid, target_id) )
+        print ("/progress/query: target_id={}".format(target_id) )
     except Exception as err:
         print ("fail to findScan in DB. Because {}".format(err))
     progress = [
