@@ -1,10 +1,8 @@
 ---
 applications:
-- name: zap-security-web-v4
+- name: zap-security-web-v5
   memory: 1024M
   instances: 1
   disk_quota: 4G
   docker:
     image: luben3485/zap:latest
-  env:
-    SSO_URL: https://portal-sso.arfa.wise-paas.com
