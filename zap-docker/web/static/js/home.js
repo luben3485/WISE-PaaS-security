@@ -82,9 +82,9 @@ $(document).ready(function(){
             method: 'GET',
             }).done(function (res) {
                 if(res == 'None'){
-                    consolo.log('no setting');
+                    console.log('no setting');
                 }else{
-                    consolo.log(res)
+                    console.log(res);
                 }
             }).fail(function(){
                 console.log("/emailServiceSetting fail!")
@@ -110,7 +110,7 @@ $(document).ready(function(){
     
     
         /*test*/
-        
+        /*
         $('.ui.modal.notification')
         .modal({
 		  closable: false
@@ -126,7 +126,7 @@ $(document).ready(function(){
         .modal('setting', 'transition', 'Vertical Flip')
         .modal('show')
         ;
-        
+        */
     
     function notoficationApprove(){
         
@@ -249,7 +249,7 @@ $(document).ready(function(){
                 
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
-        //window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
     });        
     
     function isValidDate(date) {
