@@ -46,12 +46,12 @@
             
             
             
-        	  <div class="ui modal test">
+        	  <div class="ui modal dashboard">
                   <!--<i class="close icon"></i>-->
-                  <div class="header" >
+                  <div class="dashboardheader" >
                     Set Dashboard URL
                   </div>
-                  
+                  <hr>
                 <div class="ui inverted form">
                       <div class="field" style="padding:1rem 2rem;">
                         <h3>Please input your dashboard url below</h3>
@@ -79,6 +79,40 @@
                     </div>
                   </div>
                 </div>
+            
+            <!--warning-->
+                        
+        	  <div class="ui modal warning">
+                  <!--<i class="close icon"></i>-->
+                  <div class="warningheader" >
+                    Warning
+                  </div>
+                  <hr>
+                <div class="ui inverted form">
+                      <div class="field" style="padding:1rem 2rem;">
+                        <h3>Please be aware that you should only attack applications that you have been specifically given permission to test.</h3>
+                        
+                          <h3 div="activewarning" style="display:none;">Active Scan Method Warning: <br>Please be aware of the risks and seek permission prior to performing any kind of active testing.</h3>
+                        <div class="ui negative message" id="dashMsg" style="display:none;">
+
+
+                     
+                  </div>
+                      </div>
+                  </div>
+                  
+                  
+                  <div class="actions" style="background-color: white;margin-top:1rem;">
+                    <div class="ui red deny button">
+                      Cancel
+                    </div>
+                    <div class="ui positive right labeled icon button">
+                      Confirm
+                      <i class="checkmark icon"></i>
+                    </div>
+                  </div>
+                </div>
+            
             
             
             

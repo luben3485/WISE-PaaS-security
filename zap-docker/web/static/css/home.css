@@ -17,6 +17,17 @@ body {
 
     
 }
+.ui.modal > .warningheader{
+  background-color: #ffffff !important;
+  font-size:2rem;
+  padding:1.2rem;
+}
+.ui.modal > .dashboardheader{
+  background-color: #ffffff !important;
+  font-size:2rem;
+  padding:1.2rem;
+}
+
 #img{
     position:absolute;
     top:1.4rem;

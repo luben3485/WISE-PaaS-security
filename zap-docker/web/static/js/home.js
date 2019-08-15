@@ -44,10 +44,11 @@ $(document).ready(function(){
     });
     $('#updateDashboard').click(function(){
         $('#dashMsg').css('display','none');
-        $('.ui.modal')
+        $('.ui.modal.dashboard')
         .modal({
 		  closable: false
         })
+        
         .modal({
             onDeny    : function(){
               //window.alert('Wait not yet!');
@@ -59,7 +60,12 @@ $(document).ready(function(){
         .modal('show')
         ;          
     });
-
+    
+    
+    
+    
+    
+    
     function dashboardUrlApprove(){
         //window.alert('Approved!');
                 
@@ -494,7 +500,24 @@ $(document).ready(function(){
     //startScan button
     $('#startScan').click(function(){
         EIToken_verification().done(function(){
+        $('#activewarning').css('display','none');
             //clearInterval(checkAnyScanTimer);
+        var scanOption=$("#scanOption").val();
+            
+        if(scanOption == 2) $('#activewarning').css('display','block');
+        $('.ui.modal.warning')
+        .modal({
+		  closable: false
+        })
+        .modal({
+            onDeny    : function(){
+              
+            },
+            onApprove : function(){
+            
+            
+            
+            
             
         $.ajax({
             url:'/checkDashboardUrl',
@@ -503,7 +526,7 @@ $(document).ready(function(){
         }).done(function (res) {
             if(res.Result == 'None'){
                 $('#dashMsg').css('display','none');
-                $('.ui.modal')
+                $('.ui.modal.dashboard')
                 .modal({
                   closable: false
                 })
@@ -514,7 +537,7 @@ $(document).ready(function(){
                     },
                     onApprove : dashboardUrlApprove
                 })
-                .modal('setting', 'transition', 'Vertical Flip')
+                .modal('setting', 'transition', 'Fade')
                 .modal('show')
                 ;  
                 
@@ -522,7 +545,7 @@ $(document).ready(function(){
 
             
             $('#startScan').addClass('disabled');
-            var scanOption=$("#scanOption").val();
+            
             $('#message').css('display','none');
             
              time = $('input[name="date"]').val()
@@ -585,12 +608,26 @@ $(document).ready(function(){
             console.log("/check dashboard url failed!")
         })
             
+         /*ui moadl*/
+            }
+        })
+        .modal('setting', 'transition', 'Vertical Flip')
+        .modal('show')
+        ;      
+        /*ui moadl*/
+            
             
         //EIToken  
         }).fail(function(){
             window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl; 
         });
+            
+            
+            
+            
+       
     });
+    
     
 
 
