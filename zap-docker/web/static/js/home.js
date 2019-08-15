@@ -509,11 +509,11 @@ $(document).ready(function(){
     //startScan button
     $('#startScan').click(function(){
         EIToken_verification().done(function(){
-        $('#activewarning').css('display','none');
+       
             //clearInterval(checkAnyScanTimer);
         var scanOption=$("#scanOption").val();
-            
-        if(scanOption == 2) $('#activewarning').css('display','block');
+        if(scanOption == 0) $('#activewarning').css('display','none');
+        else if(scanOption == 2) $("#activewarning").css('display','block');
         $('.ui.modal.warning')
         .modal({
 		  closable: false
