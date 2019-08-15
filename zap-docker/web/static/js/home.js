@@ -95,7 +95,9 @@ $(document).ready(function(){
                     $('input[name="ssopassword"]').val(res.SSOPassword);
                     $("#securemethod").val(res.secureMethod);
                     $('input:checkbox').prop('checked', res.secure);
-                    
+                    if(res.secure){
+                        $('#securemethodfield').css('display','block');
+                    }
                     
                     
                 }
