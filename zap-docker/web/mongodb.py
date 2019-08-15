@@ -25,13 +25,16 @@ class mongoDB():
         self.coll_emailService.update({'userId':userId},data)
     
     def checkEmailService(self,userId):
-        result = self.coll_emailService.find_one({'userId':userId})
+        result = self.coll_emailService.find_one({'userId':userId},{"_id":0})
         return result
     def addEmailService(self,data):
         self.coll_emailService.insert_one(data)
     def findAllEmailService(self):
-        result = self.coll_emailService.find({})
-        print(result)
+        results = self.coll_emailService.find({},{"_id":0})
+        info = []
+        for result in results:
+            info.append(result)
+        return info
     def deleteAllEmailService(self):
         result = self.coll_emailService.remove({})
 
@@ -276,5 +279,5 @@ if __name__ == '__main__':
     #print(len(scans))
 
 
-    scan = mongodb.findAllEmailService()
-    print(scan)
+    info = mongodb.findAllEmailService()
+    print(info)

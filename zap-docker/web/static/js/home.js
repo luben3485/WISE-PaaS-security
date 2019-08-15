@@ -87,7 +87,7 @@ $(document).ready(function(){
                     console.log(res);
                 }
             }).fail(function(){
-                console.log("/emailServiceSetting fail!")
+                console.log("/emailServiceInfo fail!")
             })
         
         
