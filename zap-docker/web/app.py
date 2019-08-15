@@ -855,8 +855,8 @@ def refreshTable():
     info_token = EIToken.split('.')[1]
     userId,userName = getUserIdFromToken(EIToken)
     scans = db.listUserScans(userId)
-    print(userId)
-    print(scans)
+    #print(userId)
+    #print(scans)
     for scan in scans:
         ts = scan['timeStamp']
         time = datetime.fromtimestamp(ts).strftime('%Y/%m/%d %H:%M')
