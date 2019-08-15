@@ -152,7 +152,7 @@ $(document).ready(function(){
             console.log(smtpaccount);
             console.log(smtppassword);
             console.log(senderemail);
-            console.log(emailsubject);
+            //console.log(emailsubject);
             console.log(ssoaccount);
             console.log(ssopassword);
 
