@@ -973,8 +973,10 @@ def emailServiceSetting():
        "SSOPassword":SSOPassword
     }
     if db.checkEmailService(userId) != None :
+        print('exist')
         db.updateEmailService(userId,data)
     else:
+        print('add')
         db.addEmailService(data)
     return jsonify({'Result':'OK'})
 '''

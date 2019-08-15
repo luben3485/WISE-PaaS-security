@@ -28,7 +28,7 @@ class mongoDB():
         result = self.coll_emailService.find_one({'userId':userId})
         return result
     def addEmailService(self,data):
-        self.coll_initInfo.insert_one(data)
+        self.coll_emailService.insert_one(data)
     def findAllEmailService(self):
         result = self.coll_emailService.find({})
         print(result)
