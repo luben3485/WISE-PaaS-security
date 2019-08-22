@@ -10,13 +10,8 @@ from datetime import datetime
 
 class mongoDB():
     def __init__(self):
-        try:
-            app_env = json.loads(os.environ['VCAP_SERVICES'])
-            self.mongoUri = app_env['mongodb'][0]['credentials']['uri']
-            self.dbname = app_env['mongodb'][0]['credentials']['database']
-            print('get db environment variables!')
-        except Exception as err:
-            print('Can not get db environment variables:{}'.format(str(err)))
+        self.mongoUri = 'mongodb://6456bf23-b6e7-4df5-ae94-7ae4501c7c8c:KyzPruBlnDgIt2ti3TnbCbn6P@61.219.26.35:27017/c834abf9-ebb7-461a-b13d-262a1c58e3ae?connectTimeoutMS=300000\u0026maxPoolSize=10'
+        self.dbname = 'c834abf9-ebb7-461a-b13d-262a1c58e3ae'
         self.client = pymongo.MongoClient(self.mongoUri)
         self.db = self.client[self.dbname]
         self.collection = self.db.scans

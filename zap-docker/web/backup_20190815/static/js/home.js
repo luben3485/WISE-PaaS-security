@@ -92,9 +92,9 @@ $(document).ready(function(){
                     $('input[name="smtppassword"]').val(res.SMTPPassword);
                     $('input[name="senderemail"]').val(res.SMTPSender);
                     $('input[name="ssoaccount"]').val(res.SSOAccount);
-                    //$('input[name="ssopassword"]').val(res.SSOPassword);
+                    $('input[name="ssopassword"]').val(res.SSOPassword);
                     $("#securemethod").val(res.secureMethod);
-                    //$('input:checkbox').prop('checked', res.secure);
+                    $('input:checkbox').prop('checked', res.secure);
                     if(res.secure){
                         $('#securemethodfield').css('display','block');
                     }
@@ -155,13 +155,8 @@ $(document).ready(function(){
         var ssoaccount = $('input[name="ssoaccount"]').val();
         var ssopassword = $('input[name="ssopassword"]').val();
         var securemethod=$("#securemethod").val();
-
-        var enc = new JSEncrypt();
-        enc.setPublicKey('MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgGmL5BIR+/3oi7wY30YvWqm+wxNrD4AEmZma6tv+PCU8UKtBwnY2/3/99+/cSClKR/kxWIGy5VmtctzfW/TYUUy/ypsT9OdO8mFQ5smUA13I4HNH2Oi3+3PiKNjkzbsONwLETsN6tUsJIjSr9QcgjJJe6yAz8HClqDHva+UWrHH3AgMBAAE=');
-        var ssopassword_encrypted = enc.encrypt(ssopassword);
-
         //var secure = $('input:checkbox').is(":checked");  //true or false
-        var secure = $('#check').prop("checked");
+        var secure = $('input:checkbox').prop("checked");
         if(notificationurl ==''|| smtpserver=='' || smtpport=='' ||  smtpaccount=='' || smtppassword=='' || senderemail=='' ||  ssoaccount=='' || ssopassword==''  ){
            $('#emailerror').css('display','block');
            return false;
@@ -175,7 +170,7 @@ $(document).ready(function(){
             console.log(senderemail);
             //console.log(emailsubject);
             console.log(ssoaccount);
-            console.log(ssopassword_encrypted);
+            console.log(ssopassword);
 
             console.log(securemethod);
 
@@ -192,7 +187,7 @@ $(document).ready(function(){
                     'secure':secure,
                     'secureMethod':securemethod,
                     'SSOAccount':ssoaccount,
-                    'SSOPassword':ssopassword_encrypted
+                    'SSOPassword':ssopassword
                 }
                 }).done(function (res) {
 
@@ -459,9 +454,6 @@ $(document).ready(function(){
 
     /*passive scan begin*/
     function Scan(targetURL,arecurse,inScopeOnly,alertThreshold,attackStrength,scanOption,precurse,subtreeOnly,timeStamp,period){
-        
-       
-        
         $.ajax({
             url: '/Scan',
             type: 'GET',
@@ -993,27 +985,16 @@ $(document).ready(function(){
     }
     function refreshTable(){
         //Delete all scan report before
-        var d=new Date();
-        var timeZone = (d.getTimezoneOffset()>0?"-":"+") +(d.getTimezoneOffset()/-60);
         return $.ajax({
                 url: '/refreshTable',
-                type: 'GET',
-                data:{
-                    'timeZone':timeZone
-                }
-                
+                type: 'GET'
         });  
     }    
     function refreshScheduleTable(){
         //Delete all scan report before
-        var d=new Date();
-        var timeZone = (d.getTimezoneOffset()>0?"-":"+") +(d.getTimezoneOffset()/-60);
         return $.ajax({
                 url: '/refreshScheduleTable',
-                type: 'GET',
-                data:{
-                    'timeZone':timeZone
-                }
+                type: 'GET'
         });  
     }
     function updateHtml(){

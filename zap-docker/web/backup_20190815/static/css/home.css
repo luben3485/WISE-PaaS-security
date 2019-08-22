@@ -111,13 +111,6 @@ background: #F25F5C !important;
         font-size:1.4rem;
 
     }*/
-    #startScan{ 
-        font-size:1.4rem;
-    }      
-    
-    #cancelButton{ 
-        font-size:1.4rem;
-    }   
     #title-a,#url-a{
         display:block;
     }
@@ -131,6 +124,7 @@ background: #F25F5C !important;
     #cancelButton{ 
         font-size:1.4rem;
     }   
+    
 }
 
 @media (min-width: 1000px) and (max-width: 1500px) {
@@ -144,12 +138,6 @@ background: #F25F5C !important;
         font-size:1.4rem;
 
     }*/
-    #startScan{ 
-        font-size:1.4rem;
-    }   
-    #cancelButton{ 
-        font-size:1.4rem;
-    } 
     #title-a,#url-a{
         display:none;
     }
@@ -162,6 +150,7 @@ background: #F25F5C !important;
     #cancelButton{ 
         font-size:1.4rem;
     } 
+    
    
 }
 
@@ -177,22 +166,12 @@ background: #F25F5C !important;
         width:100%;
         margin-bottom:0.5rem;
     }*/
-     #title-a,#url-a{
+    #title-a,#url-a{
         display:none;
     }
     #title-b,#url-b{
         display:block;
     }
-    #startScan{ 
-        font-size:1.3rem;
-        width:100%;
-        margin-bottom:0.5rem;
-    }
-    #cancelButton{ 
-        font-size:1.3rem;
-        width:100%;
-        margin-bottom:0.5rem;
-    } 
     #startScan{ 
         font-size:1.3rem;
         width:100%;

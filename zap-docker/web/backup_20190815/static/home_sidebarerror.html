@@ -1,214 +1,51 @@
+<DOCTYPE html>
+
 <html>
     <head>
-       <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*" />
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
         <link href="css/font-awesome-all.css" rel="stylesheet" type="text/css" >
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/>
         <link rel="stylesheet" href="https://unpkg.com/vue-easytable/umd/css/index.css">
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
         <link href="css/home.css" rel="stylesheet" type="text/css" >
+      
     </head>
     <body>
-         <div class="ui sidebar inverted vertical menu">
-            <div id="sidebarhead">
-            
-            </div>
-
-            <a class="sideitem item" id="updateDashboard">
-                <i  class="fas fa-tachometer-alt fa-2x" style="font-size:2rem;"><div style="float:right;margin-left:2rem;font-size:1.2rem;text-align:center;font-family: sans-serif;padding-top:0.5rem;">Dashboard URL</div></i>
+        <div class="ui sidebar inverted vertical menu">
+            <a class="item">
+              1
             </a>
-            <a class="sideitem item" id="notification">
-               <i  class="fas fa-envelope fa-2x" style="font-size:2rem;"><div style="float:right;margin-left:2rem;font-size:1.2rem;text-align:center;font-family: sans-serif;padding-top:0.5rem;;">Notification</div></i>
+            <a class="item">
+              2
             </a>
-            <a class="sideitem item" href="doc" target="_blank">
-               <i  class="fas fa-cog fa-2x" style="font-size:2rem;"><div style="float:right;margin-left:2rem;font-size:1.2rem;text-align:center;font-family: sans-serif;padding-top:0.5rem;;">Document</div></i>
+            <a class="item">
+              3
             </a>
           </div>
-        <div class="pusher">
-            <div class="ui inverted  segment"  id="bar">
+
+          
+        <!-- navbar-->
+        
+        <div class="ui inverted  segment">
             <div class="ui container">
-                <div class="ui large inverted  secondary menu ">
+                <div class="ui large inverted  secondary menu">
                 <a class="item" id="list">
-                    <i class="fas fa-bars fa-2x" ></i>  
+                    <i class="fas fa-bars fa-2x" ></i>
                     <!--<i class="sidebar icon" ></i>-->
                 </a>
-                     <!--
+                <!--
                 <a class="active item">Scan</a>
                 <a class="item">History</a>
-                --> 
-                </div>
-                <div id="img">
-                    <img src="img/web_app_scanner.png" alt="" height=50px/>
+                -->
                 </div>
             </div>
         </div>
-            
-            
-            
-        	  <div class="ui modal dashboard">
-                  <!--<i class="close icon"></i>-->
-                  <div class="modalheader" >
-                    Set Dashboard URL
-                  </div>
-                  <hr>
-                <div class="ui inverted form">
-                      <div class="field" style="padding:1rem 2rem;">
-                        <h3>Please input your dashboard url below</h3>
-                        <input type="text" name="dashboardUrl" placeholder="input here">
-                        
-                        <div class="ui negative message" id="dashMsg" style="display:none;">
-                          <!--<i class="close icon"></i>-->
-                          <div class="header">
-                            Wrong Dashboard URL !
-                          </div>
-                     
-                  </div>
-                      </div>
-                  </div>
-                  
-                  
-                  
-                  <div class="actions" style="background-color: white;margin-top:1rem;">
-                    <div class="ui red deny button">
-                      Cancel
-                    </div>
-                    <div class="ui positive right labeled icon button">
-                      Save
-                      <i class="checkmark icon"></i>
-                    </div>
-                  </div>
-                </div>
-            
-            <!--warning-->
-                        
-        	  <div class="ui modal warning">
-                  <!--<i class="close icon"></i>-->
-                  <div class="modalheader" >
-                    Warning
-                  </div>
-                  <hr>
-                <div class="ui inverted form">
-                      <div class="field" style="padding:1rem 2rem;">
-                        <h3>Please be aware that you should only attack applications that you have been specifically given permission to test.</h3>
-                        
-                          <h3 id="activewarning" style="display:none;">Active Scan Method Warning: <br>Please be aware of the risks and seek permission prior to performing any kind of active testing.</h3>
-    
-                      </div>
-                  </div>
-                  
-                  
-                  <div class="actions" style="background-color: white;margin-top:1rem;">
-                    <div class="ui red deny button">
-                      Cancel
-                    </div>
-                    <div class="ui positive right labeled icon button">
-                      Confirm
-                      <i class="checkmark icon"></i>
-                    </div>
-                  </div>
-                </div>
-            
-            <!--notification-->
-            
-            <div class="ui modal notification">
-                  <!--<i class="close icon"></i>-->
-                  <div class="modalheader" >
-                    E-mail Service Setting
-                  </div>
-                  <hr>
+        
+        <!-- navbar-->
 
-                <div class="ui form error" style="padding:1rem 2rem;">
-                 
-                  <div class="fields" style="padding-bottom: 1rem">
-                    <div class="ten wide field">
-                      <label>Notification URL</label>
-                      <input type="text" name="notificationurl" placeholder="">
-                    </div>
-                </div>
-                    
-                  <div class="fields">
-                    <div class="six wide field">
-                      <label>SMTP Server</label>
-                      <input type="text" name="smtpserver" placeholder="">
-                    </div>
-                    <div class="two wide field">
-                      <label>SMTP Port</label>
-                      <input type="text" name="smtpport" placeholder="">
-                    </div>
-                    <div class="one wide field">
-                          <div class="ui  toggle checkbox">
-                            <input type="checkbox" name="secure" id="check">
-                            <label class="coloring red" style="color:black">Secure</label>
-                          </div>
-                    </div>    
-                    <div class="two wide field">
-                     
-                    </div>
-                      <div class="three wide field" style="display:none;" id="securemethodfield">
-                      <label>Secure Method</label>
-                      <select id="securemethod" class="ui search dropdown">
-                            <option value="tls">TLS</option>     
-                            <option value="ssl">SSL</option>
-                      </select>
-                          
-                    </div>
-                      
-                  </div>
-                    
-                  <div class="fields">
-                    <div class="six wide field">
-                      <label>SMTP Account</label>
-                      <input type="text" name="smtpaccount" placeholder="">
-                    </div>
-                    <div class="six wide field">
-                      <label>SMTP Password</label>
-                      <input type="password" name="smtppassword" placeholder="">
-                    </div>
-                    <div class="four wide field">
-                        <label>Sender E-mail</label>
-                        <input type="email" name="senderemail" placeholder="">
-                    </div>
-                      <!--
-                    <div class="four wide field">
-                        <label>E-mail subject</label>
-                        <input type="text" name="emailsubject" placeholder="">
-                    </div>
-                    -->
-                  </div>
-                
-                <div class="fields">
-                    <div class="eight wide field">
-                      <label>SSO Account</label>
-                      <input type="text" name="ssoaccount" placeholder="">
-                    </div>
-                    <div class="eight wide field">
-                      <label>SSO Password</label>
-                      <input type="password" name="ssopassword" placeholder="">
-                    </div>
 
-                  </div>    
-                  
-                    
-                  <div class="ui error message" id="emailerror" style="display:none;">
-                    <div class="header">Please fill in the blanks completely.</div>
-                    <p>The information provided is incomplete.</p>
-                  </div>    
-                
-                </div>
-                  
-                  
-                  <div class="actions" style="background-color: white;margin-top:1rem;">
-                    <div class="ui red deny button">
-                      Cancel
-                    </div>
-                    <div class="ui positive right labeled icon button">
-                      Save
-                      <i class="checkmark icon"></i>
-                    </div>
-                  </div>
-            </div>
-            
-            
+        
         <!-- Scan block-->
         <div class="main">
             <div class="ui grid stackable container" >
@@ -219,8 +56,7 @@
                             <p>Start a scan</p>                  
                         </div>                
                         <div style="font-size: 1.5rem;font-family:MS Sans Serif;">
-                           <p id="title-a">The only thing you need to do is provide some basic information and make a simple choice about the type of scan you want to perform.</p>
-                            <p id="title-b">Provide some basic information and choose the type of scan you want to perform.</p>
+                            <p>The only thing you need to do is provide some basic information and make a simple choice about the type of scan you want to perform.</p>
                         </div>
                        <hr>
 
@@ -230,8 +66,7 @@
                                     <div class="field">
                                         <label >Target URL</label>
                                         <input type="text" name="input_url" placeholder="e.g http://testphp.vulnweb.com">
-                                      <div id="url-a">Full URL of the targeted web application(must include the appropriate protocol http or https).</div>
-                                        <div id="url-b">Must include the appropriate protocol http or https</div>
+                                        <div>Full URL of the targeted web application(must include the appropriate protocol http or https).</div>
                                     </div>
                                     <div class="field">
                                         <label>Scan Method</label>
@@ -629,7 +464,6 @@
         -->
     
         <!-- footer-->
-        <!--
         <div class="ui inverted vertical footer segment">
             <div id="footcontaier" class="ui container ">
               <div class="ui stackable inverted divided equal height stackable grid">
@@ -655,23 +489,22 @@
               </div>
             </div>
         </div>
-        -->
         <!-- footer-->
 
-            
-        </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/2.3.1/jsencrypt.js"></script>
+        
+      
+        
+        
+
+    </body>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.js"></script>
-         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script type="text/javascript" src="js/easy-table.js"></script>
+
         <!--<script src="https://code.jquery.com/jquery-2.1.4.js"></script>-->
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/table.js"></script>
         <script type="text/javascript" src="js/home.js"></script>
         <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>-->
         <script src="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.js"></script>
-        
-        
-    </body>
 </html>

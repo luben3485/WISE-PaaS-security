@@ -2,7 +2,6 @@ var deleted=[];
 var deletedFlag = 0;
 var deletedSchedule = []
 var deletedScheduleFlag = 0;
-/*
 var Data =[
         {
           "userId":"a7ea79a3-c2eb-4c79-b968-b279667f3747",
@@ -51,7 +50,7 @@ var Data =[
         },
                  
         ];
-*/
+
 var Data = [];
 /*var schedule =[
         {

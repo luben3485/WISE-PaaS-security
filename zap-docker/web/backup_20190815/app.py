@@ -4,7 +4,6 @@ import random
 import os
 from flask import Flask,request,redirect
 from flask import jsonify,abort,Response, make_response
-from flask_cors import cross_origin
 import requests
 import json
 import zipfile,io
@@ -21,11 +20,9 @@ db = mongodb.mongoDB()
 
 app = Flask(__name__,static_url_path='',root_path=os.getcwd())    
 
+
 import create_datasource
-from datasource_route import app
-from dashboard import datasource_init, create_dashboard, delete_dashboard
-from report import process_report
-from notify import create_group,delete_group,send_email,get_token,send_mail_by_scanID
+
 #apiURL='https://dashboard-grafana-1-3-2.arfa.wise-paas.com'
 apiURL=''
 ssoUrl = ''
@@ -38,10 +35,11 @@ try:
     appURL = 'https://'+app_env['application_uris'][0]
     print('get environment variables!')
 except Exception as err:
-    print('Can not get environment variables:{}'.format(str(err)))
+    print('Can not get environment variables form: {}'.format(str(err)))
     ssoUrl = 'https://portal-sso.arfa.wise-paas.com'
-    appURL = 'https://zap-security-0816.arfa.wise-paas.com'
+    appURL = 'https://zap-security-web-v4.arfa.wise-paas.com'
 domainName = ssoUrl[ssoUrl.find('.'):]
+
 
 #decorator
 def EIToken_verification(func):
@@ -76,12 +74,13 @@ def checkPassiveStatus(scanId):
             #scan finish
             if status == '100':
                 db.modifyExistInfo('status','3',scanId)
-                send_mail_by_scanID(ssoUrl,scanId)
                 break
             time.sleep(1)
     except Exception as err:
         print('error: {}'.format(str(err)))
     
+
+
 def checkActiveStatus(scanId,targetURL,arecurse,inScopeOnly,method,postData,contextId,alertThreshold,attackStrength):
     try:
         print("Add check full scan threading...")
@@ -149,12 +148,177 @@ def checkActiveStatus(scanId,targetURL,arecurse,inScopeOnly,method,postData,cont
             #scan finish
             if status == '100':
                 db.modifyExistInfo('status','3',scanId)
-                send_mail_by_scanID(ssoUrl,scanId)
                 break
             time.sleep(1)
 
     except Exception as err:
         print('error: {}'.format(str(err)))
+
+
+'''
+Newly Added Begin
+'''
+import sys
+import re
+from requests_html import HTMLSession
+from flask_cors import cross_origin
+session = HTMLSession()
+
+null = None
+false = False
+true = True
+#apiURL='https://dashboard-grafana-1-3-2.arfa.wise-paas.com'
+#appURL='https://ensaas-security-scanner-0730.arfa.wise-paas.com/'
+
+High = {}
+Medium = {}
+Low = {}
+Informational = {}
+search_count = [High, Medium, Low, Informational]
+
+pscanid, Passive_Scan_Progress = 0, {}
+ascanid, Active_Scan_Progress = 0, {}
+search_progress = [Passive_Scan_Progress, Active_Scan_Progress]
+
+uid_list = []
+def datasource_init(scanId):
+    global High, Medium, Low, Informational, Passive_Scan_Progress, Active_Scan_Progress
+    High[scanId] = 0
+    Medium[scanId] = 0
+    Low[scanId] = 0
+    Informational[scanId] = 0
+    Passive_Scan_Progress[scanId] = 0    
+    Active_Scan_Progress[scanId] = 0
+def create_dashboard(scanId, EIToken):
+    my_headers = {'Content-Type':'application/json','Authorization': 'Bearer {}'.format(EIToken)}
+    try:
+        with open('template.json') as json_file:
+            template = json.load(json_file)
+        payload ={
+            "dashboard": template,
+            "folderId": 0,
+            "overwrite": false
+        }
+        template["uid"] = scanId
+        template["title"] = template["title"] + "-" + str(scanId)
+        template["panels"][0]["datasource"] = "ZAP-Progress"
+        template["panels"][1]["datasource"] = "ZAP-Summary"
+        template["panels"][3]["datasource"] = "ZAP-Summary"
+        template["panels"][0]["targets"][0]["target"] = "Passive_Scan_Progress"+"-"+str(scanId)
+        template["panels"][0]["targets"][1]["target"] = "Active_Scan_Progress"+"-"+str(scanId)
+        template["panels"][1]["targets"][0]["target"] = "High"+"-"+str(scanId)
+        template["panels"][1]["targets"][1]["target"] = "Medium"+"-"+str(scanId)
+        template["panels"][1]["targets"][2]["target"] = "Low"+"-"+str(scanId)
+        template["panels"][1]["targets"][3]["target"] = "Informational"+"-"+str(scanId)
+        template["panels"][3]["targets"][0]["target"] = "High" +"-"+str(scanId)
+        template["panels"][3]["targets"][0]["target"] = "Medium"+"-"+str(scanId)
+        template["panels"][3]["targets"][0]["target"] = "Low"+"-"+str(scanId)
+        template["panels"][3]["targets"][0]["target"] = "Informational"+"-"+str(scanId)
+        template["panels"][4]["content"] = '''<html>
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/>
+    </head>
+    <body>
+      <button id="downloadReport" class="ui  blue button" style="font-size:1.3rem;">
+            <i class="file alternate outline icon"></i>
+            Download
+        </button>
+    
+        
+        <!--<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>-->
+        <script>
+            $(document).ready(function(){
+                function getCookie(cname) {
+                    var name = cname + "=";
+                    var decodedCookie = decodeURIComponent(document.cookie);
+                    var ca = decodedCookie.split(';');
+                    for(var i = 0; i <ca.length; i++) {
+                        var c = ca[i];
+                        while (c.charAt(0) == ' ') {
+                            c = c.substring(1);
+                        }
+                        if (c.indexOf(name) == 0) {
+                            return c.substring(name.length, c.length);
+                        }
+                    }
+                    return "";
+                }
+                function getScanId(){
+                  var url = window.location.toString();
+                  var tmp1 =url.split("web-app-scanner-")[1];
+                  var tmp2 = tmp1.split("?")[0]
+                  return tmp2;
+                  
+                }
+                $('#downloadReport').click(function(){
+                    scanId = getScanId();
+                    appUrl = getCookie('appUrl');
+                    $.ajax({
+                        url: appUrl+'/downloadHtml',
+                        method: 'GET',
+                        data:{'scanId':scanId}
+                    }).done(function (res) {
+                        if(res=='fail'){
+                            console.log('now u cannot download report');
+                        }else{
+                            var a = document.createElement('a');
+                            var url = window.URL.createObjectURL(new Blob([res], {type: "application/html"}));
+                            a.href = url;
+                            a.download = 'scan_report.html';
+                            document.body.append(a);
+                            a.click();
+                            a.remove();
+                            window.URL.revokeObjectURL(url);
+                        }
+                    }).fail(function () {
+                        console.log("/downloadHtml fail") 
+                    });
+                    
+                });
+                function getCookie(cname) {
+                    var name = cname + "=";
+                    var decodedCookie = decodeURIComponent(document.cookie);
+                    var ca = decodedCookie.split(';');
+                    for(var i = 0; i <ca.length; i++) {
+                        var c = ca[i];
+                        while (c.charAt(0) == ' ') {
+                            c = c.substring(1);
+                        }
+                        if (c.indexOf(name) == 0) {
+                            return c.substring(name.length, c.length);
+                        }
+                    }
+                    return "";
+                }
+                
+                
+            });
+        </script>
+    
+    </body>
+</html>'''
+        #These are Buttons.
+        template["panels"][5]["url"] = appURL+'/datasource/report/'+str(scanId) #for new template
+        #template["panels"][5]["content"] = '<iframe id="iframe" src="'+appURL+'/datasource/report/'+str(scanId)+'" width=100%" height="100%" frameborder="0"></iframe>' 
+        #for old template
+        res = requests.post(apiURL + "/api/dashboards/db", headers=my_headers, json=payload)
+        print( res.text )
+        dashboardLink = apiURL +res.json()["url"]
+        datasource_init(scanId)
+        return dashboardLink
+    except Exception:
+        raise
+def delete_dashboard(scanId, EIToken):
+    my_headers = {'Content-Type':'application/json',
+               'Authorization': 'Bearer {}'.format(EIToken)}
+    res = requests.delete(apiURL + "/api/dashboards/uid/" + scanId, headers=my_headers)
+    res_json = res.json()
+    print( res_json["title"]+" has been deleted." )
+    return res.json()
+'''
+Newly Added End
+'''
+
 
 def getUserIdFromToken(EIToken):
     info = EIToken.split('.')[1]
@@ -166,16 +330,14 @@ def getUserIdFromToken(EIToken):
     if lenx == 3:
         info += '='
     userId = json.loads(base64.b64decode(info))['userId']
-    userName =  json.loads(base64.b64decode(info))['firstName'] +" "+  json.loads(base64.b64decode(info))['lastName']  
+    userName =  json.loads(base64.b64decode(info))['firstName'] +  json.loads(base64.b64decode(info))['lastName']
     return userId,userName
+
+
 
 @app.route('/')
 def home():
     return app.send_static_file('home.html')
-
-@app.route('/doc')
-def doc():
-    return app.send_static_file('doc.html')
 
 @app.route('/deleteScans',methods=['POST'])
 @EIToken_verification
@@ -191,8 +353,9 @@ def deleteScans():
             if userId == scan_userId:
                 if status == '3' or status == '0':
                     db.deleteScan(scanId)
-                    delete_dashboard(appURL,apiURL,scanId, EIToken)
+                    delete_dashboard(scanId, EIToken)
     return jsonify({'Result':'OK'})
+
 
 @app.route('/dashboardLink',methods=['GET'])
 @EIToken_verification
@@ -205,12 +368,17 @@ def dashboardLInk():
     else:
         return url
 
+
+
+
 @app.route('/finishStatus',methods=['GET'])
 @EIToken_verification
 def finishStatus():
     scanId = request.cookies.get('scanId')
     db.modifyExistInfo('status','3',scanId)
     return 'OK' 
+
+
 
 @app.route('/updateHtml',methods=['GET'])
 @EIToken_verification
@@ -233,7 +401,6 @@ def downloadHtml():
             return 'fail'
         else:
             html= html_info['html']
-            html= process_report(html)
             #response = make_response(html,200)
             #response.headers['Content-Type'] = 'application/html'
             #response.headers['Content-Disposition'] = 'attachment; filename={}'.format('scan_report.html')
@@ -256,6 +423,7 @@ def waitScan():
         return result
     else:
         abort(500)
+
 
 @app.route('/Scan',methods=['GET'])
 @EIToken_verification
@@ -294,8 +462,8 @@ def Scan():
         print(type(timeStamp))
         #Call Dashboard API getting dashboardLink
         try:
-            dashboardLink = create_dashboard(appURL,apiURL,scanId,EIToken)
-        except Exception:
+            dashboardLink = create_dashboard(scanId,EIToken)
+        except Exception as err:
             abort(400)
         #Add html to db
         html_info = {
@@ -384,7 +552,7 @@ def Scan():
              
         #Call Dashboard API getting dashboardLink
         try:
-            dashboardLink = create_dashboard(appURL,apiURL,scanId,EIToken)
+            dashboardLink = create_dashboard(scanId,EIToken)
         except Exception as err:
             abort(400)
         
@@ -500,7 +668,7 @@ def Scan():
                 
                 #call Dashboard API getting dashboardLink
                 try:
-                    dashboardLink = create_dashboard(appURL,apiURL,scanId,EIToken)
+                    dashboardLink = create_dashboard(scanId,EIToken)
                 except Exception as err:
                     abort(400)
     
@@ -560,7 +728,9 @@ def Scan():
 
         else:
             print('passive scan delete error!')
-  
+
+
+    
 # cancel button
 @app.route('/cancelStartScan',methods=['GET'])
 @EIToken_verification
@@ -587,6 +757,7 @@ def cancelStartScan():
         print('error: {}'.format(str(err)))
         abort(500)
 
+
 @app.route('/cancelNotStartScan',methods=['GET'])
 @EIToken_verification
 def cancelNotStartScan():
@@ -606,7 +777,7 @@ def pscanStatusDB():
             return jsonify(result)
         else:
             result = {'status':'-1'}
-            return jsonify(result)
+            return status
     except Exception as err:
         print('error: {}'.format(str(err)))
         abort(500)
@@ -634,6 +805,10 @@ def fullScanStatusDB():
         print('error: {}'.format(str(err)))
         abort(500)
 
+
+
+
+
 @app.route('/addScan',methods=['GET'])
 @EIToken_verification
 def addScan():
@@ -648,7 +823,7 @@ def addScan():
         
     #call Dashboard API getting dashboardLink
     #dashboardLink = 'https://portal-sso.arfa.wise-paas.com'
-    dashboardLink = create_dashboard(appURL,apiURL,scanId,EIToken)
+    dashboardLink = create_dashboard(scanId,EIToken)
     # timeStamp => int
     # other info  => str
     scandata = {
@@ -679,7 +854,6 @@ def addScan():
 @app.route('/refreshTable',methods=['GET'])
 @EIToken_verification
 def refreshTable():
-    timeZone = request.args.get('timeZone')
     EIToken =request.cookies.get('EIToken')
     info_token = EIToken.split('.')[1]
     userId,userName = getUserIdFromToken(EIToken)
@@ -688,23 +862,19 @@ def refreshTable():
     #print(scans)
     for scan in scans:
         ts = scan['timeStamp']
-        ts+=int(timeZone)*60*60
         time = datetime.fromtimestamp(ts).strftime('%Y/%m/%d %H:%M')
         time_info = {'time' : time}
         scan.update(time_info)
     return jsonify(scans)
-
 @app.route('/refreshScheduleTable',methods=['GET'])
 @EIToken_verification
 def refreshScheduleTable():
-    timeZone = request.args.get('timeZone')
     EIToken =request.cookies.get('EIToken')
     info_token = EIToken.split('.')[1]
     userId,userName = getUserIdFromToken(EIToken)
     scans = db.listUserPendingScans(userId)
     for scan in scans:
         ts = scan['timeStamp']
-        ts+=int(timeZone)*60*60
         time = datetime.fromtimestamp(ts).strftime('%Y/%m/%d %H:%M')
         time_info = {'time' : time}
 
@@ -740,6 +910,8 @@ def checkDashboardUrl():
         create_datasource.create_datasource(apiURL, appURL, "ZAP-Progress","/progress/", EIToken)
         return jsonify({'Result':'OK'})
 
+
+
 @app.route('/updateDashboardUrl')
 @EIToken_verification
 def updateDashboardUrl():
@@ -765,6 +937,8 @@ def emailServiceInfo():
     else:
         return 'None'
      
+
+
 @app.route('/emailServiceSetting')
 @EIToken_verification
 def emailServiceSetting():
@@ -785,11 +959,6 @@ def emailServiceSetting():
         secure = True
     else: 
         secure = False
-    try:
-        groupId = create_group(notificationURL,"Web_App_Scanner",SMTPServerURL,serverPort,
-                SMTPUsername,SMTPPassword,SMTPSender,secure,secureMethod,EIToken)
-    except:
-        return jsonify({'Result':'notification configured error'})
     data = {
        "userId":userId,  
        "notificationURL":notificationURL,
@@ -801,10 +970,8 @@ def emailServiceSetting():
        "secure":secure,
        "secureMethod":secureMethod,
        "SSOAccount":SSOAccount,
-       "SSOPassword":SSOPassword,
-       "groupId":groupId
+       "SSOPassword":SSOPassword
     }
-    
     if db.checkEmailService(userId) != None :
         print('exist')
         db.updateEmailService(userId,data)
@@ -1027,6 +1194,155 @@ def clear():
         print('error: {}'.format(str(err)))
         abort(500)
 
+
+'''
+Newly Added
+'''
+'''
+Data Source 
+'''
+@app.route('/summary/')
+def health_check():
+    return "This datasource is healthy"
+
+@app.route('/progress/')
+def health_check_p():
+    return "This datasource is healthy"
+
+# return a list of data that can be queried
+@app.route('/summary/search', methods=['POST'])
+def search():
+    count_set = set()
+    for scan in db.listAllScans():
+        count_set.add( "High" + "-" + scan['scanId'] )
+        count_set.add( "Medium" + "-" + scan['scanId'] )
+        count_set.add( "Low" + "-" +  scan['scanId'] )
+        count_set.add( "Informational" + "-" + scan['scanId'] )
+    return jsonify( list(count_set) )
+
+@app.route('/progress/search', methods=['POST'])
+def search_p():
+    progress_set = set()
+    for scan in db.listAllScans():
+        progress_set.add( "Passive_Scan_Progress" + "-" + scan['scanId'] )
+        progress_set.add( "Active_Scan_Progress" + "-" + scan['scanId'] )
+    return jsonify( list(progress_set) )
+
+@app.route('/summary/query', methods=['POST'])
+def query():
+    req = request.get_json()
+    target = req['targets'][0]['target']
+    target_id = re.findall(r'\d*$',target)[0]
+    try: 
+        report = db.findHtml(target_id)['html']
+        source = report.decode("utf-8")
+        print("summary is extracted from DB.(with id {})".format(target_id))
+    except Exception as err:
+        print("summary can not extracted from DB. Because {}.".format(err))
+
+    global High
+    global Medium
+    global Low
+    global Informational
+
+    #find high_count
+    hr = re.search(r'<td><a href=\"#high\">High</a></td><td align=\"center\">(.*)</td>', source, flags=0)
+    High[target_id] = int( hr.group(1) )
+
+    #find medium_count
+    mr = re.search(r'<td><a href=\"#medium\">Medium</a></td><td align=\"center\">(.*)</td>', source, flags=0)
+    Medium[target_id] = int( mr.group(1) )
+    
+    #find low_count
+    lr = re.search(r'<td><a href=\"#low\">Low</a></td><td align=\"center\">(.*)</td>', source, flags=0)
+    Low[target_id] = int( lr.group(1) )
+
+    #find informational_count
+    ir = re.search(r'<td><a href=\"#info\">Informational</a></td><td align=\"center\">(.*)</td>', source, flags=0)
+    Informational[target_id] = int( ir.group(1) )
+
+    data = [
+        {
+            "target": "High" + "-" + str(target_id),
+            "datapoints": [
+                [High[target_id], 1563761410]
+            ]
+        },
+        {
+            "target": "Medium" + "-" + str(target_id),
+            "datapoints": [
+                [Medium[target_id],1563761410]
+            ]
+        },
+        {
+            "target": "Low" + "-" + str(target_id),
+            "datapoints": [
+                [Low[target_id], 1563761410]
+            ]
+        },
+        {
+            "target": "Informational" + "-" + str(target_id),
+            "datapoints": [
+                [Informational[target_id], 1563761410]
+            ]
+        }
+    ]
+    return jsonify(data)
+
+@app.route('/progress/query', methods=['POST'])
+def query_p():
+    req = request.get_json()
+    target = req['targets'][0]['target']
+    target_id = re.findall(r'\d*$',target)[0]
+
+    global Passive_Scan_Progress
+    global Active_Scan_Progress
+    Passive_Scan_Progress[target_id] = 0
+    Active_Scan_Progress[target_id] = 0
+    try:
+        Passive_Scan_Progress[target_id] = int (db.findScan(target_id)["pscanStatus"])
+        Active_Scan_Progress[target_id] = int (db.findScan(target_id)["ascanStatus"])
+        print ("/progress/query: target_id={}".format(target_id) )
+    except Exception as err:
+        print ("fail to findScan in DB. Because {}".format(err))
+    progress = [
+            {
+                "target": "Passive_Scan_Progress"+"-"+ str(target_id),
+                "datapoints":[
+                    [Passive_Scan_Progress[target_id], 1563761410]
+                    ]
+            },
+            {
+                "target": "Active_Scan_Progress"+"-"+ str(target_id),
+                "datapoints":[
+                    [Active_Scan_Progress[target_id], 1563761410]
+                    ]
+            }
+    ]
+    return jsonify(progress)
+
+@app.route('/datasource/report/<scanId>', methods=['GET'])
+@cross_origin()
+def datasource_report(scanId):
+    try: 
+        report = db.findHtml(str(scanId))
+        source = report['html'].decode("utf-8")
+        print("report is extracted from DB.")
+    except Exception as err:
+        print("Report can not extracted from DB. Becasue {}".format(err))
+        print("You're scanId is {}".format(scanId))
+    head = source.split("<h1>",1)
+    body = head[1].split("<h3>Alert Detail</h3>",1)
+    html = "".join(head[0]+body[1])
+    response = make_response(html,200)
+    response.headers['Content-Type'] = 'text/html'
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+'''
+Newly Added End
+'''
+
 ## Web check scan
 
 @app.route('/checkScan',methods=['GET'])
@@ -1047,6 +1363,10 @@ def checkScan():
     except Exception as err:
         print('error: {}'.format(str(err)))
         abort(500)
+
+
+
+
 
 '''
 checkAnyScan is for checking if there is any scan on ZAP api server

@@ -37,10 +37,10 @@
       "createUid": "1967f21e-7c21-eec5-7343-e95cbdd73972",
       "customInterval": "",
       "dataPoint": [
-        "Active_Scan_Progress-3444708",
-        "Passive_Scan_Progress-3444708"
+        "Active Scan Progress",
+        "Passive Scan Progress"
       ],
-      "datasource": "ZAP-Progress",
+      "datasource": "Progress-0725",
       "decimals": null,
       "description": "This panel shows the progress of your scan.",
       "fontSize": "80%",
@@ -71,12 +71,12 @@
           "scadaName": "select scada name",
           "tag": "select tag",
           "tagDesc": "tagDesc",
-          "target": "Passive_Scan_Progress-3444708",
+          "target": "Passive Scan Progress",
           "type": "timeserie"
         },
         {
           "refId": "B",
-          "target": "Active_Scan_Progress-3444708",
+          "target": "Active Scan Progress",
           "type": "timeserie"
         }
       ],
@@ -98,12 +98,8 @@
       "adjFontSize_Option": false,
       "aliasColors": {
         "High": "#bf1b00",
-        "High-3444708": "#bf1b00",
         "Informational": "rgb(187, 222, 176)",
-        "Informational-3444708": "#7eb26d",
-        "Low": "#7eb26d",
-        "Low-3444708": "#f2c96d",
-        "Medium-3444708": "#e0752d"
+        "Low": "#7eb26d"
       },
       "cacheTimeout": null,
       "combine": {
@@ -112,9 +108,9 @@
       },
       "createUid": "fc614468-138c-45d6-a583-0fa12eb65760",
       "customInterval": null,
-      "datasource": "ZAP-Summary",
+      "datasource": "Summary-0725",
       "decimals": null,
-      
+      "description": "This panel is for the summary of ZAP security scanning tools.",
       "fontSize": "80%",
       "format": "short",
       "gridPos": {
@@ -145,22 +141,22 @@
       "targets": [
         {
           "refId": "A",
-          "target": "High-3444708",
+          "target": "High",
           "type": "timeserie"
         },
         {
           "refId": "B",
-          "target": "Medium-3444708",
+          "target": "Medium",
           "type": "timeserie"
         },
         {
           "refId": "C",
-          "target": "Low-3444708",
+          "target": "Low",
           "type": "timeserie"
         },
         {
           "refId": "D",
-          "target": "Informational-3444708",
+          "target": "Informational",
           "type": "timeserie"
         }
       ],
@@ -181,6 +177,32 @@
       "valueName": "total"
     },
     {
+      "content": "<font color=white>\nThis is the dashboard of your security scan summary.</br>\nYou can view the scanning result here or download it as an HTML report.\n</font>",
+      "createUid": "4d56f0ec-192f-2036-e963-f2c37eb61198",
+      "gridPos": {
+        "h": 2,
+        "w": 12,
+        "x": 12,
+        "y": 4
+      },
+      "id": 4,
+      "links": [],
+      "mode": "html",
+      "panelThemeStyle": "50,50,51",
+      "title": "About",
+      "titleAdjFontSize": true,
+      "titleBgColor": "#052b51",
+      "titleFontSize": "1vw",
+      "titleFontSizeVal": "80%",
+      "titleShowSize": "",
+      "titleTxtAlign": "center",
+      "titleTxtBold": "normal",
+      "titleTxtColor": "rgb(255, 255, 255)",
+      "transparent": false,
+      "transparentRange": 1,
+      "type": "text"
+    },
+    {
       "columns": [
         {
           "text": "Total",
@@ -189,7 +211,7 @@
       ],
       "createUid": "fbe31b90-68ed-0aa2-0312-16a1375dfa50",
       "customInterval": null,
-      "datasource": "ZAP-Summary",
+      "datasource": "Summary-0725",
       "fontAdjustable": true,
       "fontSize": "100%",
       "fontSizePX": "15px",
@@ -199,10 +221,10 @@
       "fontSizeVW": "0.8vw",
       "fontSizeVal": "100%",
       "gridPos": {
-        "h": 7,
+        "h": 6,
         "w": 12,
         "x": 12,
-        "y": 4
+        "y": 6
       },
       "id": 16,
       "links": [],
@@ -243,7 +265,7 @@
       "targets": [
         {
           "refId": "A",
-          "target": "Informational-3444708",
+          "target": "high",
           "type": "timeserie"
         },
         {
@@ -276,45 +298,19 @@
       "type": "table"
     },
     {
-      "content": "<font color=white>\nThis is the dashboard of your security scan summary.</br>\nYou can view the scanning result here or download it as an HTML report.\n</font>",
-      "createUid": "4d56f0ec-192f-2036-e963-f2c37eb61198",
-      "gridPos": {
-        "h": 3,
-        "w": 8,
-        "x": 12,
-        "y": 11
-      },
-      "id": 4,
-      "links": [],
-      "mode": "html",
-      "panelThemeStyle": "50,50,51",
-      "title": "About",
-      "titleAdjFontSize": true,
-      "titleBgColor": "#052b51",
-      "titleFontSize": "1vw",
-      "titleFontSizeVal": "80%",
-      "titleShowSize": "",
-      "titleTxtAlign": "center",
-      "titleTxtBold": "normal",
-      "titleTxtColor": "rgb(255, 255, 255)",
-      "transparent": false,
-      "transparentRange": 1,
-      "type": "text"
-    },
-    {
-      "content": "\n        <html>\n            <head>\n                <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css\"/>\n            </head>\n            <body>\n            <button id=\"downloadReport\" class=\"ui  blue button\" style=\"font-size:1.3rem;\">\n                    <i class=\"file alternate outline icon\"></i>\n                    Download\n                </button>\n            \n                \n                <!--<script src=\"https://code.jquery.com/jquery-3.4.1.min.js\"></script>-->\n                <script>\n                    $(document).ready(function(){\n                        function getCookie(cname) {\n                            var name = cname + \"=\";\n                            var decodedCookie = decodeURIComponent(document.cookie);\n                            var ca = decodedCookie.split(';');\n                            for(var i = 0; i <ca.length; i++) {\n                                var c = ca[i];\n                                while (c.charAt(0) == ' ') {\n                                    c = c.substring(1);\n                                }\n                                if (c.indexOf(name) == 0) {\n                                    return c.substring(name.length, c.length);\n                                }\n                            }\n                            return \"\";\n                        }\n                        function getScanId(){\n                        var url = window.location.toString();\n                        var tmp1 =url.split(\"web-app-scanner-\")[1];\n                        var tmp2 = tmp1.split(\"?\")[0]\n                        return tmp2;\n                        \n                        }\n                        $('#downloadReport').click(function(){\n                            scanId = getScanId();\n                            appUrl = getCookie('appUrl');\n                            $.ajax({\n                                url: appUrl+'/downloadHtml',\n                                method: 'GET',\n                                data:{'scanId':scanId}\n                            }).done(function (res) {\n                                if(res=='fail'){\n                                    console.log('now u cannot download report');\n                                }else{\n                                    var a = document.createElement('a');\n                                    var url = window.URL.createObjectURL(new Blob([res], {type: \"application/html\"}));\n                                    a.href = url;\n                                    a.download = 'scan_report.html';\n                                    document.body.append(a);\n                                    a.click();\n                                    a.remove();\n                                    window.URL.revokeObjectURL(url);\n                                }\n                            }).fail(function () {\n                                console.log(\"/downloadHtml fail\") \n                            });\n                            \n                        });\n                        function getCookie(cname) {\n                            var name = cname + \"=\";\n                            var decodedCookie = decodeURIComponent(document.cookie);\n                            var ca = decodedCookie.split(';');\n                            for(var i = 0; i <ca.length; i++) {\n                                var c = ca[i];\n                                while (c.charAt(0) == ' ') {\n                                    c = c.substring(1);\n                                }\n                                if (c.indexOf(name) == 0) {\n                                    return c.substring(name.length, c.length);\n                                }\n                            }\n                            return \"\";\n                        }\n                        \n                        \n                    });\n                </script>\n            \n            </body>\n        </html>\n        ",
+      "content": "<head>\n        <meta http-equiv=\"Access-Control-Allow-Origin\" content=\"*\" />\n        <!--<link href=\"css/style.css\" rel=\"stylesheet\" type=\"text/css\" >-->\n        <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css\"/>\n\n</head>\n\n<button class=\"ui button\"><a href=\"https://zap-security-merge-0725.arfa.wise-paas.com/\">Go back to Scanning Protal</a></button>\n<button class=\"ui button\" id=\"downloadReport\"><a href=\"https://zap-security-merge-0725.arfa.wise-paas.com/downloadReport\" download=\"report.html\" target=\"_blank\">Download Report</a></button>\n$('#downloadReport').removeClass('disabled');",
       "createUid": "d76426f4-d8c2-30a1-0926-0690f19ffb52",
       "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 20,
-        "y": 11
+        "h": 2,
+        "w": 12,
+        "x": 12,
+        "y": 12
       },
       "id": 10,
       "links": [],
       "mode": "html",
       "panelThemeStyle": "50,50,51",
-      "title": "Download Report",
+      "title": "Rescan & Download Report as HTML",
       "titleAdjFontSize": true,
       "titleBgColor": "#052b51",
       "titleFontSize": "1vw",
@@ -369,7 +365,7 @@
       "titleTxtColor": "rgb(255, 255, 255)",
       "transparentRange": 1,
       "type": "ryantxu-ajax-panel",
-      "url": "https://zap-security-web-v4.arfa.wise-paas.com/datasource/report/3444708",
+      "url": "https://zap-security-merge-0725.arfa.wise-paas.com/datasource/report",
       "withCredentials": false
     }
   ],
