@@ -270,7 +270,7 @@ $(document).ready(function(){
                 
         console.log('Hello! ' + user.lastName + ' ' + user.firstName);
     }).fail(function () {
-        //window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
+        window.location.href = ssoUrl + '/web/signIn.html?redirectUri=' + myUrl;
     });        
     
     function isValidDate(date) {
