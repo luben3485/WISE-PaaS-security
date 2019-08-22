@@ -995,6 +995,7 @@ $(document).ready(function(){
         //Delete all scan report before
         var d=new Date();
         var timeZone = (d.getTimezoneOffset()>0?"-":"+") +(d.getTimezoneOffset()/-60);
+        console.log(timeZone)
         return $.ajax({
                 url: '/refreshTable',
                 type: 'GET',
