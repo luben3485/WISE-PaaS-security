@@ -688,7 +688,7 @@ def refreshTable():
     #print(userId)
     #print(scans)
     for scan in scans:
-        ts = scan['timeStamp']
+        ts = scan['timeStamp'] 
         ts+=int(timeZone)*60*60
         time = datetime.fromtimestamp(ts).strftime('%Y/%m/%d %H:%M')
         time_info = {'time' : time}

@@ -152,6 +152,7 @@ function downloadHtml(scanId){
 
 
 function deleteScans(scanIdArr){
+    
     $.ajax({
                 url: '/deleteScans',
                 type: 'POST',
@@ -159,10 +160,15 @@ function deleteScans(scanIdArr){
                     'scanIdArr':scanIdArr
                 }
     }).done(function(){
-        console.log("delete scan success");       
+        console.log("delete scan success");
+        var d=new Date();
+        var timeZone = (d.getTimezoneOffset()>0?"-":"+") +(d.getTimezoneOffset()/-60);
         $.ajax({
                 url: '/refreshTable',
-                type: 'GET'
+                type: 'GET',
+                data:{
+                    'timeZone':timeZone
+                }
         }).done(function(response){
             while (Data.length > 0) Data.pop();
             while (response.length > 0) Data.push(response.shift());
@@ -172,7 +178,10 @@ function deleteScans(scanIdArr){
         });
         $.ajax({
                 url: '/refreshScheduleTable',
-                type: 'GET'
+                type: 'GET',
+                data:{
+                    'timeZone':timeZone
+                }
         }).done(function(response){
             while (schedule.length > 0) schedule.pop();
             while (response.length > 0) schedule.push(response.shift());
