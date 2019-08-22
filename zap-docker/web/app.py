@@ -15,6 +15,7 @@ from datetime import datetime
 import base64
 import random
 import time
+import calendar
 import mongodb
 import threading
 db = mongodb.mongoDB()
@@ -688,7 +689,7 @@ def refreshTable():
     #print(scans)
     for scan in scans:
         ts = scan['timeStamp']
-        #ts+=int(timeZone)*60*60
+        ts+=int(timeZone)*60*60
         time = datetime.fromtimestamp(ts).strftime('%Y/%m/%d %H:%M')
         time_info = {'time' : time}
         scan.update(time_info)
@@ -704,7 +705,7 @@ def refreshScheduleTable():
     scans = db.listUserPendingScans(userId)
     for scan in scans:
         ts = scan['timeStamp']
-        #ts+=int(timeZone)*60*60
+        ts+=int(timeZone)*60*60
         time = datetime.fromtimestamp(ts).strftime('%Y/%m/%d %H:%M')
         time_info = {'time' : time}
 
