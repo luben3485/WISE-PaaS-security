@@ -703,10 +703,8 @@ $(document).ready(function(){
             
             $('#message').css('display','none');
             
-             time = $('input[name="date"]').val()
+            time = $('input[name="date"]').val()
             var date = new Date(time);
-            if(isValidDate(date)) date.toUTCString();
-            console.log(date)
             var day =$("#period").val();
             var period = day*24*60*60;
             
