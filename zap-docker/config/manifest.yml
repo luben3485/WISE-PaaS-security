@@ -1,6 +1,6 @@
 ---
 applications:
-- name: zap-security-web-v5
+- name: zap-security-0823
   memory: 1024M
   instances: 1
   disk_quota: 4G
