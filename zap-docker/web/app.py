@@ -1077,7 +1077,7 @@ def checkUserScan():
     
         EIToken = request.cookies.get('EIToken')
         info_token = EIToken.split('.')[1]
-        userId = getUserIdFromToken(EIToken)
+        userId,userName = getUserIdFromToken(EIToken)
         scan = db.listUserNotFinishedScan(userId)
         if scan == None:
             result = {'Result':'NOSCAN'}
